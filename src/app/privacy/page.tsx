@@ -3,8 +3,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - EU AI Act Compliance Checker",
-  description: "Privacy policy for EU AI Act Compliance Checker",
+  title: "Privacy Policy",
+  description:
+    "Privacy policy for EU AI Act Compliance Checker. We collect minimal data, use privacy-first analytics, and never store anonymous assessment responses on our servers.",
 };
 
 export default function PrivacyPage() {

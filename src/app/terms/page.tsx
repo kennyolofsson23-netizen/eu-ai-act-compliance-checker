@@ -3,8 +3,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - EU AI Act Compliance Checker",
-  description: "Terms of Service for EU AI Act Compliance Checker",
+  title: "Terms of Service",
+  description:
+    "Terms of Service for EU AI Act Compliance Checker. This tool provides informational guidance only and does not constitute legal advice.",
 };
 
 export default function TermsPage() {

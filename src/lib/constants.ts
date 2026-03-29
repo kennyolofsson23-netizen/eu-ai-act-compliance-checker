@@ -2,7 +2,7 @@ export const APP_NAME = "EU AI Act Compliance Checker";
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL || "https://euaiacompliance.app";
 export const APP_DESCRIPTION =
-  "Free AI risk classification tool for EU AI Act compliance. Get your risk level, obligation checklist, and shareable compliance badge in 3 minutes.";
+  "EU AI Act Compliance Checker is a free AI risk classification tool. Get your EU AI Act risk level, obligation checklist, and compliance badge in 3 minutes.";
 
 export const EU_AI_ACT_ENFORCEMENT_DATE = new Date("2026-08-02T00:00:00Z");
 export const EU_AI_ACT_PROHIBITED_DATE = new Date("2025-02-02T00:00:00Z");

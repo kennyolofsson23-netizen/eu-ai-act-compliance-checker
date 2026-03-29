@@ -3,9 +3,9 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "About EU AI Act Compliance Checker",
+  title: "About",
   description:
-    "Learn about the EU AI Act Compliance Checker, our mission, and why we built this free tool for the AI community.",
+    "EU AI Act Compliance Checker is a free tool that classifies AI systems by risk level and generates actionable obligation checklists. Built for developers and PMs, not lawyers.",
 };
 
 export default function AboutPage() {
@@ -20,110 +20,120 @@ export default function AboutPage() {
 
           <div className="prose prose-lg max-w-none space-y-6 text-slate-700">
             <p>
-              The EU AI Act Compliance Checker is a free tool designed to help
-              organizations quickly assess their AI systems&apos; compliance
-              with the European Union&apos;s groundbreaking AI Act.
+              EU AI Act Compliance Checker is a free AI risk classification tool
+              that takes any organization from &ldquo;I have an AI product&rdquo;
+              to &ldquo;here&apos;s exactly what I need to do&rdquo; in under
+              3 minutes. Unlike enterprise GRC platforms that cost $20K–$150K
+              per year, the core assessment requires no account and no credit
+              card.
             </p>
-
-            <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
-              Our Mission
-            </h2>
-            <p>
-              We believe that compliance with the EU AI Act should be accessible
-              to all organizations, regardless of size or budget. Enterprise
-              compliance solutions cost $20K-100K annually, putting them out of
-              reach for startups and smaller companies.
-            </p>
-            <p>
-              Our mission is to democratize AI compliance by providing free,
-              accurate, and actionable guidance to help your organization:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 my-4">
-              <li>
-                Understand the EU AI Act requirements applicable to your AI
-                system
-              </li>
-              <li>
-                Classify your system by risk level (Unacceptable, High, Limited,
-                Minimal)
-              </li>
-              <li>Access specific obligation checklists</li>
-              <li>Download documentation templates</li>
-              <li>Get started on the path to compliance</li>
-            </ul>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
               Why We Built This
             </h2>
             <p>
-              The EU AI Act represents a watershed moment in AI regulation. With
-              full enforcement coming by August 2, 2026, organizations need
-              clear guidance now. We noticed that:
+              The EU AI Act (Regulation 2024/1689) is the world&apos;s first
+              comprehensive AI regulation. Full enforcement begins August 2,
+              2026, with fines up to 7% of global annual turnover. Yet the
+              gap between &ldquo;regulation exists&rdquo; and &ldquo;my team
+              knows what to do&rdquo; is enormous for anyone outside a large
+              enterprise with a dedicated compliance team.
             </p>
+            <p>We built this tool because:</p>
             <ul className="list-disc pl-6 space-y-2 my-4">
-              <li>Most guidance is fragmented across multiple documents</li>
-              <li>Enterprise tools are prohibitively expensive</li>
-              <li>Organizations need fast, practical answers to get started</li>
-              <li>The compliance landscape is evolving rapidly</li>
+              <li>
+                The official EU checker gives raw classifications with no
+                actionable guidance or obligation checklists
+              </li>
+              <li>
+                Enterprise compliance platforms require budget and
+                implementation timelines most companies don&apos;t have
+              </li>
+              <li>
+                Legal consultations at $500–$1,000/hour are inaccessible for
+                early-stage teams answering a basic scoping question
+              </li>
+              <li>
+                Developers and PMs need plain language — not legal text — to
+                understand what they must build
+              </li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
-              How It Works
+              How the Assessment Works
             </h2>
             <p>
-              Our assessment asks 12 evidence-based questions about your AI
-              system, designed by reviewing:
+              The questionnaire uses branching logic based on the official EU AI
+              Act text (Regulation 2024/1689), covering the Article 5 prohibited
+              practices checklist, Annex III high-risk categories, and Article
+              50 transparency triggers. Questions were designed by reviewing:
             </p>
             <ul className="list-disc pl-6 space-y-2 my-4">
-              <li>The official EU AI Act text (Regulation 2024/1689)</li>
+              <li>The official EU AI Act text and recitals</li>
               <li>European Commission guidance documents</li>
-              <li>AI Office and national regulatory interpretations</li>
-              <li>Industry standards and best practices</li>
+              <li>EU AI Office interpretive materials</li>
+              <li>
+                Annex I (regulated products), Annex III (high-risk use cases),
+                and Annex IV (technical documentation requirements)
+              </li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
-              What You Get
+              What You Receive
             </h2>
-            <p>After answering 12 questions (takes ~5 minutes), you receive:</p>
+            <p>
+              After answering up to 12 questions (typically 3 minutes), you
+              receive:
+            </p>
             <ul className="list-disc pl-6 space-y-2 my-4">
               <li>
                 <strong>Risk Classification:</strong> Unacceptable, High,
-                Limited, or Minimal Risk
+                Limited, or Minimal — with the specific articles that triggered
+                the result
               </li>
               <li>
-                <strong>Obligation Checklist:</strong> Specific requirements for
-                your system
+                <strong>Obligation Checklist:</strong> Every applicable
+                requirement for your role (provider or deployer), in plain
+                language with article citations
               </li>
               <li>
-                <strong>Documentation Templates:</strong> Ready-to-use
-                compliance documents
+                <strong>Documentation Templates:</strong> Ready-to-edit Markdown
+                templates for Technical Documentation (Annex IV), Risk
+                Management Plan, Data Governance Policy, and more
               </li>
               <li>
-                <strong>Compliance Badge:</strong> Share your compliance status
+                <strong>Compliance Badge:</strong> An embeddable SVG badge
+                showing your classification, suitable for investor decks,
+                customer trust pages, and GitHub READMEs
               </li>
               <li>
-                <strong>Expert Guidance:</strong> Links to official regulations
-                and guidance
+                <strong>PDF Report:</strong> A downloadable assessment summary
+                for your team, legal counsel, or auditors
               </li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
-              Important Disclaimer
+              Free to Start
             </h2>
             <p>
-              This tool is designed to provide general guidance based on the EU
-              AI Act. It is not legal advice. For legal questions specific to
-              your organization, please consult with a qualified legal expert
-              familiar with EU AI Act compliance.
+              The core assessment — risk classification, obligation checklist,
+              and compliance badge — is free with no signup required. For teams
+              managing multiple AI systems, we offer a Pro plan with unlimited
+              saved assessments, full documentation templates, PDF exports, API
+              access, and deadline reminders.
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
-              Always Free
+              Disclaimer
             </h2>
             <p>
-              We believe that compliance guidance should be free and accessible.
-              The EU AI Act Compliance Checker will remain completely free
-              forever. No hidden costs, no upsells, no premium features.
+              This tool provides informational guidance based on publicly
+              available EU AI Act text and does not constitute legal advice.
+              Results reflect our interpretation of Regulation 2024/1689 and
+              may not account for implementing acts, delegated regulations, or
+              jurisdiction-specific guidance issued after our last update.
+              Consult a qualified legal professional before making compliance
+              decisions that affect your organization.
             </p>
           </div>
         </div>

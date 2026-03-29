@@ -22,7 +22,8 @@ export default function DeadlineCountdown() {
             Key EU AI Act Deadlines
           </h2>
           <p className="mt-4 text-xl text-slate-600">
-            Time is running out. Here are the critical compliance dates.
+            Each phase carries real enforcement teeth. Know which deadlines
+            apply to your AI system before they pass.
           </p>
         </div>
 

@@ -6,7 +6,7 @@ import QuestionnaireShell from "@/components/checker/QuestionnaireShell";
 export const metadata: Metadata = {
   title: "EU AI Act Risk Assessment",
   description:
-    "Complete the 12-question questionnaire to classify your AI system under the EU AI Act.",
+    "Classify your AI system under the EU AI Act in 12 questions. Receive your risk level, obligation checklist, and compliance badge. Free, no account needed.",
 };
 
 export default function CheckerPage() {
