@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db/client";
 import RiskClassificationBanner from "@/components/results/RiskClassificationBanner";
