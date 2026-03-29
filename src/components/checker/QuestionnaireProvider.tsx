@@ -96,6 +96,32 @@ function buildProhibitedResult(
   };
 }
 
+function buildCompleteState(
+  state: QuestionnaireState,
+  newAnswers: AssessmentAnswers,
+): QuestionnaireState {
+  return {
+    ...state,
+    answers: newAnswers,
+    isComplete: true,
+    result: classify(newAnswers),
+    questionHistory: [...state.questionHistory],
+  };
+}
+
+function buildNextState(
+  state: QuestionnaireState,
+  newAnswers: AssessmentAnswers,
+  nextId: string,
+): QuestionnaireState {
+  return {
+    ...state,
+    answers: newAnswers,
+    currentQuestionId: nextId,
+    questionHistory: [...state.questionHistory, nextId],
+  };
+}
+
 function handleAnswerQuestion(
   state: QuestionnaireState,
   questionId: string,
@@ -105,41 +131,22 @@ function handleAnswerQuestion(
   if (!question) return state;
 
   const answerKey = getAnswerKey(questionId);
-  const newAnswers = {
-    ...state.answers,
-    [answerKey]: answer,
-  } as AssessmentAnswers;
+  const newAnswers = { ...state.answers, [answerKey]: answer } as AssessmentAnswers;
 
-  if (questionId === "q1_is_ai" && answer === "no") {
+  if (questionId === "q1_is_ai" && answer === "no")
     return buildNonAiResult(state, newAnswers);
-  }
 
   if (questionId === "q4_prohibited") {
     const prohibitedResult = buildProhibitedResult(state, newAnswers, answer);
     if (prohibitedResult) return prohibitedResult;
   }
 
-  const answerStr = Array.isArray(answer)
-    ? (answer as string[])[0]
-    : String(answer);
+  const answerStr = Array.isArray(answer) ? (answer as string[])[0] : String(answer);
   const nextId = question.next ? question.next(answerStr) : null;
 
-  if (!nextId) {
-    return {
-      ...state,
-      answers: newAnswers,
-      isComplete: true,
-      result: classify(newAnswers),
-      questionHistory: [...state.questionHistory],
-    };
-  }
-
-  return {
-    ...state,
-    answers: newAnswers,
-    currentQuestionId: nextId,
-    questionHistory: [...state.questionHistory, nextId],
-  };
+  return nextId
+    ? buildNextState(state, newAnswers, nextId)
+    : buildCompleteState(state, newAnswers);
 }
 
 function reducer(

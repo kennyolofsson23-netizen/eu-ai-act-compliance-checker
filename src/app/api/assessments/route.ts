@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ assessments });
   } catch (err: unknown) {
-    void err; // Error captured; generic response prevents detail leakage
+    console.error("[assessments]", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
   try {
     // Rate limiting
     const rawIp = request.headers.get("x-forwarded-for");
-    const ip = rawIp ? rawIp.split(",")[0].trim() : "anonymous";
+    const ip = rawIp ? rawIp.split(",").at(-1)!.trim() : "anonymous";
     const session = await auth();
     const userId = session?.user?.id;
 
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch (err: unknown) {
-    void err; // Error captured; generic response prevents detail leakage
+    console.error("[assessments]", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

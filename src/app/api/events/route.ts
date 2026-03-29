@@ -5,7 +5,7 @@ import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit/limiter";
 
 export async function POST(request: NextRequest) {
   const rawIp = request.headers.get("x-forwarded-for");
-  const ip = rawIp ? rawIp.split(",")[0].trim() : "anonymous";
+  const ip = rawIp ? rawIp.split(",").at(-1)!.trim() : "anonymous";
   const rl = await rateLimit(
     `events_${ip}`,
     RATE_LIMITS.EVENTS.limit,

@@ -63,7 +63,7 @@ export async function GET(
       updatedAt: assessment.updatedAt,
     });
   } catch (err: unknown) {
-    void err;
+    console.error("[assessments/id]", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -109,7 +109,7 @@ export async function PATCH(
       updatedAt: updated.updatedAt,
     });
   } catch (err: unknown) {
-    void err;
+    console.error("[assessments/id]", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -137,7 +137,7 @@ export async function DELETE(
     await prisma.assessment.delete({ where: { id } });
     return new NextResponse(null, { status: 204 });
   } catch (err: unknown) {
-    void err;
+    console.error("[assessments/id]", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
