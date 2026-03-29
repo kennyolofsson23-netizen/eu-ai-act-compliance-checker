@@ -1,89 +1,79 @@
-'use client'
+import Link from 'next/link'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
-import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+const faqs = [
+  {
+    question: 'What is the EU AI Act?',
+    answer: 'The EU AI Act (Regulation 2024/1689) is the world\'s first comprehensive AI regulation. It establishes a risk-based framework that classifies AI systems into four categories — Unacceptable, High, Limited, and Minimal risk — each with different obligations. It applies to any organization that develops, deploys, imports, or distributes AI systems that affect people in the EU.',
+  },
+  {
+    question: 'Who does the EU AI Act apply to?',
+    answer: 'The EU AI Act applies to providers (developers), deployers, importers, and distributors of AI systems whose outputs are used within the EU — regardless of where the organization is based. If your AI system affects EU residents, the Act likely applies to you.',
+  },
+  {
+    question: 'What are the key deadlines?',
+    answer: 'Prohibited AI practices became enforceable on February 2, 2025. GPAI model obligations (including large language models) apply from August 2, 2025. High-risk AI system obligations and transparency requirements are fully enforceable from August 2, 2026.',
+  },
+  {
+    question: 'What are the fines for non-compliance?',
+    answer: 'Fines can reach up to 7% of global annual turnover (capped at €35M) for deploying prohibited AI practices, 3% (€15M cap) for violating high-risk AI obligations, and 1.5% (€7.5M cap) for providing incorrect information to authorities.',
+  },
+  {
+    question: 'Is this tool free to use?',
+    answer: 'Yes — the core questionnaire, risk classification, obligation checklist, and compliance badge are completely free. No credit card required, no account needed to complete an assessment.',
+  },
+  {
+    question: 'Is the result of this tool legally binding?',
+    answer: 'No. This tool provides educational guidance based on publicly available information about the EU AI Act. The results are not legal advice. You should consult qualified legal counsel for compliance decisions affecting your business.',
+  },
+  {
+    question: 'What is a High-Risk AI system?',
+    answer: 'High-risk AI systems are those that could significantly impact people\'s lives, safety, or fundamental rights. They include AI systems used in employment decisions, credit scoring, education assessment, biometric identification, law enforcement, and more (listed in Annex III). They also include AI that serves as a safety component in products regulated by EU harmonised legislation.',
+  },
+  {
+    question: 'What does "GPAI" mean?',
+    answer: 'GPAI stands for General Purpose AI — AI models trained on large amounts of data to perform a wide range of tasks, such as large language models (GPT, Claude, Llama). GPAI providers have specific obligations under the EU AI Act including technical documentation, copyright compliance, and transparency with downstream providers.',
+  },
+]
 
 export default function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
-
-  const faqs = [
-    {
-      question: 'What is the EU AI Act?',
-      answer: 'The EU AI Act is a comprehensive regulatory framework for artificial intelligence that establishes rules based on risk levels. It went into force on December 12, 2024, with full applicability by August 2, 2026.'
-    },
-    {
-      question: 'How long does the assessment take?',
-      answer: 'The assessment takes approximately 5-10 minutes depending on how familiar you are with your AI system. All 12 questions must be answered for accurate classification.'
-    },
-    {
-      question: 'Is this tool free forever?',
-      answer: 'Yes! The EU AI Act Compliance Checker is completely free and will remain free. There are no hidden costs, subscription fees, or premium features.'
-    },
-    {
-      question: 'What risk categories are there?',
-      answer: 'The EU AI Act defines four risk levels: (1) Unacceptable Risk - prohibited systems, (2) High Risk - systems requiring extensive compliance, (3) Limited Risk - transparency requirements, and (4) Minimal Risk - minimal requirements.'
-    },
-    {
-      question: 'Can I use this assessment for official documentation?',
-      answer: 'This tool provides guidance and templates to help you understand your obligations. For official compliance documentation, we recommend consulting with legal experts familiar with the EU AI Act.'
-    },
-    {
-      question: 'How often is this tool updated?',
-      answer: 'We continuously monitor EU AI Act guidance documents and update our assessment criteria to reflect the latest regulatory interpretation from the European Commission and regulatory bodies.'
-    }
-  ]
-
   return (
-    <section id="faq" className="py-20 md:py-32 bg-white">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-slate-600">
-            Have questions about EU AI Act compliance?
+    <section id="faq" className="py-20 md:py-32 bg-slate-50" aria-labelledby="faq-heading">
+      <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 id="faq-heading" className="text-4xl font-bold text-slate-900">
+            Frequently Asked Questions
+          </h2>
+          <p className="mt-4 text-lg text-slate-600">
+            Everything you need to know about EU AI Act compliance.
           </p>
         </div>
 
-        <div className="space-y-4">
+        <Accordion type="single" collapsible className="w-full space-y-2">
           {faqs.map((faq, index) => (
-            <div key={index} className="border border-slate-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-4 text-left font-semibold flex items-center justify-between hover:bg-slate-50 transition-colors"
-              >
-                <span>{faq.question}</span>
-                <ChevronDown
-                  className={`w-5 h-5 text-slate-600 transition-transform ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-              {openIndex === index && (
-                <div className="px-6 py-4 bg-slate-50 border-t text-slate-700">
-                  {faq.answer}
-                </div>
-              )}
-            </div>
+            <AccordionItem
+              key={index}
+              value={`item-${index}`}
+              className="bg-white rounded-lg border border-slate-200 px-4"
+            >
+              <AccordionTrigger className="text-left font-medium text-slate-900 no-underline hover:no-underline">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-slate-600 leading-relaxed">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
 
-        {/* FAQ Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'FAQPage',
-              mainEntity: faqs.map(faq => ({
-                '@type': 'Question',
-                name: faq.question,
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: faq.answer
-                }
-              }))
-            })
-          }}
-        />
+        <div className="mt-10 text-center">
+          <p className="text-slate-600">
+            Still have questions?{' '}
+            <Link href="/about" className="text-blue-600 hover:underline font-medium">
+              Learn more about the EU AI Act
+            </Link>
+          </p>
+        </div>
       </div>
     </section>
   )

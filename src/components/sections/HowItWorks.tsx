@@ -1,66 +1,55 @@
-'use client'
+import { ClipboardList, BarChart3, FileDown } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+const steps = [
+  {
+    number: '1',
+    icon: ClipboardList,
+    title: 'Answer 12 Questions',
+    description: 'Our branching questionnaire covers your AI system type, domain, functions, and role. Takes 3 minutes.',
+  },
+  {
+    number: '2',
+    icon: BarChart3,
+    title: 'Get Your Classification',
+    description: 'Instantly receive your risk level (Unacceptable, High, Limited, or Minimal) with specific EU AI Act article citations.',
+  },
+  {
+    number: '3',
+    icon: FileDown,
+    title: 'Download Your Checklist',
+    description: 'Get an actionable obligation checklist, downloadable PDF report, and embeddable compliance badge.',
+  },
+]
 
 export default function HowItWorks() {
-  const steps = [
-    {
-      number: '1',
-      title: 'Answer 12 Questions',
-      description: 'Tell us about your AI system: what it does, who uses it, and what data it processes'
-    },
-    {
-      number: '2',
-      title: 'Get Risk Classification',
-      description: 'Instantly see if your system is unacceptable risk, high-risk, limited risk, or minimal risk'
-    },
-    {
-      number: '3',
-      title: 'View Obligations',
-      description: 'See a detailed checklist of everything you must do to comply with the EU AI Act'
-    },
-    {
-      number: '4',
-      title: 'Download Documentation',
-      description: 'Get ready-to-use templates and guidance for compliance documentation'
-    }
-  ]
-
   return (
-    <section id="how-it-works" className="py-20 md:py-32 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="py-20 md:py-32 bg-white" aria-labelledby="how-it-works-heading">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">How It Works</h2>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Get compliance-ready in 4 simple steps
+          <h2 id="how-it-works-heading" className="text-4xl font-bold text-slate-900">
+            How It Works
+          </h2>
+          <p className="mt-4 text-xl text-slate-600 max-w-2xl mx-auto">
+            From AI system to compliance checklist in three straightforward steps.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           {steps.map((step, index) => (
-            <div key={index} className="relative">
-              <div className="bg-white p-6 rounded-lg border border-slate-200 h-full">
-                <div className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center mb-4">
-                  {step.number}
-                </div>
-                <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                <p className="text-slate-600 text-sm">{step.description}</p>
-              </div>
+            <div key={step.number} className="relative text-center">
               {index < steps.length - 1 && (
-                <div className="hidden lg:flex absolute -right-3 top-12 text-slate-300">
-                  <ArrowRight className="w-6 h-6" />
-                </div>
+                <div className="hidden md:block absolute top-8 left-[calc(50%+40px)] right-[-50%] h-px bg-slate-200" aria-hidden="true" />
               )}
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600 text-white text-xl font-bold mb-4">
+                {step.number}
+              </div>
+              <div className="flex justify-center mb-3">
+                <step.icon className="h-7 w-7 text-blue-600" aria-hidden="true" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">{step.title}</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
             </div>
           ))}
-        </div>
-
-        <div className="text-center">
-          <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Link href="/checker">Start Your Assessment Now</Link>
-          </Button>
         </div>
       </div>
     </section>
