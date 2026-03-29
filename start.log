@@ -1,0 +1,12 @@
+
+> eu-ai-act-compliance-checker@0.1.0 start
+> next start
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3100
+
+ ✓ Starting...
+ ✓ Ready in 206ms
+[31m[auth][error][0m UntrustedHost: Host must be trusted. URL was: http://localhost:3000/api/auth/session. Read more at https://errors.authjs.dev#untrustedhost
+    at C:\Users\Kenny\projects\eu-ai-act-checker\.next\server\chunks\683.js:404:54005
+    at oe (C:\Users\Kenny\projects\eu-ai-act-checker\.next\server\chunks\683.js:404:56680)
