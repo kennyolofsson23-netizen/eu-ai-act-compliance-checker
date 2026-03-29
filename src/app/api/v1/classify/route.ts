@@ -30,13 +30,17 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() ??
       request.headers.get("x-real-ip") ??
       "anonymous";
-    const rl = await rateLimit(
-      `classify_${ip}`,
-      RATE_LIMITS.API_ANONYMOUS.limit,
-      RATE_LIMITS.API_ANONYMOUS.windowMs,
-    );
-    if (!rl.success) {
-      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    try {
+      const rl = await rateLimit(
+        `classify_${ip}`,
+        RATE_LIMITS.API_ANONYMOUS.limit,
+        RATE_LIMITS.API_ANONYMOUS.windowMs,
+      );
+      if (!rl.success) {
+        return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+      }
+    } catch {
+      // rate limiting unavailable — proceed without it
     }
 
     const body = await request.json();

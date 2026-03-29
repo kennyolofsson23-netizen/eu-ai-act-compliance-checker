@@ -62,16 +62,20 @@ export async function rateLimit(
 ): Promise<RateLimitResult> {
   const redis = getRedisClient();
   if (redis) {
-    const rl = new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(limit, `${windowMs}ms` as `${number}ms`),
-    });
-    const result = await rl.limit(identifier);
-    return {
-      success: result.success,
-      remaining: result.remaining,
-      reset: result.reset,
-    };
+    try {
+      const rl = new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(limit, `${windowMs}ms` as `${number}ms`),
+      });
+      const result = await rl.limit(identifier);
+      return {
+        success: result.success,
+        remaining: result.remaining,
+        reset: result.reset,
+      };
+    } catch {
+      // Redis connection failed — fall through to in-memory fallback
+    }
   }
   return inMemoryRateLimit(identifier, limit, windowMs);
 }

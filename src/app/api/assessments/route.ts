@@ -44,21 +44,30 @@ export async function POST(request: NextRequest) {
     // Rate limiting
     const rawIp = request.headers.get("x-forwarded-for");
     const ip = rawIp ? rawIp.split(",").at(-1)!.trim() : "anonymous";
-    const session = await auth();
-    const userId = session?.user?.id;
+    // Auth is optional — DB may not be available in serverless
+    let userId: string | undefined;
+    try {
+      const session = await auth();
+      userId = session?.user?.id;
+    } catch {
+      // auth failed (likely DB unavailable) — proceed as anonymous
+    }
 
-    const rl = await rateLimit(
-      userId ? `assessment_auth_${userId}` : `assessment_anon_${ip}`,
-      userId
-        ? RATE_LIMITS.ASSESSMENT_CREATE_AUTH.limit
-        : RATE_LIMITS.ASSESSMENT_CREATE_ANON.limit,
-      userId
-        ? RATE_LIMITS.ASSESSMENT_CREATE_AUTH.windowMs
-        : RATE_LIMITS.ASSESSMENT_CREATE_ANON.windowMs,
-    );
-
-    if (!rl.success) {
-      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    try {
+      const rl = await rateLimit(
+        userId ? `assessment_auth_${userId}` : `assessment_anon_${ip}`,
+        userId
+          ? RATE_LIMITS.ASSESSMENT_CREATE_AUTH.limit
+          : RATE_LIMITS.ASSESSMENT_CREATE_ANON.limit,
+        userId
+          ? RATE_LIMITS.ASSESSMENT_CREATE_AUTH.windowMs
+          : RATE_LIMITS.ASSESSMENT_CREATE_ANON.windowMs,
+      );
+      if (!rl.success) {
+        return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+      }
+    } catch {
+      // rate limiting failed — proceed without it
     }
 
     const body = await request.json();
