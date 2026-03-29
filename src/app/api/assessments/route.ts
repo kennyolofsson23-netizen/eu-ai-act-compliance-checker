@@ -75,35 +75,52 @@ export async function POST(request: NextRequest) {
     // Run classification
     const result = classify(answers);
 
-    // Store in DB
-    const assessment = await prisma.assessment.create({
-      data: {
-        userId: userId || null,
-        anonymousId: userId ? null : anonymousId || null,
-        systemName: systemName || "Untitled AI System",
-        answers: JSON.stringify(answers),
-        riskLevel: result.riskLevel,
-        role: (answers.role as string) || "provider",
-        isGpai: Boolean(answers.isGpai),
-        annexCategory: result.annexCategory || null,
-        citedArticles: JSON.stringify(result.citedArticles),
-        obligations: JSON.stringify(result.obligations),
-      },
-    });
+    // Attempt to store in DB — gracefully degrade if DB is unavailable
+    let assessmentId: string | null = null;
+    let savedSystemName = systemName || "Untitled AI System";
+    let savedRole = (answers.role as string) || "provider";
+    let savedIsGpai = Boolean(answers.isGpai);
+    let savedCreatedAt = new Date();
+
+    try {
+      const assessment = await prisma.assessment.create({
+        data: {
+          userId: userId || null,
+          anonymousId: userId ? null : anonymousId || null,
+          systemName: savedSystemName,
+          answers: JSON.stringify(answers),
+          riskLevel: result.riskLevel,
+          role: savedRole,
+          isGpai: savedIsGpai,
+          annexCategory: result.annexCategory || null,
+          citedArticles: JSON.stringify(result.citedArticles),
+          obligations: JSON.stringify(result.obligations),
+        },
+      });
+      assessmentId = assessment.id;
+      savedSystemName = assessment.systemName;
+      savedRole = assessment.role;
+      savedIsGpai = assessment.isGpai;
+      savedCreatedAt = assessment.createdAt;
+    } catch (dbErr: unknown) {
+      console.warn("[assessments] DB unavailable, returning stateless result:", dbErr);
+      // Generate a temporary ID for badge URL — not persisted
+      assessmentId = `tmp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    }
 
     return NextResponse.json(
       {
-        id: assessment.id,
-        systemName: assessment.systemName,
+        id: assessmentId,
+        systemName: savedSystemName,
         riskLevel: result.riskLevel,
-        role: assessment.role,
-        isGpai: assessment.isGpai,
+        role: savedRole,
+        isGpai: savedIsGpai,
         annexCategory: result.annexCategory,
         citedArticles: result.citedArticles,
         obligations: result.obligations,
         reasoning: result.reasoning,
-        badgeUrl: `/api/badge/${assessment.id}`,
-        createdAt: assessment.createdAt,
+        badgeUrl: assessmentId ? `/api/badge/${assessmentId}` : null,
+        createdAt: savedCreatedAt,
       },
       { status: 201 },
     );
