@@ -1,0 +1,343 @@
+[
+  {
+    "id": "F000",
+    "name": "Shared Infrastructure",
+    "priority": "infra",
+    "description": "Database schema, TypeScript types, auth config, layouts, constants, and shared UI components",
+    "acceptanceCriteria": [
+      "Prisma schema migrates successfully and creates all tables (User, Account, Session, VerificationToken, Assessment, ApiKey, AssessmentEvent)",
+      "TypeScript types compile with no errors for all engine data structures",
+      "NextAuth config supports email/password and Google OAuth login",
+      "Root layout renders Header and Footer on all pages",
+      "Dashboard layout renders sidebar and redirects unauthenticated users to /auth/login",
+      "Tailwind CSS and all Radix UI primitives render correctly",
+      "Zod validation schemas are importable from lib/validation/schemas.ts",
+      "Rate limiter middleware is configured and functional",
+      "Environment variables are validated on startup"
+    ],
+    "dependencies": [],
+    "files": {
+      "prismaSchema": "prisma/schema.prisma",
+      "dbClient": "src/lib/db/client.ts",
+      "engineTypes": "src/lib/engine/types.ts",
+      "authConfig": "src/lib/auth/config.ts",
+      "authProviders": "src/lib/auth/providers.ts",
+      "authHelpers": "src/lib/auth/helpers.ts",
+      "validationSchemas": "src/lib/validation/schemas.ts",
+      "rateLimiter": "src/lib/rate-limit/limiter.ts",
+      "constants": "src/lib/constants.ts",
+      "utils": "src/lib/utils.ts",
+      "rootLayout": "src/app/layout.tsx",
+      "globalStyles": "src/app/globals.css",
+      "header": "src/components/layout/Header.tsx",
+      "footer": "src/components/layout/Footer.tsx",
+      "dashboardLayout": "src/app/dashboard/layout.tsx",
+      "dashboardSidebar": "src/components/layout/DashboardSidebar.tsx",
+      "authGuard": "src/components/layout/AuthGuard.tsx",
+      "buttonUi": "src/components/ui/button.tsx",
+      "cardUi": "src/components/ui/card.tsx",
+      "inputUi": "src/components/ui/input.tsx",
+      "labelUi": "src/components/ui/label.tsx",
+      "selectUi": "src/components/ui/select.tsx",
+      "dialogUi": "src/components/ui/dialog.tsx",
+      "badgeUi": "src/components/ui/badge.tsx",
+      "accordionUi": "src/components/ui/accordion.tsx",
+      "progressUi": "src/components/ui/progress.tsx",
+      "toastUi": "src/components/ui/toast.tsx",
+      "skeletonUi": "src/components/ui/skeleton.tsx",
+      "separatorUi": "src/components/ui/separator.tsx",
+      "tabsUi": "src/components/ui/tabs.tsx",
+      "dropdownMenuUi": "src/components/ui/dropdown-menu.tsx",
+      "nextAuthRoute": "src/app/api/auth/[...nextauth]/route.ts",
+      "registerRoute": "src/app/api/auth/register/route.ts"
+    }
+  },
+  {
+    "id": "F001",
+    "name": "Risk Classification Questionnaire",
+    "priority": "P0",
+    "description": "12-question branching questionnaire that classifies an AI system into unacceptable/high/limited/minimal risk",
+    "acceptanceCriteria": [
+      "Given a user lands on /checker, When the page loads, Then they see Question 1 with no signup required",
+      "Given a user is on any question, When they select an answer, Then the next relevant question appears via branching logic",
+      "Given a user answers a question indicating a prohibited practice, When the questionnaire detects this, Then it short-circuits to Unacceptable Risk classification immediately with explanation",
+      "Given a user completes all applicable questions, When results are calculated, Then the classification is one of: Unacceptable, High, Limited, or Minimal risk",
+      "Given a user reaches the results page, When results display, Then the specific EU AI Act articles triggering that classification are cited",
+      "Given a user refreshes the page mid-questionnaire, When the page reloads, Then their progress is preserved via URL state or localStorage"
+    ],
+    "dependencies": ["F000"],
+    "files": {
+      "engine": "src/lib/engine/classifier.ts",
+      "questions": "src/lib/engine/questions.ts",
+      "articles": "src/lib/engine/articles.ts",
+      "provider": "src/components/checker/QuestionnaireProvider.tsx",
+      "shell": "src/components/checker/QuestionnaireShell.tsx",
+      "questionCard": "src/components/checker/QuestionCard.tsx",
+      "progressBar": "src/components/checker/ProgressBar.tsx",
+      "ui": "src/app/checker/page.tsx",
+      "tests": "src/__tests__/unit/engine/classifier.test.ts"
+    }
+  },
+  {
+    "id": "F002",
+    "name": "Obligation Checklist",
+    "priority": "P0",
+    "description": "Display specific actionable obligation checklist based on risk classification and user role",
+    "acceptanceCriteria": [
+      "Given a user is classified as High Risk, When the results page loads, Then they see a checklist with all applicable obligations including Art. 9, 10, 11, 12, 13, 14, 15, 17, 43, 49, 72",
+      "Given a user is classified as Limited Risk, When the results page loads, Then they see only transparency obligations (Art. 50) applicable to their system type",
+      "Given a user is classified as Minimal Risk, When the results page loads, Then they see No mandatory obligations with a recommendation to follow voluntary codes of conduct",
+      "Given a user is classified as Unacceptable Risk, When the results page loads, Then they see a clear warning that this AI practice is prohibited with the specific Article 5 provision cited",
+      "Given any obligation item, When the user clicks it, Then an expandable section shows a plain-language explanation, the exact article reference, and a what this means in practice summary",
+      "Given a user is a deployer not provider, When obligations display, Then only deployer-specific obligations are shown"
+    ],
+    "dependencies": ["F000", "F001"],
+    "files": {
+      "engine": "src/lib/engine/obligations.ts",
+      "checklist": "src/components/results/ObligationChecklist.tsx",
+      "obligationItem": "src/components/results/ObligationItem.tsx",
+      "banner": "src/components/results/RiskClassificationBanner.tsx",
+      "citations": "src/components/results/ArticleCitations.tsx",
+      "disclaimer": "src/components/results/DisclaimerBanner.tsx",
+      "resultsPage": "src/app/checker/results/page.tsx",
+      "tests": "src/__tests__/unit/engine/obligations.test.ts"
+    }
+  },
+  {
+    "id": "F003",
+    "name": "Shareable Compliance Badge",
+    "priority": "P0",
+    "description": "Unique URL that renders an SVG badge showing the AI system's risk classification level",
+    "acceptanceCriteria": [
+      "Given a user completes an assessment, When results display, Then a badge preview is shown with the classification level and date",
+      "Given a user clicks Copy Badge URL, When the URL is copied, Then it points to /api/badge/[assessmentId] which returns an SVG image",
+      "Given a badge URL is requested, When the server responds, Then it returns a valid SVG with risk level color-coded, assessment date, and EU AI Act label",
+      "Given the badge is embedded in an external site via img tag, When rendered, Then it displays correctly at any size with crisp text",
+      "Given a user has not created an account, When they generate a badge, Then the badge uses an anonymous assessment ID stored in a cookie or localStorage with a 90-day expiration",
+      "Badge colors are: Unacceptable red #DC2626, High orange #EA580C, Limited yellow #CA8A04, Minimal green #16A34A"
+    ],
+    "dependencies": ["F000", "F001"],
+    "files": {
+      "generator": "src/lib/badge/generator.ts",
+      "preview": "src/components/results/BadgePreview.tsx",
+      "api": "src/app/api/badge/[id]/route.ts",
+      "tests": "src/__tests__/unit/badge/generator.test.ts"
+    }
+  },
+  {
+    "id": "F004",
+    "name": "Results Summary & PDF Export",
+    "priority": "P0",
+    "description": "Export the full assessment as a downloadable PDF with classification, obligations, and article references",
+    "acceptanceCriteria": [
+      "Given a user is on the results page, When they click Download PDF, Then a PDF is generated and downloaded containing system description, risk classification with reasoning, full obligation checklist, applicable article references, and assessment date",
+      "Given the PDF is generated, When opened, Then it includes a header with EU AI Act Compliance Assessment and a footer with the tool URL and disclaimer",
+      "Given the PDF is generated, When reviewed, Then it contains a disclaimer stating this is an informational tool and not legal advice"
+    ],
+    "dependencies": ["F000", "F001", "F002"],
+    "files": {
+      "generator": "src/lib/pdf/generator.tsx",
+      "actions": "src/components/results/ResultsActions.tsx",
+      "api": "src/app/api/assessments/[id]/pdf/route.ts",
+      "tests": "src/__tests__/unit/pdf/generator.test.ts"
+    }
+  },
+  {
+    "id": "F005",
+    "name": "Landing Page & SEO",
+    "priority": "P0",
+    "description": "Marketing landing page with hero, features, FAQ, deadline countdown, and SEO optimization",
+    "acceptanceCriteria": [
+      "Given a user visits /, When the page loads, Then they see a headline communicating the value prop, a Start Assessment CTA above the fold, a brief explanation of the EU AI Act with key deadlines, and social proof",
+      "Given search engine crawlers index the page, When /robots.txt and /sitemap.xml are requested, Then they return valid responses including all public pages",
+      "Given a user visits /, When they view the page, Then the meta title is EU AI Act Compliance Checker — Free Risk Classification Tool",
+      "Given a user on mobile visits /, When the page loads, Then all content is readable and the CTA is tappable without horizontal scrolling"
+    ],
+    "dependencies": ["F000"],
+    "files": {
+      "page": "src/app/page.tsx",
+      "hero": "src/components/sections/Hero.tsx",
+      "howItWorks": "src/components/sections/HowItWorks.tsx",
+      "features": "src/components/sections/Features.tsx",
+      "countdown": "src/components/sections/DeadlineCountdown.tsx",
+      "faq": "src/components/sections/FAQ.tsx",
+      "socialProof": "src/components/sections/SocialProof.tsx",
+      "robots": "src/app/robots.ts",
+      "sitemap": "src/app/sitemap.ts"
+    }
+  },
+  {
+    "id": "F006",
+    "name": "Assessment Persistence API",
+    "priority": "P0",
+    "description": "API routes to create, read, list, update, and delete assessments in the database",
+    "acceptanceCriteria": [
+      "Given a user completes an assessment, When POST /api/assessments is called, Then the assessment is stored in the database and returned with an ID",
+      "Given an authenticated user, When GET /api/assessments is called, Then all their assessments are returned sorted by updatedAt descending",
+      "Given a valid assessment ID, When GET /api/assessments/[id] is called, Then the full assessment is returned if the caller is the owner or anonymous ID matches",
+      "Given an authenticated user, When DELETE /api/assessments/[id] is called, Then the assessment is deleted if they are the owner",
+      "Given an authenticated user, When PATCH /api/assessments/[id] is called, Then the assessment name or emailReminders can be updated"
+    ],
+    "dependencies": ["F000"],
+    "files": {
+      "listCreate": "src/app/api/assessments/route.ts",
+      "getUpdateDelete": "src/app/api/assessments/[id]/route.ts",
+      "tests": "src/__tests__/unit/api/assessments.test.ts"
+    }
+  },
+  {
+    "id": "F007",
+    "name": "Documentation Templates",
+    "priority": "P1",
+    "description": "Downloadable Markdown templates for required compliance documentation based on risk classification",
+    "acceptanceCriteria": [
+      "Given a user is classified as High Risk, When they view the results page, Then they see a Documentation Templates section with templates for Technical Documentation, Risk Management Plan, Data Governance Policy, Human Oversight Protocol, and Post-Market Monitoring Plan",
+      "Given a user clicks a template, When it downloads, Then it contains structured sections with placeholder text, guidance comments, and references to the relevant articles",
+      "Given a user is classified as Limited Risk, When they view templates, Then only the Transparency Disclosure template is offered",
+      "Given a user is classified as Minimal Risk, When they view templates, Then no templates are shown and only voluntary code of conduct guidance appears"
+    ],
+    "dependencies": ["F000", "F002"],
+    "files": {
+      "technicalDoc": "src/lib/templates/technical-documentation.ts",
+      "riskMgmt": "src/lib/templates/risk-management.ts",
+      "dataGov": "src/lib/templates/data-governance.ts",
+      "humanOversight": "src/lib/templates/human-oversight.ts",
+      "postMarket": "src/lib/templates/post-market-monitoring.ts",
+      "transparency": "src/lib/templates/transparency-disclosure.ts",
+      "api": "src/app/api/templates/[templateId]/route.ts",
+      "tests": "src/__tests__/unit/templates/templates.test.ts"
+    }
+  },
+  {
+    "id": "F008",
+    "name": "User Accounts & Saved Assessments",
+    "priority": "P1",
+    "description": "Optional account creation to save, manage, and track multiple AI system assessments over time",
+    "acceptanceCriteria": [
+      "Given a user completes an assessment without an account, When they click Save Assessment, Then they are prompted to create an account via email/password or Google OAuth",
+      "Given a user creates an account, When they log in, Then they see a dashboard listing all their saved assessments with system name, classification, date, and last updated",
+      "Given a user clicks an existing assessment, When the detail page loads, Then they can view the full results, re-take the questionnaire, or delete the assessment",
+      "Given a user has multiple assessments, When they view the dashboard, Then assessments are sorted by last updated date newest first",
+      "Given a user deletes their account, When the deletion completes, Then all their data is permanently removed within 30 days"
+    ],
+    "dependencies": ["F000", "F006"],
+    "files": {
+      "loginPage": "src/app/auth/login/page.tsx",
+      "registerPage": "src/app/auth/register/page.tsx",
+      "dashboardPage": "src/app/dashboard/page.tsx",
+      "savedResultsPage": "src/app/checker/results/[id]/page.tsx",
+      "assessmentList": "src/components/dashboard/AssessmentList.tsx",
+      "assessmentCard": "src/components/dashboard/AssessmentCard.tsx",
+      "settingsPage": "src/app/dashboard/settings/page.tsx",
+      "tests": "src/__tests__/unit/api/auth.test.ts"
+    }
+  },
+  {
+    "id": "F009",
+    "name": "Assessment Comparison View",
+    "priority": "P1",
+    "description": "Side-by-side comparison of multiple assessments to prioritize compliance efforts",
+    "acceptanceCriteria": [
+      "Given a user has 2+ saved assessments, When they select 2-4 assessments and click Compare, Then a comparison table displays showing system name, risk level, applicable obligations with checkmarks, and key differences highlighted",
+      "Given the comparison view is displayed, When the user views it, Then obligations present in one assessment but not another are visually highlighted"
+    ],
+    "dependencies": ["F000", "F008"],
+    "files": {
+      "page": "src/app/dashboard/compare/page.tsx",
+      "table": "src/components/dashboard/ComparisonTable.tsx",
+      "tests": "src/__tests__/unit/components/comparison.test.ts"
+    }
+  },
+  {
+    "id": "F010",
+    "name": "Compliance Timeline",
+    "priority": "P2",
+    "description": "Visual timeline showing when each obligation becomes enforceable with countdown to deadlines",
+    "acceptanceCriteria": [
+      "Given a user views their results, When they click View Timeline, Then a visual timeline shows key dates with the user's relevant dates highlighted",
+      "Given the current date is before a deadline, When the timeline renders, Then the upcoming deadline shows a countdown in days remaining",
+      "Given the current date is past a deadline, When the timeline renders, Then that deadline shows In effect with a checkmark"
+    ],
+    "dependencies": ["F000", "F002"],
+    "files": {
+      "timeline": "src/components/results/ComplianceTimeline.tsx",
+      "tests": "src/__tests__/unit/components/timeline.test.ts"
+    }
+  },
+  {
+    "id": "F011",
+    "name": "Email Deadline Reminders",
+    "priority": "P2",
+    "description": "Opt-in email notifications sent at 90, 60, 30, and 7 days before compliance deadlines",
+    "acceptanceCriteria": [
+      "Given a user has an account and a saved assessment, When they toggle Email Reminders on, Then they receive emails at 90, 60, 30, and 7 days before each applicable deadline",
+      "Given a user receives a reminder email, When they click the link, Then they are taken to their assessment results page",
+      "Given a user toggles reminders off, When the toggle is saved, Then no further emails are sent"
+    ],
+    "dependencies": ["F000", "F008"],
+    "files": {
+      "emailService": "src/lib/email/reminders.ts",
+      "cronHandler": "src/app/api/cron/reminders/route.ts",
+      "tests": "src/__tests__/unit/email/reminders.test.ts"
+    }
+  },
+  {
+    "id": "F012",
+    "name": "Multi-Language Support",
+    "priority": "P2",
+    "description": "Questionnaire and results available in English, German, and French",
+    "acceptanceCriteria": [
+      "Given a user visits the site, When they click the language selector, Then they can choose English, German, or French",
+      "Given a user selects German, When the questionnaire loads, Then all questions, answers, results, and obligation descriptions are displayed in German",
+      "Given a user switches language mid-assessment, When the language changes, Then their progress is preserved and the current question re-renders in the new language"
+    ],
+    "dependencies": ["F000", "F001", "F002"],
+    "files": {
+      "i18nConfig": "src/lib/i18n/config.ts",
+      "enTranslations": "src/lib/i18n/locales/en.json",
+      "deTranslations": "src/lib/i18n/locales/de.json",
+      "frTranslations": "src/lib/i18n/locales/fr.json",
+      "languageSelector": "src/components/layout/LanguageSelector.tsx",
+      "tests": "src/__tests__/unit/i18n/translations.test.ts"
+    }
+  },
+  {
+    "id": "F013",
+    "name": "Public API Access",
+    "priority": "P2",
+    "description": "Public REST API for programmatic access to the classification engine with API key authentication",
+    "acceptanceCriteria": [
+      "Given a developer sends a POST request to /api/v1/classify with valid answers JSON, When the server processes it, Then it returns a JSON response with risk_level, applicable_obligations, cited_articles, and badge_url",
+      "Given a developer sends invalid or incomplete answers, When the server validates, Then it returns a 422 error with specific field-level validation messages",
+      "Given the API is called without an API key, When rate limiting is checked, Then anonymous requests are limited to 10/hour per IP",
+      "Given a developer has an account, When they generate an API key from their dashboard, Then authenticated requests are limited to 100/hour"
+    ],
+    "dependencies": ["F000", "F001", "F008"],
+    "files": {
+      "classifyRoute": "src/app/api/v1/classify/route.ts",
+      "keysRoute": "src/app/api/keys/route.ts",
+      "keysDeleteRoute": "src/app/api/keys/[id]/route.ts",
+      "keysPage": "src/app/dashboard/keys/page.tsx",
+      "apiKeyList": "src/components/dashboard/ApiKeyList.tsx",
+      "apiKeyDialog": "src/components/dashboard/ApiKeyCreateDialog.tsx",
+      "tests": "src/__tests__/unit/api/classify.test.ts"
+    }
+  },
+  {
+    "id": "F014",
+    "name": "Analytics Events",
+    "priority": "P0",
+    "description": "Track assessment events (started, completed, abandoned, pdf_downloaded, badge_copied) for success metrics",
+    "acceptanceCriteria": [
+      "Given a user starts an assessment, When the first question loads, Then a started event is recorded",
+      "Given a user completes an assessment, When results display, Then a completed event is recorded",
+      "Given a user downloads a PDF, When the download succeeds, Then a pdf_downloaded event is recorded",
+      "Given a user copies a badge URL, When the copy succeeds, Then a badge_copied event is recorded"
+    ],
+    "dependencies": ["F000"],
+    "files": {
+      "api": "src/app/api/events/route.ts",
+      "tests": "src/__tests__/unit/api/events.test.ts"
+    }
+  }
+]
