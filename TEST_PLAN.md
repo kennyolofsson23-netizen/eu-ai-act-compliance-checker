@@ -1,1079 +1,909 @@
 # TEST_PLAN.md — EU AI Act Compliance Checker
 
 > Generated: 2026-03-29
-> Coverage of SPEC.md acceptance criteria: **100%**
-> Toolchain: Vitest · React Testing Library · Playwright · fast-check
+> Spec version: SPEC.md (F1–F5 P0 launch scope)
+> Architecture version: ARCHITECTURE.md
+> Test runner: Vitest (unit/integration) · Playwright (E2E) · fast-check (property)
 
 ---
 
-## Table of Contents
+## 0. Acceptance Criterion → Test Traceability Matrix
 
-1. [Test Strategy & Pyramid](#1-test-strategy--pyramid)
-2. [Unit Tests](#2-unit-tests)
-3. [Integration Tests](#3-integration-tests)
-4. [End-to-End Tests](#4-end-to-end-tests)
-5. [Property-Based Tests](#5-property-based-tests)
-6. [Coverage Targets](#6-coverage-targets)
-7. [SPEC.md Acceptance Criteria Traceability](#7-specmd-acceptance-criteria-traceability)
+Every `F`-tagged acceptance criterion from SPEC.md is mapped to at least one test ID below.
+Tests are prefixed: `U` = unit, `I` = integration, `E` = E2E, `P` = property-based.
+
+| Spec Criterion | Test IDs |
+|---|---|
+| F1 – 12-question questionnaire renders all questions | E-QUEST-01, U-QUEST-01 |
+| F1 – Branching: Q1 "no" → instant minimal result | U-CLS-01, E-QUEST-02 |
+| F1 – Branching: Q4 prohibited → instant unacceptable result | U-CLS-02, E-QUEST-03 |
+| F1 – Branching: safety component → high risk | U-CLS-03, E-QUEST-04 |
+| F1 – Branching: high-risk domain + function → high risk | U-CLS-04, E-QUEST-05 |
+| F1 – Branching: narrow task overrides high-risk domain | U-CLS-05 |
+| F1 – Branching: interacts with humans → limited risk | U-CLS-06, E-QUEST-06 |
+| F1 – Branching: synthetic content → limited risk | U-CLS-07 |
+| F1 – Branching: emotion recognition → limited risk | U-CLS-08 |
+| F1 – Branching: simple recommendation → minimal risk | U-CLS-09 |
+| F1 – Progress bar advances correctly | E-QUEST-07, U-QUEST-02 |
+| F1 – Back navigation restores previous answer | E-QUEST-08, U-QUEST-03 |
+| F1 – State persists on page refresh (localStorage) | E-QUEST-09 |
+| F1 – System name captured and stored | I-ASSESS-01, E-QUEST-10 |
+| F2 – Obligation checklist shown after classification | E-RES-01, U-OBL-01 |
+| F2 – Obligations filtered by risk level and role | U-OBL-02, U-OBL-03 |
+| F2 – Article references link to EU-Lex | E-RES-02, U-ART-01 |
+| F2 – Unacceptable risk shows cease-practice obligation | U-OBL-04, E-RES-03 |
+| F2 – High-risk provider: 11 obligations displayed | U-OBL-05, E-RES-04 |
+| F2 – High-risk deployer: 2 obligations displayed | U-OBL-06 |
+| F2 – Limited risk: 1 transparency obligation | U-OBL-07 |
+| F2 – Minimal risk: 0 obligations | U-OBL-08, E-RES-05 |
+| F3 – Badge SVG generated for any completed assessment | I-BADGE-01, E-RES-06 |
+| F3 – Badge URL is shareable (public, no auth) | I-BADGE-02 |
+| F3 – Badge reflects correct risk level color | I-BADGE-03, U-CONST-01 |
+| F3 – Badge embed code copyable | E-RES-07 |
+| F4 – PDF export downloads for completed assessment | I-PDF-01, E-RES-10 |
+| F4 – PDF contains system name, risk level, obligations | I-PDF-02 |
+| F4 – PDF export requires valid assessment ID | I-PDF-03 |
+| F5 – Landing page loads with valid SEO metadata | E-LAND-01, U-SEO-01 |
+| F5 – FAQ section present with JSON-LD schema | E-LAND-02 |
+| F5 – Deadline countdown shows correct days | U-UTIL-01, E-LAND-03 |
+| F5 – CTA links to /checker | E-LAND-04 |
+| NFR – Page load < 1.5 s (LCP) | E-PERF-01 |
+| NFR – WCAG 2.1 AA: keyboard navigation | E-A11Y-01, E-A11Y-05 |
+| NFR – WCAG 2.1 AA: color contrast | E-A11Y-02 |
+| NFR – WCAG 2.1 AA: screen reader labels | E-A11Y-03 |
+| NFR – Rate limiting: anon 20/hr, auth 60/hr | I-RATE-01, I-RATE-02 |
+| NFR – Passwords hashed with bcrypt cost 12 | U-AUTH-01, I-AUTH-02 |
+| NFR – JWT stored in HTTP-only cookie | I-AUTH-09 |
+| NFR – Anonymous assessments work without login | I-ASSESS-02, E-QUEST-01 |
+| NFR – Assessment saved to DB for auth user | I-ASSESS-03, E-DASH-01 |
+| NFR – Input validation rejects malformed requests | I-ASSESS-04, I-AUTH-04 |
 
 ---
 
 ## 1. Test Strategy & Pyramid
 
-### Rationale
+### 1.1 Rationale
 
-The EU AI Act Compliance Checker has three distinct layers of complexity that dictate the pyramid shape:
-
-| Layer | Why it dominates here |
-|---|---|
-| **Unit (60%)** | The classification engine (`classifier.ts`), obligation mapper (`obligations.ts`), and questionnaire branching (`questions.ts`) are pure-function business logic — the entire legal correctness of the product lives here. Bugs here cause wrong legal advice. |
-| **Integration (25%)** | Every API route handles auth, Zod validation, rate-limiting, and DB writes simultaneously. These interactions must be tested together, not mocked into meaninglessness. |
-| **E2E (15%)** | Five critical user flows (complete questionnaire, download PDF, copy badge, save to account, share result) must work across real browsers. Kept lean because the UI is thin over the classification engine. |
+The compliance checker has a **pure-function engine core** (classifier, obligations, questions) that is
+deterministic and easily unit-tested. The UI is a relatively linear wizard. The primary risk is in the
+**classification logic** (legal correctness) and the **API contract** (data integrity across save/load).
+This drives a **bottom-heavy pyramid** with 100% branch coverage mandated on the engine.
 
 ```
-        ▲
-       /E2E\          ~15%   Playwright  — 9 flows × ~4 scenarios each
-      /──────\
-     / Integr \        ~25%   Vitest + supertest — 11 API routes
-    /──────────\
-   /    Unit    \      ~60%   Vitest — classifier, obligations, questions,
-  /──────────────\            validation schemas, badge SVG, PDF builder
-  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+         ┌─────────────┐
+         │   E2E (≈15%)│  ~25 scenarios · Playwright
+         ├─────────────┤
+         │  Intg (≈25%)│  ~45 cases · Vitest + direct route handlers
+         ├─────────────┤
+         │  Unit (≈60%)│  ~120 cases · Vitest
+         └─────────────┘
+           Property: ~12 candidates woven throughout all layers
 ```
 
-### Tools & Configuration
+Key principle: **the engine is a pure function with no I/O — no mocks are needed and 100% branch
+coverage is mandatory.** API-layer tests exercise real Zod validation, real rate-limit logic, and a
+real in-memory SQLite DB. E2E tests are reserved for cross-layer flows and accessibility.
+
+### 1.2 Toolchain
+
+| Layer | Tool | Config file |
+|---|---|---|
+| Unit + Integration | Vitest | `vitest.config.ts` |
+| Component | Vitest + @testing-library/react | same |
+| E2E | Playwright | `playwright.config.ts` |
+| Property | fast-check (via Vitest) | co-located with unit tests |
+| Coverage | Vitest v8 | thresholds in `vitest.config.ts` |
+| Accessibility | @axe-core/playwright | inside Playwright tests |
+
+### 1.3 Test Environments
+
+| Environment | DB | Auth | Notes |
+|---|---|---|---|
+| Unit | in-memory / mocked | mocked | No I/O |
+| Integration | SQLite `:memory:` | real NextAuth logic, mocked JWT sign | Prisma `migrate reset` before suite |
+| E2E | SQLite file `.test.db` | seeded test users | `playwright/global-setup.ts` seeds DB |
+
+### 1.4 CI Pipeline Order
 
 ```
-src/
-  __tests__/
-    unit/
-    integration/
-    property/
-  e2e/              # Playwright tests
-vitest.config.ts    # unit + integration
-playwright.config.ts
+lint → typecheck → unit → integration → e2e (chromium) → e2e (firefox) → coverage-gate
 ```
-
-**Vitest config highlights**
-- Environment: `jsdom` for component tests, `node` for API route tests
-- Setup file: `src/__tests__/setup.ts` — MSW server, Prisma mock, `vi.mock` stubs
-- Coverage provider: `v8`
-
-**Playwright config highlights**
-- Browsers: Chromium, Firefox, WebKit (covers Chrome/Firefox/Safari/Edge per SPEC §NFR-2)
-- Base URL: `http://localhost:3000` (CI) / staging URL (pre-prod)
-- `data-testid` selectors preferred over CSS/text selectors
 
 ---
 
 ## 2. Unit Tests
 
-### 2.1 `src/lib/classifier.ts`
+### 2.1 `src/lib/engine/classifier.ts`
 
-**What to test:** Every branch of the classification decision tree. This is the highest-value module — a wrong output gives legally incorrect advice.
+**File:** `src/__tests__/unit/engine/classifier.test.ts`
 
-#### Test file: `src/__tests__/unit/classifier.test.ts`
+**Strategy:** Exhaustive decision-tree coverage using table-driven tests. Every branch path must be
+exercised. The classifier is a pure function — zero mocks required.
 
-```
-classify()
-  ├── Prohibited practices (Q4 answers)
-  │   ├── returns "unacceptable" for each of the 6 prohibited-practice answers
-  │   ├── short-circuits — does NOT evaluate subsequent questions
-  │   └── role is irrelevant when prohibited (provider AND deployer both → unacceptable)
-  │
-  ├── High-risk — Annex II safety component (Q5 = yes)
-  │   ├── returns "high-risk" regardless of domain/function
-  │   └── all roles (provider / deployer / importer / distributor) → high-risk
-  │
-  ├── High-risk — Domain × Function matrix (Q6 + Q7)
-  │   ├── each of the 8 high-risk domains paired with a qualifying function → high-risk
-  │   ├── high-risk domain + non-qualifying function → limited-risk or minimal
-  │   └── non-high-risk domain → does NOT trigger high-risk path
-  │
-  ├── High-risk — profiles individuals (Q9 = yes)
-  │   ├── profiling in any domain → high-risk
-  │   └── profiling = false + other non-qualifying answers → not high-risk
-  │
-  ├── Narrow procedural task override (Q8 = yes)
-  │   ├── "narrow procedural" overrides domain match → limited or minimal
-  │   └── narrow procedural does NOT override prohibited or Annex II
-  │
-  ├── Limited-risk triggers (Q10, Q11, Q12)
-  │   ├── interacts with people (Q10=yes) → limited-risk
-  │   ├── generates synthetic content (Q11=yes) → limited-risk
-  │   ├── emotion recognition (Q12=yes) → limited-risk
-  │   └── all three false → minimal
-  │
-  ├── "Not an AI system" (Q1 = no)
-  │   └── returns "not-applicable" immediately
-  │
-  └── GPAI model (Q3 = yes)
-      ├── no prohibited flags → "gpai" classification
-      └── GPAI + prohibited practice → "unacceptable" (prohibited wins)
-```
+#### 2.1.1 Decision-tree happy paths
 
-**Edge cases**
-- All 12 questions answered with every permutation that straddles two risk levels
-- Q4 prohibited answer combined with Q3 GPAI = yes → unacceptable
-- Q8 narrow-procedural = yes AND Q5 Annex II = yes → high-risk (Annex II wins)
-- Unknown/missing answer keys → throws typed `ClassificationError`, never returns wrong risk
-- Role `"distributor"` with high-risk domain → high-risk (distributor is still in scope)
+| Test ID | Input summary | Expected `riskLevel` | Key articles |
+|---|---|---|---|
+| U-CLS-01 | `isAiSystem: "no"` | `minimal` | none |
+| U-CLS-02 | prohibited practice flag set | `unacceptable` | Article 5 |
+| U-CLS-03 | `safetyComponent: "yes"` | `high` | Article 6 |
+| U-CLS-04 | domain=employment, function=decision, narrowTask=`"no"` | `high` | Article 6, Annex III |
+| U-CLS-05 | domain=employment, function=decision, narrowTask=`"yes"` | `minimal` | — |
+| U-CLS-06 | `interactsWithPeople: "yes"` | `limited` | Article 50 |
+| U-CLS-07 | `syntheticContent: "yes"` | `limited` | Article 50 |
+| U-CLS-08 | `emotionRecognition: "yes"` | `limited` | Article 50 |
+| U-CLS-09 | all negative/non-qualifying flags | `minimal` | — |
 
-**Mock boundaries:** None. `classify()` is a pure function — zero mocks needed.
+#### 2.1.2 Edge cases
+
+| Test ID | Scenario |
+|---|---|
+| U-CLS-10 | All 8 high-risk domains — each returns `high` when paired with a decision function |
+| U-CLS-11 | GPAI flag set — does NOT short-circuit tree; continues evaluation |
+| U-CLS-12 | `role: "deployer"` with high risk — obligations list differs from `"provider"` list |
+| U-CLS-13 | `answers` object entirely `undefined` fields — does not throw; returns `minimal` |
+| U-CLS-14 | `safetyComponent="yes"` AND prohibited practice set — `unacceptable` takes precedence |
+| U-CLS-15 | Multiple high-risk domains selected simultaneously — any one is sufficient for `high` |
+
+#### 2.1.3 Output shape contract
+
+| Test ID | Assertion |
+|---|---|
+| U-CLS-16 | `citedArticles` is always a non-empty `ArticleReference[]` |
+| U-CLS-17 | Each item in `obligations` has `id`, `title`, `description`, `articleRef`, `deadline` |
+| U-CLS-18 | `reasoning` is a non-empty string for every classification path |
+| U-CLS-19 | `riskLevel` is strictly one of `"unacceptable" \| "high" \| "limited" \| "minimal"` |
+
+**Mock boundaries:** None — pure function.
 
 ---
 
-### 2.2 `src/lib/obligations.ts`
+### 2.2 `src/lib/engine/obligations.ts`
 
-**What to test:** Every risk level × role combination produces the correct obligation set with the right article references.
+**File:** `src/__tests__/unit/engine/obligations.test.ts`
 
-#### Test file: `src/__tests__/unit/obligations.test.ts`
-
-```
-getObligations()
-  ├── high-risk + provider
-  │   ├── returns exactly 11 obligations
-  │   ├── each obligation has: id, title, articleRef, description, priority
-  │   └── articleRefs include: Art.9, Art.10, Art.11, Art.12, Art.13, Art.14,
-  │                            Art.15, Art.17, Art.43, Art.49, Art.72
-  │
-  ├── high-risk + deployer
-  │   ├── returns exactly 2 obligations
-  │   └── articleRefs include: Art.14 (human oversight), Art.27 (FRIA)
-  │
-  ├── high-risk + importer / distributor
-  │   ├── subset of provider obligations (due diligence)
-  │   └── does NOT include Art.49 (registration — provider only)
-  │
-  ├── limited-risk + any role
-  │   ├── returns exactly 1 obligation
-  │   └── articleRef = Art.50 (transparency to users)
-  │
-  ├── unacceptable + any role
-  │   ├── returns exactly 1 obligation
-  │   └── description references Art.5 and cessation requirement
-  │
-  ├── gpai + provider
-  │   ├── returns GPAI-specific obligations (Art.53, Art.55 for systemic-risk models)
-  │   └── distinguishes general GPAI from systemic-risk GPAI
-  │
-  ├── minimal + any role
-  │   └── returns empty array (no mandatory obligations)
-  │
-  └── not-applicable
-      └── returns empty array
-```
-
-**Edge cases**
-- Passing an unknown riskLevel string → throws, never silently returns wrong obligations
-- All obligations have non-empty `title`, `description`, and valid `articleRef` format (`/^Art\.\d+/`)
-- No duplicate obligation IDs within a single result set
-
-**Mock boundaries:** None. Pure function.
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-OBL-01 | `getObligationsForLevel("high", "provider")` | Exactly 11 obligations |
+| U-OBL-02 | `getObligationsForLevel("high", "deployer")` | Exactly 2 obligations |
+| U-OBL-03 | `getObligationsForLevel("limited", "provider")` | Exactly 1 transparency obligation |
+| U-OBL-04 | `getObligationsForLevel("unacceptable", "provider")` | 1 cease-practice obligation |
+| U-OBL-05 | `getObligationsForLevel("minimal", "provider")` | Empty array |
+| U-OBL-06 | `getObligationsForLevel("minimal", "deployer")` | Empty array |
+| U-OBL-07 | Each obligation's `articleRef` resolves to a known article | No dangling references |
+| U-OBL-08 | `deadline` on high-risk obligations is ISO date string `"2026-08-02"` | Enforcement date |
+| U-OBL-09 | Obligation IDs are unique within each returned list | No duplicates |
 
 ---
 
-### 2.3 `src/lib/questions.ts`
+### 2.3 `src/lib/engine/articles.ts`
 
-**What to test:** The 12 question definitions and their branching/skip logic.
+**File:** `src/__tests__/unit/engine/articles.test.ts`
 
-#### Test file: `src/__tests__/unit/questions.test.ts`
-
-```
-Question definitions
-  ├── exactly 12 questions defined
-  ├── each question has: id (q1–q12), text, options[], helpText
-  ├── no duplicate question IDs
-  └── all option values are valid string literals (not undefined)
-
-getNextQuestion()
-  ├── Q1 = "no" → jumps to result (not-applicable), skips Q2–Q12
-  ├── Q4 = any prohibited answer → jumps to result (unacceptable), skips Q5–Q12
-  ├── Q3 = "yes" (GPAI) → skips Q5–Q9 (domain/function questions)
-  ├── Q8 = "yes" (narrow procedural) → skips Q9
-  ├── linear progression when no skip conditions met: Q1→Q2→…→Q12
-  └── after Q12 → returns null (questionnaire complete)
-
-isQuestionRequired()
-  ├── Q5 skipped when Q3 = "yes"
-  ├── Q6–Q9 skipped when Q3 = "yes" OR Q5 = "yes" (safety component)
-  ├── Q9 skipped when Q8 = "yes"
-  └── Q10–Q12 always shown (limited-risk transparency triggers)
-
-Progress calculation
-  ├── 0 answers → 0%
-  ├── after Q1 answered → calculates based on expected remaining questions
-  ├── Q4 = prohibited → jumps to 100% (terminal state)
-  └── Q12 answered → 100%
-```
-
-**Edge cases**
-- Answering questions out of order (stale localStorage) → state rehydration produces valid next-question
-- All options for all questions are answered — no infinite loop in traversal
-- `getNextQuestion` called with complete answer set → returns `null`, not an error
-
-**Mock boundaries:** None. Pure data + pure functions.
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-ART-01 | All 15 `ArticleReference` objects exported | `count === 15` |
+| U-ART-02 | Every `url` starts with `https://eur-lex.europa.eu` | URL validity |
+| U-ART-03 | Article numbers unique across the array | No duplicates |
+| U-ART-04 | Articles 5, 6, 9–15, 17, 43, 49, 50, 53, 55, 72 all present | Spec-required set |
 
 ---
 
-### 2.4 `src/components/checker/QuestionnaireProvider.tsx`
+### 2.4 `src/lib/engine/questions.ts`
 
-**What to test:** React context state management, localStorage persistence, and branching evaluation in the UI layer.
+**File:** `src/__tests__/unit/engine/questions.test.ts`
 
-#### Test file: `src/__tests__/unit/QuestionnaireProvider.test.tsx`
-
-```
-State management
-  ├── initial state: currentQuestionId = "q1", answers = {}, progress = 0
-  ├── answerQuestion(qId, value) → updates answers map correctly
-  ├── answerQuestion triggers re-evaluation of nextQuestionId
-  ├── goBack() → restores previous question, does NOT clear the answer
-  ├── reset() → clears all answers, returns to q1, clears localStorage
-  └── isComplete = true only when all required questions are answered
-
-localStorage persistence
-  ├── answers written to localStorage after each answerQuestion call
-  ├── provider initializes from localStorage on mount (page reload simulation)
-  ├── corrupted localStorage JSON → provider initializes fresh, does NOT crash
-  └── localStorage cleared on reset()
-
-Context value shape
-  ├── useQuestionnaire() outside provider → throws descriptive error
-  └── all context values (answers, progress, currentQuestion, goBack, reset) present
-```
-
-**Mock boundaries:**
-- `localStorage` → `vi.stubGlobal('localStorage', createLocalStorageMock())`
-- `classify` / `getObligations` → do NOT mock (real logic keeps tests honest)
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-QUEST-01 | Questions array has exactly 12 items | `questions.length === 12` |
+| U-QUEST-02 | Each question has `id`, `text`, `type`, `options`, `next` | Shape contract |
+| U-QUEST-03 | `getAnswerKey(id)` maps all 12 IDs to unique `AssessmentAnswers` keys | No duplicates, no `undefined` |
+| U-QUEST-04 | `next()` on Q1 with `"no"` returns `null` (terminal) | Early exit |
+| U-QUEST-05 | `next()` on Q4 with a prohibited-practice value returns `null` | Early exit |
+| U-QUEST-06 | `next()` on Q12 returns `null` (last question) | End of chain |
+| U-QUEST-07 | All non-terminal `next()` calls return a valid question ID | No broken links |
+| U-QUEST-08 | Checkbox questions `type === "checkbox"`, radio questions `type === "radio"` | Type consistency |
+| U-QUEST-09 | Branching from Q6 with each high-risk domain routes to Q7 | Domain branch intact |
 
 ---
 
-### 2.5 `src/components/checker/QuestionCard.tsx`
+### 2.5 `src/lib/validation/schemas.ts`
 
-**What to test:** Rendering and interaction for each question type (single-select radio).
+**File:** `src/__tests__/unit/validation/schemas.test.ts`
 
-#### Test file: `src/__tests__/unit/QuestionCard.test.tsx`
-
-```
-Rendering
-  ├── renders question text and helpText
-  ├── renders all options as radio inputs
-  ├── selected option is visually marked (aria-checked or checked)
-  └── "Back" button absent on Q1, present on Q2+
-
-Interaction
-  ├── clicking an option calls onAnswer(questionId, optionValue)
-  ├── clicking Back calls onBack()
-  ├── keyboard: Space/Enter on focused option triggers selection
-  └── no double-submit: rapid double-click only calls onAnswer once
-
-Accessibility
-  ├── fieldset + legend wraps options (screen reader grouping)
-  ├── each option has associated label (htmlFor / aria-labelledby)
-  ├── focus returns to first option when question changes
-  └── role="radiogroup" present
-```
-
-**Mock boundaries:**
-- `onAnswer` / `onBack` → `vi.fn()` callback props
+| Test ID | Schema | Valid input | Invalid input | Assertion |
+|---|---|---|---|---|
+| U-VAL-01 | `registerSchema` | `{email:"a@b.com", password:"Passw0rd"}` | `{email:"not-email"}` | Passes / ZodError |
+| U-VAL-02 | `registerSchema` password | `"Passw0rd"` | `"password1"` (no uppercase) | Rule enforced |
+| U-VAL-03 | `registerSchema` password | `"Passw0rd"` | `"Password"` (no digit) | Rule enforced |
+| U-VAL-04 | `registerSchema` password | `"Passw0rd"` | `"Pa0"` (< 8 chars) | Length enforced |
+| U-VAL-05 | `assessmentAnswersSchema` | 12 optional fields | Extra unknown key | Unknown keys stripped |
+| U-VAL-06 | `createAssessmentSchema` | `{systemName:"X", answers:{}}` | `{systemName:""}` | Non-empty name required |
+| U-VAL-07 | `createApiKeySchema` | `{}` (name optional) | — | No throw on empty object |
+| U-VAL-08 | `analyticsEventSchema` | Valid `eventType` enum member | Unknown string | Enum rejection |
 
 ---
 
-### 2.6 `src/components/results/` — Badge & PDF builders
+### 2.6 `src/lib/utils.ts`
 
-#### Test file: `src/__tests__/unit/badge.test.ts`
+**File:** `src/__tests__/unit/utils.test.ts`
 
-```
-generateBadgeSVG()
-  ├── returns valid SVG string (starts with <svg, ends with </svg>)
-  ├── color matches risk level:
-  │     red=unacceptable, orange=high-risk, yellow=limited-risk,
-  │     green=minimal, blue=gpai
-  ├── contains the risk level label text
-  ├── contains the unique assessment ID in the badge URL
-  └── SVG is well-formed — parse with DOMParser, assert no parser errors
-
-Badge URL uniqueness
-  ├── two different assessmentIds produce two different URLs
-  └── URL format: /badge/{assessmentId} (matches ARCHITECTURE route)
-```
-
-#### Test file: `src/__tests__/unit/pdf.test.ts`
-
-```
-buildPdfDocument()
-  ├── returns a valid @react-pdf/renderer Document element (not null/undefined)
-  ├── includes company name when provided
-  ├── includes risk level and color-coded styling
-  ├── includes all obligations (title + articleRef) for high-risk result
-  ├── includes disclaimer text
-  ├── includes generation date
-  └── handles empty obligations array (minimal risk) without crashing
-```
-
-**Mock boundaries:**
-- Use `@react-pdf/renderer`'s `renderToString()` for content assertions; avoid binary PDF comparison
+| Test ID | Function | Input | Expected |
+|---|---|---|---|
+| U-UTIL-01 | `getDaysUntil` | `new Date("2026-08-02")` from `2026-03-29` | `126` |
+| U-UTIL-02 | `getDaysUntil` | Past date | Negative number (no throw) |
+| U-UTIL-03 | `formatDate` | `new Date("2026-08-02")` | `"2 August 2026"` |
+| U-UTIL-04 | `formatDateISO` | `new Date("2026-08-02T12:00Z")` | `"2026-08-02"` |
+| U-UTIL-05 | `generateAnonymousId` | Called twice | Two distinct strings |
+| U-UTIL-06 | `generateAnonymousId` | Single call | Matches `/^[a-z0-9_-]+$/` |
+| U-UTIL-07 | `truncate` | `("hello world", 5)` | `"hello…"` |
+| U-UTIL-08 | `truncate` | String shorter than limit | Unchanged |
+| U-UTIL-09 | `slugify` | `"EU AI Act – Checker!"` | `"eu-ai-act-checker"` |
+| U-UTIL-10 | `cn` | Two conflicting Tailwind classes | Later class wins (tailwind-merge) |
 
 ---
 
-### 2.7 `src/lib/validation/schemas.ts`
+### 2.7 `src/lib/constants.ts`
 
-#### Test file: `src/__tests__/unit/schemas.test.ts`
+**File:** `src/__tests__/unit/constants.test.ts`
 
-```
-assessmentCreateSchema
-  ├── valid payload → passes, returns typed object
-  ├── missing `answers` field → ZodError with path "answers"
-  ├── answers with extra unknown keys → stripped (strict mode) or ZodError
-  ├── answers.q1 not in allowed enum values → ZodError
-  └── companyName > 255 chars → ZodError
+| Test ID | Assertion |
+|---|---|
+| U-CONST-01 | `RISK_COLORS` has entries for all 4 risk levels |
+| U-CONST-02 | Each entry has `badge`, `bg`, `border`, `bannerBg`, `heading`, `body`, `icon`, `tailwind` |
+| U-CONST-03 | `EU_AI_ACT_DEADLINES` has ≥ 3 entries, each with a valid ISO date |
+| U-CONST-04 | Prohibited practices enforcement date = `"2025-02-02"` |
+| U-CONST-05 | GPAI enforcement date = `"2025-08-02"` |
+| U-CONST-06 | High-risk enforcement date = `"2026-08-02"` |
 
-registerSchema
-  ├── valid email + strong password → passes
-  ├── invalid email format → ZodError on "email"
-  ├── password < 8 chars → ZodError on "password"
-  └── missing fields → ZodError with correct paths
+---
 
-apiKeyCreateSchema
-  ├── valid name (1–64 chars) → passes
-  ├── empty string name → ZodError
-  └── name > 64 chars → ZodError
-```
+### 2.8 `src/lib/rate-limit/limiter.ts`
+
+**File:** `src/__tests__/unit/rate-limit/limiter.test.ts`
+
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-RATE-01 | Single request under limit | `{success: true, remaining: N-1}` |
+| U-RATE-02 | Requests up to exact limit | All `success: true` |
+| U-RATE-03 | Request exceeding limit | `{success: false}` |
+| U-RATE-04 | Different keys isolated | Key A exhausted does not affect key B |
+| U-RATE-05 | Window reset after TTL | `Date.now` mocked forward; count resets |
+| U-RATE-06 | `RATE_LIMITS.ASSESSMENT_CREATE_ANON === 20` | Matches spec |
+| U-RATE-07 | `RATE_LIMITS.ASSESSMENT_CREATE_AUTH === 60` | Matches spec |
+
+**Mock:** `vi.setSystemTime()` to advance the rate-limit window without sleeping.
+
+---
+
+### 2.9 `src/components/checker/QuestionnaireProvider.tsx`
+
+**File:** `src/__tests__/unit/components/QuestionnaireProvider.test.tsx`
+
+**Strategy:** Test the reducer and context via `renderHook`. No visual assertions here.
+
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-QPROV-01 | Initial state | `currentQuestionIndex=0`, `status="in_progress"`, `answers={}` |
+| U-QPROV-02 | `ANSWER_QUESTION` action | `currentQuestionIndex` increments |
+| U-QPROV-03 | Q1 answer `"no"` → early completion | `status="complete"`, `result.riskLevel="minimal"` |
+| U-QPROV-04 | Q4 prohibited answer → early completion | `status="complete"`, `result.riskLevel="unacceptable"` |
+| U-QPROV-05 | All 12 questions answered | `status="complete"`, `result` fully populated |
+| U-QPROV-06 | `GO_BACK` action | Index decrements; cannot go below 0 |
+| U-QPROV-07 | `RESET` action | Returns to initial state |
+| U-QPROV-08 | `SET_SYSTEM_NAME` action | `systemName` updated in state |
+| U-QPROV-09 | `RESTORE` action from localStorage | All fields hydrated correctly |
+| U-QPROV-10 | `progress` computed value | `progress = (index / totalQuestions) * 100` |
+| U-QPROV-11 | `localStorage.setItem` called on every state change | Spy confirms write with `STORAGE_KEY` |
+| U-QPROV-12 | Corrupt localStorage on `RESTORE` | Fails silently; starts fresh |
+
+**Mock boundaries:** `localStorage` (mock Storage API), `classify` (spy: verify called once on completion).
+
+---
+
+### 2.10 `src/components/checker/QuestionCard.tsx`
+
+**File:** `src/__tests__/unit/components/QuestionCard.test.tsx`
+
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-QC-01 | Radio question | One `<input type="radio">` per option |
+| U-QC-02 | Checkbox question | One `<input type="checkbox">` per option |
+| U-QC-03 | Select radio option | `onChange` fires with correct value |
+| U-QC-04 | Select "none" checkbox | All other checkboxes deselected |
+| U-QC-05 | Select non-"none" after "none" checked | "none" becomes unchecked |
+| U-QC-06 | Question text | Rendered in accessible `<h2>` or `role="heading"` |
+| U-QC-07 | Keyboard focus | Focus-ring class applied on `:focus-visible` |
+| U-QC-08 | Label linkage | Each option has `<label for=...>` matching input `id` |
+
+---
+
+### 2.11 `src/lib/auth/providers.ts`
+
+**File:** `src/__tests__/unit/auth/providers.test.ts`
+
+| Test ID | Scenario | Assertion |
+|---|---|---|
+| U-AUTH-01 | `authorize` with correct password | Returns user object with `id` and `email` |
+| U-AUTH-02 | `authorize` with wrong password | Returns `null` |
+| U-AUTH-03 | `authorize` with unknown email | Returns `null` |
+| U-AUTH-04 | `jwt` callback | `token.id` set from `user.id` on sign-in |
+| U-AUTH-05 | `session` callback | `session.user.id` exposed from `token.id` |
+
+**Mock boundaries:** `prisma.user.findUnique`, `bcrypt.compare`.
+
+---
+
+### 2.12 SEO / Metadata
+
+**File:** `src/__tests__/unit/seo/metadata.test.ts`
+
+| Test ID | Assertion |
+|---|---|
+| U-SEO-01 | Landing page `metadata` export has `title`, `description`, `openGraph` |
+| U-SEO-02 | `openGraph.type === "website"` |
+| U-SEO-03 | JSON-LD `FAQPage` schema has ≥ 5 Q&A entries |
+| U-SEO-04 | JSON-LD `SoftwareApplication` schema has `name`, `url`, `applicationCategory` |
 
 ---
 
 ## 3. Integration Tests
 
-**Setup for all integration tests:**
-- Prisma: use in-memory SQLite (`:memory:`) with `prisma.$disconnect()` teardown; seed fixtures in `beforeEach`
-- Auth: inject session via `getServerSession` mock or test-specific JWT
-- Rate limiter: mock Upstash Redis client to return non-limited by default; override per test
+**Setup:** `beforeAll` migrates a fresh SQLite `:memory:` DB via `prisma migrate reset --force`.
+**Auth helper:** `createTestUser(email, password)` seeds a user and returns a signed JWT cookie string.
+**HTTP layer:** Route handlers called directly as Next.js `Request`/`Response` objects:
+
+```ts
+import { POST } from "@/app/api/assessments/route";
+const res = await POST(new Request("http://localhost/api/assessments", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ ... })
+}));
+```
+
+---
 
 ### 3.1 `POST /api/assessments`
 
-#### Test file: `src/__tests__/integration/api/assessments-create.test.ts`
+**File:** `src/__tests__/integration/api/assessments/create.test.ts`
 
-```
-Happy paths
-  ├── anonymous user: valid answers payload
-  │   → 201, body.id present, body.riskLevel in valid enum,
-  │     body.obligations is array, anonymousId cookie set (HttpOnly)
-  │
-  ├── authenticated user: valid answers + session
-  │   → 201, body.userId = session.user.id, stored in DB with userId
-  │
-  └── GPAI model answers
-      → 201, riskLevel = "gpai", correct GPAI obligations returned
-
-Auth & authorization
-  ├── no session (anonymous) → 201 (anonymous assessments allowed)
-  └── malformed Authorization header → ignored, treated as anonymous
-
-Validation errors
-  ├── missing `answers` field → 400, body.error describes field
-  ├── q1 = "not-a-real-option" → 400 ZodError
-  ├── extra unknown fields in body → 400 or stripped (per schema config)
-  └── body is not JSON → 400
-
-Rate limiting
-  ├── 11th request within window from same IP → 429, Retry-After header set
-  └── requests from different IPs are not cross-limited
-
-Database
-  ├── assessment record created with correct answers JSON blob
-  ├── AssessmentEvent record created (analytics) with eventType="created"
-  └── DB write failure → 500, error not leaked in response body
-```
+| Test ID | Scenario | Request | Expected |
+|---|---|---|---|
+| I-ASSESS-01 | Valid anonymous assessment | `{systemName:"MyAI", answers:{...}, anonymousId:"anon_123"}` | `201`, body has `id`, `riskLevel`, `badgeUrl` |
+| I-ASSESS-02 | Anonymous — no auth cookie | Same, no cookie | `201` (auth not required) |
+| I-ASSESS-03 | Authenticated user | Valid JWT cookie | `201`, DB row `userId` is set |
+| I-ASSESS-04 | Missing `systemName` | `{answers:{}}` | `400`, validation error in body |
+| I-ASSESS-05 | Invalid answer enum value | `{answers:{isAiSystem:"maybe"}}` | `400` |
+| I-ASSESS-06 | Rate limit exceeded (anon, 21st request) | 21 rapid POSTs same IP | 21st → `429`, `Retry-After` header present |
+| I-ASSESS-07 | Rate limit higher for auth user | 21 POSTs with valid JWT | All 21 succeed (limit is 60) |
+| I-ASSESS-08 | Classification stored in DB | Valid request | `assessment` row has correct `riskLevel` + `obligations` JSON |
+| I-ASSESS-09 | `badgeUrl` format | Valid request | `badgeUrl` matches `/\/api\/badge\/[a-z0-9-]+/` |
+| I-ASSESS-10 | `systemName` trimmed | `systemName: "  MyAI  "` | Stored and returned as `"MyAI"` |
+| I-ASSESS-11 | Unknown extra fields stripped | `{systemName:"X", answers:{}, __evil:"x"}` | `201`, no extra field in response or DB |
 
 ---
 
 ### 3.2 `GET /api/assessments`
 
-#### Test file: `src/__tests__/integration/api/assessments-list.test.ts`
+**File:** `src/__tests__/integration/api/assessments/list.test.ts`
 
-```
-Happy paths
-  ├── authenticated user with 3 assessments → 200, returns array of 3
-  ├── authenticated user with 0 assessments → 200, returns []
-  └── pagination: ?page=2&limit=10 → correct slice returned
-
-Auth
-  ├── unauthenticated → 401
-  └── user A cannot see user B's assessments (isolation check)
-
-Response shape
-  └── each item has: id, riskLevel, createdAt, companyName (nullable)
-      — does NOT include raw answers (PII protection)
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-ALIST-01 | Auth user lists own 3 assessments | `200`, array of 3 ordered by `updatedAt` DESC |
+| I-ALIST-02 | Other user's assessments not returned | Only the requesting user's assessments present |
+| I-ALIST-03 | Unauthenticated | `401` |
+| I-ALIST-04 | No assessments seeded | `200`, `[]` |
+| I-ALIST-05 | Response shape is summary | Items have `id`, `systemName`, `riskLevel`, `createdAt`; no `obligations` blob |
 
 ---
 
 ### 3.3 `GET /api/assessments/[id]`
 
-#### Test file: `src/__tests__/integration/api/assessments-get.test.ts`
+**File:** `src/__tests__/integration/api/assessments/get.test.ts`
 
-```
-Happy paths
-  ├── owner (authenticated) fetching own assessment → 200, full detail
-  ├── anonymous assessment via matching anonymousId cookie → 200
-  └── response includes riskLevel, obligations, answers, createdAt
-
-Auth & authorization
-  ├── authenticated user fetching another user's assessment → 403
-  ├── anonymous user without matching cookie → 403
-  ├── unauthenticated + no cookie → 403
-  └── non-existent assessmentId → 404
-
-Response shape
-  └── obligations array items have: id, title, articleRef, description
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-AGET-01 | Owner fetches own assessment | `200`, full detail including `obligations`, `citedArticles`, `reasoning` |
+| I-AGET-02 | Different authenticated user | `403` |
+| I-AGET-03 | Anonymous assessment with matching `anonymousId` cookie | `200` |
+| I-AGET-04 | Anonymous assessment without `anonymousId` cookie | `403` |
+| I-AGET-05 | Nonexistent ID | `404` |
+| I-AGET-06 | Malformed / non-UUID ID | `400` |
+| I-AGET-07 | Unauthenticated fetch of user-owned assessment | `401` |
 
 ---
 
-### 3.4 `PATCH /api/assessments/[id]`
+### 3.4 `GET /api/badge/[id]`
 
-#### Test file: `src/__tests__/integration/api/assessments-update.test.ts`
+**File:** `src/__tests__/integration/api/badge.test.ts`
 
-```
-Happy paths
-  └── owner updates companyName → 200, updated record returned
-
-Auth & authorization
-  ├── unauthenticated → 401
-  └── non-owner → 403
-
-Validation
-  ├── companyName > 255 chars → 400
-  └── attempting to overwrite riskLevel directly → field ignored or 400
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-BADGE-01 | Valid assessment ID | `200`, `Content-Type: image/svg+xml` |
+| I-BADGE-02 | Public — no auth required | No cookie → `200` |
+| I-BADGE-03 | SVG body contains risk level label | e.g. `"HIGH RISK"` text node for a high-risk assessment |
+| I-BADGE-04 | SVG fill color matches `RISK_COLORS[riskLevel].badge` | Hex color value present in markup |
+| I-BADGE-05 | Nonexistent assessment ID | `404` |
+| I-BADGE-06 | Caching header present | `Cache-Control: public, max-age=86400` |
 
 ---
 
-### 3.5 `DELETE /api/assessments/[id]`
+### 3.5 `GET /api/assessments/[id]/pdf`
 
-#### Test file: `src/__tests__/integration/api/assessments-delete.test.ts`
+**File:** `src/__tests__/integration/api/pdf.test.ts`
 
-```
-Happy paths
-  └── owner deletes own assessment → 204, record gone from DB
-
-Auth & authorization
-  ├── unauthenticated → 401
-  └── non-owner → 403
-
-Edge cases
-  └── already deleted (double-delete) → 404
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-PDF-01 | Owner downloads PDF | `200`, `Content-Type: application/pdf` |
+| I-PDF-02 | Non-empty PDF body | `Content-Length > 0` |
+| I-PDF-03 | Non-owner | `403` |
+| I-PDF-04 | Nonexistent assessment | `404` |
+| I-PDF-05 | No cookie / no matching `anonymousId` | `401` or `403` |
 
 ---
 
-### 3.6 `GET /api/badge/[id]`
+### 3.6 `POST /api/auth/register`
 
-#### Test file: `src/__tests__/integration/api/badge.test.ts`
+**File:** `src/__tests__/integration/api/auth/register.test.ts`
 
-```
-Happy paths
-  ├── valid assessmentId → 200, Content-Type: image/svg+xml
-  ├── response SVG contains correct risk-level color
-  └── Cache-Control header present (edge caching per ARCHITECTURE)
-
-Error cases
-  └── non-existent assessmentId → 404
-
-Response validation
-  ├── SVG is parseable XML (no malformed markup)
-  └── no user PII embedded in SVG (only risk level + ID)
-
-SPEC §F3 traceability
-  ├── color coding: unacceptable=red, high-risk=orange,
-  │   limited-risk=yellow, minimal=green, gpai=blue
-  └── badge URL is stable (same assessmentId → same SVG structure on re-request)
-```
+| Test ID | Scenario | Input | Expected |
+|---|---|---|---|
+| I-AUTH-01 | Valid registration | `{email:"new@test.com", password:"Passw0rd"}` | `201`, body has `id` + `email`, no `passwordHash` |
+| I-AUTH-02 | Password stored as bcrypt hash | Inspect DB after registration | `passwordHash` starts with `$2b$12$` |
+| I-AUTH-03 | Duplicate email | Register same email twice | Second → `409` |
+| I-AUTH-04 | Invalid email format | `{email:"notanemail"}` | `400` |
+| I-AUTH-05 | No uppercase in password | `{password:"password1"}` | `400` |
+| I-AUTH-06 | No digit in password | `{password:"Password"}` | `400` |
+| I-AUTH-07 | Password too short | `{password:"Pa0"}` | `400` |
+| I-AUTH-08 | Login rate limit (6th attempt / 15 min) | 6 POSTs to login with wrong password | 6th → `429` |
 
 ---
 
-### 3.7 `GET /api/assessments/[id]/pdf`
+### 3.7 Session / JWT
 
-#### Test file: `src/__tests__/integration/api/pdf.test.ts`
+**File:** `src/__tests__/integration/api/auth/session.test.ts`
 
-```
-Happy paths
-  ├── owner requests PDF → 200, Content-Type: application/pdf
-  ├── binary response is a valid PDF (starts with %PDF-)
-  └── response time < 3000ms (SPEC §NFR-1 performance requirement)
-
-Auth & authorization
-  ├── unauthenticated → 401
-  └── non-owner → 403
-
-Error cases
-  └── non-existent assessmentId → 404
-
-SPEC §F4 traceability
-  └── PDF generation completes within 3s SLA
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-AUTH-09 | Successful login sets HTTP-only cookie | `Set-Cookie` has `HttpOnly; Secure; SameSite=Lax` |
+| I-AUTH-10 | JWT payload contains `userId` | Decoded JWT `sub` equals registered user's DB id |
+| I-AUTH-11 | `/dashboard` redirects without session | `302` to `/auth/login` |
+| I-AUTH-12 | `/dashboard` accessible with valid session | `200` |
+| I-AUTH-13 | Google OAuth provider registered | `providers` includes `{id: "google"}` |
 
 ---
 
-### 3.8 `POST /api/auth/register`
+### 3.8 `POST /api/v1/classify` (Public API)
 
-#### Test file: `src/__tests__/integration/api/auth-register.test.ts`
+**File:** `src/__tests__/integration/api/v1/classify.test.ts`
 
-```
-Happy paths
-  ├── valid email + password → 201, user created in DB
-  ├── password stored as bcrypt hash (not plaintext) in DB
-  └── response does NOT include password or hash
-
-Validation
-  ├── duplicate email → 409 Conflict
-  ├── invalid email format → 400
-  ├── password < 8 chars → 400
-  └── missing fields → 400
-
-Security
-  ├── password never appears in response body
-  └── duplicate email check doesn't reveal timing difference
-         (bcrypt compare used regardless to prevent user enumeration)
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-V1-01 | Valid API key + valid payload | `200`, `{riskLevel, obligations, citedArticles}` |
+| I-V1-02 | Missing `Authorization` header | `401` |
+| I-V1-03 | Invalid or revoked API key | `401` |
+| I-V1-04 | Valid key but malformed payload | `400` |
+| I-V1-05 | Rate limit for API key | Exceeding `API_AUTHENTICATED` limit → `429` |
+| I-V1-06 | Response shape matches `ClassificationResult` type | Structural assertion |
 
 ---
 
-### 3.9 `POST /api/keys` & `DELETE /api/keys/[id]`
+### 3.9 Rate Limiting
 
-#### Test file: `src/__tests__/integration/api/api-keys.test.ts`
+**File:** `src/__tests__/integration/api/rate-limit.test.ts`
 
-```
-POST /api/keys
-  ├── authenticated user creates key → 201, returns { id, key, name, createdAt }
-  ├── raw key value returned ONLY at creation time (not retrievable later)
-  ├── key stored as hash in DB
-  └── unauthenticated → 401
-
-DELETE /api/keys/[id]
-  ├── owner deletes key → 204
-  ├── non-owner → 403
-  └── non-existent → 404
-```
+| Test ID | Scenario | Expected |
+|---|---|---|
+| I-RATE-01 | Anonymous `POST /api/assessments`: 20 succeed, 21st fails | `429` on 21st |
+| I-RATE-02 | Auth `POST /api/assessments`: 60 succeed, 61st fails | `429` on 61st |
+| I-RATE-03 | `Retry-After` header on every 429 | Integer seconds value |
+| I-RATE-04 | Different IPs (`X-Forwarded-For`) isolated | Mock IP per test |
+| I-RATE-05 | Badge endpoint (smoke — 1000/hr) | 10 rapid requests all succeed |
 
 ---
 
-### 3.10 `POST /api/v1/classify` (Public API)
+## 4. E2E Tests (Playwright)
 
-#### Test file: `src/__tests__/integration/api/public-classify.test.ts`
+**Config:** `playwright.config.ts` — Chromium, Firefox, WebKit (iPhone 13)
+**Base URL:** `http://localhost:3000`
+**Global setup:** `playwright/global-setup.ts` — `prisma migrate reset`, seeds `TEST_USER` with 2
+pre-existing assessments.
 
-```
-Happy paths
-  ├── valid API key in Authorization: Bearer header + valid answers
-  │   → 200, { riskLevel, obligations }
-  └── minimal answers (Q1=no) → 200, riskLevel="not-applicable"
-
-Authentication
-  ├── missing Authorization header → 401
-  ├── invalid/revoked API key → 401
-  └── malformed Bearer token → 401
-
-Validation
-  ├── missing answers → 400
-  └── invalid answer values → 400
-
-Rate limiting
-  ├── 101st request within window (100 req/min per ARCHITECTURE)
-  │   → 429, X-RateLimit-Remaining: 0, Retry-After header present
-  └── different API keys have independent rate-limit buckets
-
-SPEC §F12 traceability (parity test)
-  └── public API returns same riskLevel as the UI questionnaire
-      for equivalent answer sets (same inputs → same output)
-```
-
----
-
-### 3.11 `GET /api/templates/[templateId]`
-
-#### Test file: `src/__tests__/integration/api/templates.test.ts`
+### 4.1 Directory Layout
 
 ```
-Happy paths
-  ├── valid templateId → 200, Content-Disposition: attachment; filename="*.md"
-  ├── body is valid Markdown (non-empty, contains headings)
-  └── covers: risk-management-system, technical-documentation,
-              data-governance, transparency-notice
-
-Error cases
-  ├── unknown templateId → 404
-  └── unauthenticated (if Pro-gated) → 401 or 403
-
-SPEC §F6 traceability
-  └── at least one template per major high-risk obligation category
+playwright/
+  pages/
+    LandingPage.ts
+    CheckerPage.ts
+    ResultsPage.ts
+    DashboardPage.ts
+    AuthPage.ts
+  fixtures/
+    users.ts
+    answers.ts
+  global-setup.ts
+  global-teardown.ts
+  tests/
+    landing.spec.ts
+    questionnaire.spec.ts
+    results.spec.ts
+    auth.spec.ts
+    dashboard.spec.ts
+    accessibility.spec.ts
+    performance.spec.ts
 ```
 
----
+### 4.2 Required `data-testid` Attributes
 
-## 4. End-to-End Tests
-
-**Tooling:** Playwright with `data-testid` selectors.
-**Fixtures:** Seeded test DB; test account (`test@example.com` / `TestPass123!`)
-**Viewport:** 1280×800 desktop default; mobile (`375×812`) noted where required.
-
-### Required `data-testid` attributes
-
-These must be added to components before E2E tests can run:
+These **must be present** in source components before E2E tests are written:
 
 | Component | `data-testid` |
 |---|---|
-| Hero heading | `hero-heading` |
-| Question card container | `question-card` |
-| Question text | `question-text` |
-| Option button/radio | `option-{value}` |
-| Back button | `back-button` |
+| Landing hero CTA button | `hero-cta` |
+| Landing FAQ section wrapper | `faq-section` |
+| Deadline countdown | `deadline-countdown` |
+| Questionnaire form wrapper | `questionnaire-form` |
+| Individual question card | `question-card` |
 | Progress bar | `progress-bar` |
-| Results container | `results-container` |
-| Risk level badge | `risk-level-badge` |
-| Obligation list | `obligations-list` |
-| Obligation item | `obligation-item` |
-| Download PDF button | `btn-download-pdf` |
-| Copy badge URL button | `btn-copy-badge` |
-| Share URL field | `share-url-input` |
-| Save to account button | `btn-save-assessment` |
-| Dashboard assessment row | `assessment-row-{id}` |
+| Back button | `back-button` |
+| Next / Submit button | `next-button` |
+| System name input | `system-name-input` |
+| Results risk level badge | `risk-level-badge` |
+| Results obligations list | `obligations-list` |
+| Results badge embed code block | `badge-embed-code` |
+| Results PDF download button | `download-pdf-button` |
+| Results share / copy badge button | `share-badge-button` |
+| Dashboard assessment list | `assessment-list` |
+| Individual dashboard assessment row | `assessment-item` |
 
 ---
 
-### 4.1 E2E Flow 1 — Anonymous Assessment → Minimal Risk
+### 4.3 F5: Landing Page
 
-**SPEC coverage:** F1 (questionnaire), F2 (obligations), F5 (landing page CTA)
+**File:** `playwright/tests/landing.spec.ts`
 
-```
-File: e2e/flows/anonymous-minimal.spec.ts
-
-Scenario: "Solo developer builds narrow NLP tool, gets minimal risk"
-
-Steps:
-  1.  Navigate to /
-      → data-testid="hero-heading" visible
-      → "Start Free Assessment" CTA button visible
-  2.  Click CTA → URL changes to /checker
-  3.  Q1 (Is it an AI system?): click option-yes
-      → Q2 appears, progress-bar width > 0%
-  4.  Q2 (Role?): click option-provider
-  5.  Q3 (GPAI?): click option-no
-  6.  Q4 (Prohibited practices?): click option-none-of-the-above
-  7.  Q5 (Safety component?): click option-no
-  8.  Q6 (Domain?): click option-other (non-high-risk)
-  9.  Q7 (Function?): click option-recommendation
-  10. Q8 (Narrow procedural?): click option-yes
-  11. Q10 (Interacts with people?): click option-no
-  12. Q11 (Synthetic content?): click option-no
-  13. Q12 (Emotion recognition?): click option-no
-      → progress-bar = 100%
-      → results-container visible
-  14. Assert risk-level-badge text contains "Minimal"
-  15. Assert obligations-list has 0 items
-  16. Assert no error messages visible
-
-Mobile variant (375×812):
-  → Repeat steps 1–16
-  → All interactive elements reachable without horizontal scroll (no overflow-x)
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-LAND-01 | Navigate to `/` | `<title>` contains "EU AI Act"; `<meta name="description">` present; OG tags present |
+| E-LAND-02 | Navigate to `/`, scroll to FAQ | `[data-testid="faq-section"]` visible; `<script type="application/ld+json">` contains `"@type":"FAQPage"` |
+| E-LAND-03 | Navigate to `/` | `[data-testid="deadline-countdown"]` shows a positive integer |
+| E-LAND-04 | Click `[data-testid="hero-cta"]` | URL becomes `/checker` |
+| E-LAND-05 | Viewport 390×844 (mobile) | Hamburger visible; desktop nav hidden |
+| E-LAND-06 | Click hamburger | Mobile nav links become visible |
 
 ---
 
-### 4.2 E2E Flow 2 — High-Risk Assessment → Full Obligation Checklist
+### 4.4 F1: Questionnaire — Anonymous Happy Paths
 
-**SPEC coverage:** F1 (branching), F2 (obligations with article refs)
+**File:** `playwright/tests/questionnaire.spec.ts`
 
-```
-File: e2e/flows/high-risk-obligations.spec.ts
-
-Scenario: "HR software company gets high-risk classification"
-
-Steps:
-  1.  Navigate to /checker
-  2.  Q1: option-yes
-  3.  Q2: option-provider
-  4.  Q3: option-no
-  5.  Q4: option-none-of-the-above
-  6.  Q5: option-no
-  7.  Q6: option-employment  (high-risk domain)
-  8.  Q7: option-decision-making  (qualifying function)
-  9.  Q8: option-no  (not narrow procedural)
-  10. Q9: option-yes  (profiles individuals)
-  11. Q10–Q12: any values  (already high-risk)
-      → results-container visible
-  12. Assert risk-level-badge contains "High Risk"
-  13. Assert obligations-list has ≥ 11 obligation-item elements
-  14. Assert at least one obligation-item text contains "Art.9"
-  15. Assert at least one obligation-item text contains "Art.14"
-  16. Assert at least one obligation-item text contains "Art.49"
-  17. Assert each obligation-item has a non-empty plain-language description
-      (text length > article reference alone)
-
-Back navigation:
-  18. Navigate back to /checker fresh
-  19. Answer through to Q7, then press back-button
-      → Q6 re-appears with previous answer still selected
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-QUEST-01 | Navigate to `/checker` (no auth) | Form visible; Q1 present; progress bar at 0% |
+| E-QUEST-02 | Answer Q1 "Not an AI system" → Next | `/checker/results`; badge says "MINIMAL" |
+| E-QUEST-03 | Q1 yes → Q2 provider → Q3 no → Q4 social scoring → Next | Badge says "UNACCEPTABLE" |
+| E-QUEST-04 | AI, provider, no GPAI, no prohibited, safety component yes | Badge says "HIGH" |
+| E-QUEST-05 | AI, provider, employment domain, decision function, not narrow | Badge says "HIGH" |
+| E-QUEST-06 | AI, deployer, no safety, no high-risk domain, interacts with people | Badge says "LIMITED" |
+| E-QUEST-07 | Answer Q1–Q3 | Progress bar width ≈ 25% |
+| E-QUEST-08 | Answer Q1 + Q2, click back | Q1 shown; previous answer pre-selected |
+| E-QUEST-09 | Answer Q1–Q3, reload page | Q4 shown (state restored from localStorage) |
+| E-QUEST-10 | Type "Acme Hiring Bot" in system name, complete questionnaire | Name appears on results page |
+| E-QUEST-11 | Tab-only keyboard navigation through Q1 | Space/Enter selects and advances |
+| E-QUEST-12 | Checkbox: select two domains simultaneously | Both checked |
+| E-QUEST-13 | Checkbox: select domain, then select "None of the above" | Domain unchecked; only "None" checked |
 
 ---
 
-### 4.3 E2E Flow 3 — Prohibited Practice → Hard Stop
+### 4.5 F2: Results — Obligation Checklist
 
-**SPEC coverage:** F1 (prohibited practice short-circuit)
+**File:** `playwright/tests/results.spec.ts`
 
-```
-File: e2e/flows/prohibited-practice.spec.ts
-
-Scenario: "Social scoring system gets immediate unacceptable classification"
-
-Steps:
-  1. Navigate to /checker
-  2. Q1: option-yes
-  3. Q2: option-provider
-  4. Q3: option-no
-  5. Q4: click a prohibited practice option (e.g., option-social-scoring)
-     → Q5 does NOT appear (short-circuit confirmed: no question-card with id q5)
-     → progress-bar = 100%
-     → results-container visible immediately
-  6. Assert risk-level-badge contains "Unacceptable"
-  7. Assert obligations-list contains 1 item referencing "Art.5"
-  8. Assert risk-level-badge has red color styling
-     (CSS class or computed color matches constants.ts RISK_COLORS.unacceptable)
-  9. Assert btn-download-pdf is visible
-     (prohibited systems still get a PDF for documentation)
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-RES-01 | Complete high-risk provider path | `[data-testid="obligations-list"]` has 11 items |
+| E-RES-02 | Click article reference link | New tab opens to `eur-lex.europa.eu` URL |
+| E-RES-03 | Complete unacceptable risk path | Obligations contain "Cease practice immediately" |
+| E-RES-04 | High-risk provider — verify all 11 obligation titles | Risk mgmt, data governance, technical docs, logging, transparency, human oversight, accuracy, QMS, conformity, registration, post-market monitoring |
+| E-RES-05 | Complete minimal risk path | Obligations list empty or shows "no obligations" message |
 
 ---
 
-### 4.4 E2E Flow 4 — PDF Download
+### 4.6 F3: Compliance Badge
 
-**SPEC coverage:** F4 (PDF export, < 3s)
+**File:** `playwright/tests/results.spec.ts` (continued)
 
-```
-File: e2e/flows/pdf-download.spec.ts
-
-Scenario: "User completes high-risk assessment and downloads PDF"
-
-Setup: Use Flow 2 steps to reach results page with high-risk result
-
-Steps:
-  1. Locate btn-download-pdf on results page
-  2. Set up Playwright download listener
-  3. Click btn-download-pdf
-     → Loading/spinner indicator appears
-  4. Wait for download event (timeout: 3000ms — SPEC §NFR-1)
-  5. Assert downloaded file:
-     - Filename matches /compliance-report.*\.pdf/i
-     - File size > 5 KB (not empty/truncated)
-     - File first bytes = "%PDF-" (valid PDF magic number)
-  6. Assert no error toast appeared during download
-
-Performance assertion:
-  → Record timestamp before click; assert download-start within 3000ms
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-RES-06 | Complete any assessment | `[data-testid="share-badge-button"]` visible |
+| E-RES-07 | Click share/copy button | `[data-testid="badge-embed-code"]` contains `<img src="...api/badge/..."` |
+| E-RES-08 | Open badge URL in incognito context | SVG renders; no redirect to login |
+| E-RES-09 | Badge URL without any cookie | `200 image/svg+xml` |
 
 ---
 
-### 4.5 E2E Flow 5 — Badge Generation & Sharing
+### 4.7 F4: PDF Export
 
-**SPEC coverage:** F3 (shareable badge, color coding, stable URL, publicly accessible)
+**File:** `playwright/tests/results.spec.ts` (continued)
 
-```
-File: e2e/flows/badge-sharing.spec.ts
-
-Scenario: "User copies badge URL after completing assessment"
-
-Setup: Complete any assessment to reach results page
-
-Steps:
-  1. Locate badge preview SVG on results page
-  2. Assert SVG is visible and uses correct color for the risk level
-     (check fill attribute matches RISK_COLORS constant)
-  3. Click btn-copy-badge
-     → Playwright reads clipboard
-  4. Assert clipboard content matches: /https?:\/\/.*\/badge\/[a-z0-9-]+/
-  5. Navigate to the badge URL directly (new page)
-     → Response status 200
-     → Content-Type includes "image/svg+xml"
-     → SVG renders in browser (svg element in DOM)
-  6. Reload badge URL → identical SVG content (deterministic/cached)
-  7. Assert badge URL requires no authentication
-     (open in incognito context → still 200)
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-RES-10 | Complete assessment, click `[data-testid="download-pdf-button"]` | File download triggered; file has `.pdf` extension |
+| E-RES-11 | Anonymous assessment (no login) | Download button visible and functional |
 
 ---
 
-### 4.6 E2E Flow 6 — Registration & Saved Assessments
+### 4.8 Auth Flows
 
-**SPEC coverage:** F7 (user accounts), F8 (comparison view)
+**File:** `playwright/tests/auth.spec.ts`
 
-```
-File: e2e/flows/auth-save-assessment.spec.ts
-
-Scenario: "New user registers, saves assessment, finds it in dashboard"
-
-Steps:
-  1.  Navigate to /register
-  2.  Fill email (unique: `test+${Date.now()}@example.com`) and password
-  3.  Submit → redirect to /dashboard or /checker, no error
-  4.  Complete a high-risk assessment (via questionnaire or API seed)
-  5.  Click btn-save-assessment on results page
-      → Success toast: "Assessment saved"
-  6.  Navigate to /dashboard
-  7.  Assert assessment-row-{id} appears in the list
-  8.  Assert row displays: risk level, creation date
-  9.  Click the row → navigates to /assessments/{id}
-  10. Assert full results restored (same risk-level-badge, same obligations count)
-
-Persistence across sessions:
-  11. Log out
-  12. Log back in with same credentials
-  13. Navigate to /dashboard → same assessment row still present
-
-SPEC §F8 — Comparison View (P1):
-  14. Complete a second (different risk level) assessment and save
-  15. Select both assessment rows via checkboxes
-  16. Click "Compare" button
-  17. Assert side-by-side comparison table visible with both risk levels
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-AUTH-01 | `/auth/register` with valid form | Redirected from register page; session cookie set |
+| E-AUTH-02 | Register with already-used email | Error message displayed |
+| E-AUTH-03 | Register with weak password | Inline validation error before submission |
+| E-AUTH-04 | Login with correct credentials | Redirected to `/dashboard` |
+| E-AUTH-05 | Login with wrong password | Error message displayed |
+| E-AUTH-06 | Navigate to `/dashboard` without auth | Redirected to `/auth/login` |
+| E-AUTH-07 | Click logout | Session cleared; redirected to `/` |
 
 ---
 
-### 4.7 E2E Flow 7 — Accessibility Audit
+### 4.9 Dashboard
 
-**SPEC coverage:** NFR-3 (WCAG 2.1 AA)
+**File:** `playwright/tests/dashboard.spec.ts`
+**Precondition:** Logged in as `test@example.com` with 2 pre-seeded assessments.
 
-```
-File: e2e/accessibility/wcag.spec.ts
-
-Pages audited:
-  - / (landing)
-  - /checker (each of: fresh, mid-questionnaire, results)
-  - /dashboard (authenticated)
-
-Per page:
-  1. Run @axe-core/playwright
-  2. Assert 0 violations with impact "critical" or "serious"
-  3. Assert all images have alt text (axe rule: image-alt)
-  4. Assert color contrast ≥ 4.5:1 for normal text (axe rule: color-contrast)
-  5. Assert all form controls have associated labels
-
-Keyboard-only navigation:
-  1. Navigate to /checker — mouse disabled (keyboard only)
-  2. Tab to first option → Space to select → assert Q2 appears
-  3. Complete full questionnaire keyboard-only → results page reached
-  4. Tab to btn-download-pdf → Enter → download initiates
-```
+| Test ID | Steps | Assertions |
+|---|---|---|
+| E-DASH-01 | Navigate to `/dashboard` | `[data-testid="assessment-list"]` has 2 items |
+| E-DASH-02 | Click `[data-testid="assessment-item"]` | Navigates to assessment detail / results page |
+| E-DASH-03 | Complete new assessment while logged in → return to dashboard | 3 items shown |
+| E-DASH-04 | Assessment item content | System name and risk level text visible |
 
 ---
 
-### 4.8 E2E Flow 8 — SEO & Structured Data
+### 4.10 Accessibility (WCAG 2.1 AA)
 
-**SPEC coverage:** F5 (landing page SEO, page load < 1.5s)
+**File:** `playwright/tests/accessibility.spec.ts`
 
-```
-File: e2e/seo/landing-seo.spec.ts
-
-Steps:
-  1.  Navigate to / and capture performance timing
-  2.  Assert DOMContentLoaded < 1500ms (SPEC §NFR-1)
-  3.  Assert <title> contains "EU AI Act" (case-insensitive)
-  4.  Assert meta[name="description"] content length 50–160 chars
-  5.  Assert og:title, og:description, og:url meta tags present
-  6.  Assert canonical <link rel="canonical"> tag present
-  7.  Assert exactly one <h1> on the page
-  8.  Assert JSON-LD <script type="application/ld+json"> present
-  9.  Parse JSON-LD → assert @type is "WebApplication" or "SoftwareApplication"
-  10. Assert no broken internal links (all href hrefs return 200)
-```
+| Test ID | Page | Assertions |
+|---|---|---|
+| E-A11Y-01 | `/` | `checkAccessibility()` zero critical violations |
+| E-A11Y-02 | `/checker` | Zero critical violations; all inputs have accessible labels |
+| E-A11Y-03 | `/checker/results` | Zero critical violations; color contrast ≥ 4.5:1 |
+| E-A11Y-04 | `/auth/login` | Zero critical violations |
+| E-A11Y-05 | Keyboard-only full questionnaire | Tab / Enter / Space sufficient to reach results; no mouse |
+| E-A11Y-06 | Skip-to-content | First Tab press focuses `#main-content` skip link on every page |
 
 ---
 
-### 4.9 E2E Flow 9 — Multi-Language Support (P2 / F11 — stub)
+### 4.11 Performance
 
-```
-File: e2e/flows/i18n.spec.ts
-Status: PENDING — stub until F11 is implemented
+**File:** `playwright/tests/performance.spec.ts`
 
-Scenario: "German user switches to DE locale"
-
-Steps (to implement when F11 ships):
-  1. Navigate to /?locale=de
-  2. Assert <html lang="de">
-  3. Assert questionnaire text is in German
-  4. Assert risk level labels translated (e.g., "Hohes Risiko")
-  5. Complete questionnaire in DE → results in German
-  6. Download PDF → PDF content in German
-```
+| Test ID | Page | Metric | Threshold |
+|---|---|---|---|
+| E-PERF-01 | `/` | LCP via `PerformanceObserver` | < 1500 ms |
+| E-PERF-02 | `/checker` | Time to interactive | < 1500 ms |
+| E-PERF-03 | `/api/badge/[id]` (edge function) | Response time | < 200 ms |
 
 ---
 
 ## 5. Property-Based Tests
 
-**Tooling:** `fast-check` via Vitest
+**Library:** `fast-check`
+**Location:** `src/__tests__/property/`
+**Runner:** Vitest — standard `it()` blocks with `fc.assert(fc.property(...))` inside.
+**Runs per property:** 1000 (default `numRuns`).
 
-#### Test file: `src/__tests__/property/classifier-properties.test.ts`
-
-```
-Property 1 — Classification is total (never throws on valid inputs)
-  Arbitrary: all 12 questions answered with valid option values
-  ∀ such answers → classify(answers) returns a value in RiskLevel enum
-
-Property 2 — Prohibited answers always dominate
-  ∀ answers where answers.q4 ∈ PROHIBITED_OPTIONS
-  → classify(answers).riskLevel === "unacceptable"
-
-Property 3 — Q1 = "no" always short-circuits to not-applicable
-  ∀ answers where answers.q1 === "no"
-  → classify(answers).riskLevel === "not-applicable"
-  (regardless of all other answer values)
-
-Property 4 — Adding a prohibited answer never lowers the risk classification
-  If classify(answers) = R  and  answers' differs only by q4 = prohibitedValue
-  → classify(answers').riskLevel === "unacceptable"
-
-Property 5 — Obligation set is deterministic (same inputs → same output)
-  ∀ (riskLevel, role) pairs
-  → getObligations(riskLevel, role) called twice returns arrays with identical
-     IDs in identical order (no random/time-based mutation)
-```
-
-#### Test file: `src/__tests__/property/serialization.test.ts`
-
-```
-Property 6 — AssessmentAnswers JSON roundtrip
-  ∀ answers: AssessmentAnswers (fast-check record arbitrary)
-  → JSON.parse(JSON.stringify(answers)) deep-equals answers
-  (no data lost through the DB storage cycle)
-
-Property 7 — Zod schema parse is idempotent
-  ∀ valid payload matching assessmentCreateSchema
-  → assessmentCreateSchema.parse(assessmentCreateSchema.parse(payload))
-     deep-equals the first parse result
-
-Property 8 — Badge SVG is always well-formed XML
-  ∀ riskLevel in RiskLevel enum, ∀ assessmentId (UUID-shaped string)
-  → DOMParser().parseFromString(generateBadgeSVG(riskLevel, id), "image/svg+xml")
-     produces a document with zero parser errors
-```
-
-#### Test file: `src/__tests__/property/questions-properties.test.ts`
-
-```
-Property 9 — Questionnaire always terminates
-  ∀ complete answer maps (all questions answered with valid values)
-  → traverseQuestionnaire(answers) completes in ≤ 12 hops (no infinite loop)
-
-Property 10 — Progress is monotonically non-decreasing
-  ∀ answer sequences where the user only moves forward (no goBack)
-  → each successive answerQuestion call produces progress ≥ previous progress
-```
-
----
-
-## 6. Coverage Targets
-
-Coverage measured by Vitest `v8` provider. **CI fails if any target is not met.**
-
-| Module | Line % | Branch % | Notes |
+| Test ID | Module | Property | Generators |
 |---|---|---|---|
-| `src/lib/classifier.ts` | **95%** | **95%** | Legal correctness — highest priority |
-| `src/lib/obligations.ts` | **95%** | **90%** | Legal correctness |
-| `src/lib/questions.ts` | **90%** | **90%** | Branching logic |
-| `src/lib/validation/schemas.ts` | **90%** | **85%** | All schema paths |
-| `src/components/checker/QuestionnaireProvider.tsx` | **85%** | **80%** | State + persistence |
-| `src/components/checker/QuestionCard.tsx` | **85%** | **80%** | Interaction + a11y |
-| `src/components/results/` (badge + PDF) | **80%** | **75%** | SVG + PDF builders |
-| `src/app/api/assessments/route.ts` | **85%** | **80%** | POST + GET |
-| `src/app/api/assessments/[id]/route.ts` | **85%** | **80%** | GET / PATCH / DELETE |
-| `src/app/api/badge/[id]/route.ts` | **85%** | **80%** | SVG edge response |
-| `src/app/api/assessments/[id]/pdf/route.ts` | **80%** | **75%** | PDF stream |
-| `src/app/api/auth/register/route.ts` | **90%** | **85%** | Auth correctness |
-| `src/app/api/v1/classify/route.ts` | **90%** | **85%** | Public API |
-| `src/app/api/keys/route.ts` | **85%** | **80%** | Key lifecycle |
-| `src/app/api/templates/[templateId]/route.ts` | **80%** | **75%** | Template delivery |
-| `src/lib/constants.ts` | **70%** | n/a | Config data only |
-| **Overall project** | **≥ 85%** | **≥ 80%** | **CI gate** |
-
-> **Excluded from coverage:** `src/app/**/page.tsx` layout shells (covered by E2E), `src/components/ui/` (shadcn vendor components), generated Prisma client, `*.config.ts` files.
+| P-CLS-01 | `classifier.ts` | `riskLevel` always one of 4 valid enum values | `fc.record` with arbitrary answer strings |
+| P-CLS-02 | `classifier.ts` | `classify()` never throws for any valid partial `AssessmentAnswers` | Arbitrary partial record |
+| P-CLS-03 | `classifier.ts` | `citedArticles` always non-empty array | Same arbitrary answers |
+| P-OBL-01 | `obligations.ts` | `getObligationsForLevel` returns array for every `(RiskLevel, UserRole)` pair | `fc.constantFrom` over enums |
+| P-VAL-01 | `schemas.ts` | `assessmentAnswersSchema.parse()` never throws on valid-string partial records | `fc.record` with optional valid strings |
+| P-VAL-02 | `schemas.ts` | `registerSchema` rejects passwords missing uppercase OR digit | `fc.string` filtered to omit those chars |
+| P-UTIL-01 | `utils.ts` | `slugify(s)` always matches `/^[a-z0-9-]*$/` | `fc.string` (unicode) |
+| P-UTIL-02 | `utils.ts` | `truncate(s, n).length <= n + 1` | `fc.string`, `fc.nat({max:200})` |
+| P-UTIL-03 | `utils.ts` | `generateAnonymousId()` always matches `/^[a-z0-9_-]+$/` | No input; run 1000× |
+| P-ASSESS-01 | API roundtrip | POST then GET by ID: `riskLevel` identical in both | Arbitrary valid `AssessmentAnswers` |
+| P-QUEST-01 | `questions.ts` | Following `next()` chain never produces a cycle | Graph traversal with all possible answer values |
+| P-RATE-01 | `limiter.ts` | After exactly N requests at limit, `success` flips to `false` | `fc.nat({min:1, max:100})` for limit |
 
 ---
 
-## 7. SPEC.md Acceptance Criteria Traceability
+## 6. Per-Module Coverage Targets
 
-Every acceptance criterion from SPEC.md is mapped to ≥ 1 test. Tests labelled `[AC:Fxx]` in CI output.
+Enforced via `vitest.config.ts` `coverage.thresholds`. Engine targets are set at 100% because a
+missed branch is a potential **legal misclassification**.
 
-| # | SPEC Criterion | Covered By |
-|---|---|---|
-| **F1 — 12-Question Risk Classification Questionnaire** | | |
-| F1-1 | Exactly 12 questions with branching logic | `unit/questions.test.ts` — "exactly 12 questions"; branching paths |
-| F1-2 | Q4 prohibited answer → immediate unacceptable | `unit/classifier.test.ts` — prohibited short-circuit; E2E Flow 3 |
-| F1-3 | Q3 GPAI = yes → skip domain/function questions | `unit/questions.test.ts` — GPAI skip; `unit/classifier.test.ts` — GPAI path |
-| F1-4 | Q8 narrow procedural overrides domain match | `unit/classifier.test.ts` — narrow procedural override |
-| F1-5 | Progress indicator updates on each answer | `unit/QuestionnaireProvider.test.tsx` — progress calc; E2E Flow 1 step 3 |
-| F1-6 | Back navigation restores previous answer | `unit/QuestionnaireProvider.test.tsx` — `goBack()`; E2E Flow 2 step 18 |
-| F1-7 | State persists on page reload | `unit/QuestionnaireProvider.test.tsx` — localStorage init; E2E Flow 1 reload variant |
-| F1-8 | Question transition < 100ms | E2E Flow 1 — Playwright `toBeVisible({ timeout: 100 })` on next question-card |
-| **F2 — Obligation Checklist** | | |
-| F2-1 | High-risk provider: 11 obligations | `unit/obligations.test.ts`; E2E Flow 2 step 13 |
-| F2-2 | Each obligation has article reference | `unit/obligations.test.ts` — articleRef format; E2E Flow 2 steps 14–16 |
-| F2-3 | Plain-language descriptions (not just codes) | `unit/obligations.test.ts` — description non-empty; E2E Flow 2 step 17 |
-| F2-4 | High-risk deployer: 2 obligations (Art.14, Art.27) | `unit/obligations.test.ts` — high-risk + deployer |
-| F2-5 | Limited-risk: Art.50 transparency obligation | `unit/obligations.test.ts` — limited-risk + any role |
-| F2-6 | Unacceptable: Art.5 cessation obligation | `unit/obligations.test.ts`; E2E Flow 3 step 7 |
-| F2-7 | Minimal risk: no mandatory obligations | `unit/obligations.test.ts` — minimal; E2E Flow 1 step 15 |
-| **F3 — Shareable Compliance Badge** | | |
-| F3-1 | Badge is SVG with correct risk color | `unit/badge.test.ts`; `integration/api/badge.test.ts`; E2E Flow 5 step 2 |
-| F3-2 | Badge has unique stable URL | `unit/badge.test.ts` — URL uniqueness; E2E Flow 5 step 6 |
-| F3-3 | Badge URL is publicly accessible (no auth) | `integration/api/badge.test.ts`; E2E Flow 5 step 7 |
-| F3-4 | Color coding per risk level | `integration/api/badge.test.ts` — each riskLevel color |
-| F3-5 | Copy badge URL to clipboard | E2E Flow 5 steps 3–4 |
-| **F4 — PDF Export** | | |
-| F4-1 | PDF contains full assessment results | `unit/pdf.test.ts` — content assertions |
-| F4-2 | PDF generation < 3s | `integration/api/pdf.test.ts` — timing; E2E Flow 4 performance assertion |
-| F4-3 | Valid PDF output | `integration/api/pdf.test.ts` — %PDF- magic number |
-| F4-4 | PDF includes disclaimer | `unit/pdf.test.ts` — disclaimer present |
-| F4-5 | Only assessment owner can download PDF | `integration/api/pdf.test.ts` — 401/403 auth scenarios |
-| **F5 — Landing Page & SEO** | | |
-| F5-1 | Page load < 1.5s | E2E Flow 8 — DOMContentLoaded timing |
-| F5-2 | JSON-LD structured data | E2E Flow 8 steps 8–9 |
-| F5-3 | Meta description 50–160 chars | E2E Flow 8 step 4 |
-| F5-4 | OG tags present | E2E Flow 8 step 5 |
-| F5-5 | Canonical URL tag | E2E Flow 8 step 7 |
-| **F6 — Documentation Templates (P1)** | | |
-| F6-1 | Templates downloadable as Markdown | `integration/api/templates.test.ts` — content-type + body |
-| F6-2 | Templates cover major obligation categories | `integration/api/templates.test.ts` — templateId coverage list |
-| **F7 — User Accounts & Saved Assessments (P1)** | | |
-| F7-1 | Registration with email + password | `integration/api/auth-register.test.ts`; E2E Flow 6 steps 1–3 |
-| F7-2 | Password stored as bcrypt hash | `integration/api/auth-register.test.ts` — DB hash check |
-| F7-3 | Saved assessments tied to account | `integration/api/assessments-list.test.ts`; E2E Flow 6 steps 4–10 |
-| F7-4 | Assessments persist across sessions | E2E Flow 6 steps 11–13 |
-| F7-5 | User cannot see other users' assessments | `integration/api/assessments-list.test.ts` — isolation; `assessments-get.test.ts` — 403 |
-| **F8 — Assessment Comparison View (P1)** | | |
-| F8-1 | Compare two assessments side-by-side | E2E Flow 6 step 14–17 (pending F8 impl) |
-| **F9 — Compliance Timeline (P2)** | | |
-| F9-1 | Countdown to Aug 2, 2026 enforcement deadline | `unit/constants.test.ts` — DEADLINES values; E2E stub |
-| **F10 — Email Deadline Reminders (P2)** | | |
-| F10-1 | Email sent via Resend before deadline | Integration test for email route (stub — pending F10 impl) |
-| **F11 — Multi-Language Support (P2)** | | |
-| F11-1 | EN/DE/FR questionnaire and results | E2E Flow 9 (stub — pending F11 impl) |
-| **F12 — Public API (P2)** | | |
-| F12-1 | API key authentication | `integration/api/public-classify.test.ts` — auth scenarios |
-| F12-2 | Same result as UI for same inputs | `integration/api/public-classify.test.ts` — parity test |
-| F12-3 | Rate limited at 100 req/min | `integration/api/public-classify.test.ts` — 429 test |
-| **NFR — Non-Functional Requirements** | | |
-| NFR-1: Page load < 1.5s | E2E Flow 8 |
-| NFR-1: Question transition < 100ms | E2E Flow 1 — Playwright timing |
-| NFR-1: PDF < 3s | E2E Flow 4; `integration/api/pdf.test.ts` |
-| NFR-2: Chrome/Firefox/Safari/Edge | Playwright multi-browser: chromium, firefox, webkit |
-| NFR-3: WCAG 2.1 AA | E2E Flow 7 — axe-core per page |
-| NFR-4: HTTPS / HSTS | Staging deploy pipeline (infra-level, outside test scope) |
-| NFR-5: bcrypt passwords | `integration/api/auth-register.test.ts` |
-| NFR-6: HTTP-only cookies | `integration/api/assessments-create.test.ts` — cookie flags |
-| NFR-7: CSRF protection | NextAuth handles; integration tests use same-origin fetch |
-| NFR-8: Rate limiting on public endpoints | `integration/api/assessments-create.test.ts`; `public-classify.test.ts` |
-| NFR-9: GDPR — no PII in anonymous assessments | `integration/api/assessments-get.test.ts` — response shape excludes PII; `unit/badge.test.ts` — SVG has no PII |
+| Module / Path | Statements | Branches | Functions | Lines | Rationale |
+|---|---|---|---|---|---|
+| `src/lib/engine/classifier.ts` | **100%** | **100%** | **100%** | **100%** | Every branch is a legal compliance decision |
+| `src/lib/engine/obligations.ts` | **100%** | **100%** | **100%** | **100%** | Every obligation is a legal requirement |
+| `src/lib/engine/questions.ts` | **95%** | **90%** | **100%** | **95%** | Branching chain coverage |
+| `src/lib/engine/articles.ts` | **100%** | **100%** | **100%** | **100%** | Static data; trivially coverable |
+| `src/lib/engine/types.ts` | **100%** | **100%** | **100%** | **100%** | Types covered by importing tests |
+| `src/lib/validation/schemas.ts` | **100%** | **95%** | **100%** | **100%** | Security boundary |
+| `src/lib/auth/config.ts` | **90%** | **85%** | **90%** | **90%** | Auth security |
+| `src/lib/auth/providers.ts` | **90%** | **85%** | **90%** | **90%** | Auth security |
+| `src/lib/rate-limit/limiter.ts` | **95%** | **90%** | **100%** | **95%** | Rate-limit correctness |
+| `src/lib/utils.ts` | **95%** | **90%** | **100%** | **95%** | Pure utility functions |
+| `src/lib/constants.ts` | **80%** | N/A | N/A | **80%** | Static data |
+| `src/components/checker/QuestionnaireProvider.tsx` | **90%** | **85%** | **90%** | **90%** | Core UI state machine |
+| `src/components/checker/QuestionCard.tsx` | **85%** | **80%** | **85%** | **85%** | UI component |
+| `src/components/checker/QuestionnaireShell.tsx` | **85%** | **80%** | **85%** | **85%** | UI component |
+| `src/app/api/assessments/route.ts` | **90%** | **85%** | **90%** | **90%** | API contract + rate-limit branches |
+| `src/app/api/auth/register/route.ts` | **95%** | **90%** | **95%** | **95%** | Auth security boundary |
+| `src/app/api/badge/[id]/route.ts` | **85%** | **80%** | **85%** | **85%** | Public endpoint |
+| `src/app/api/v1/classify/route.ts` | **90%** | **85%** | **90%** | **90%** | Public API |
+| **Global minimum (all other files)** | **80%** | **75%** | **80%** | **80%** | Baseline floor |
+
+### `vitest.config.ts` threshold block
+
+```ts
+coverage: {
+  provider: "v8",
+  include: ["src/lib/**", "src/components/checker/**", "src/app/api/**"],
+  exclude: ["src/__tests__/**", "src/**/*.d.ts"],
+  thresholds: {
+    "src/lib/engine/**": {
+      statements: 100, branches: 100, functions: 100, lines: 100
+    },
+    "src/lib/validation/**": {
+      statements: 100, branches: 95, functions: 100, lines: 100
+    },
+    global: {
+      statements: 80, branches: 75, functions: 80, lines: 80
+    }
+  }
+}
+```
 
 ---
 
-*All tests that map to an acceptance criterion are annotated with `[AC:Fxx]` in their `describe` or `it` description strings, enabling automated traceability reports in CI output.*
+## 7. Test Data & Fixtures
+
+### 7.1 E2E Seeded Users
+
+```ts
+// playwright/fixtures/users.ts
+export const TEST_USER  = { email: "test@example.com",  password: "Passw0rd1" };
+export const TEST_USER2 = { email: "other@example.com", password: "Passw0rd2" };
+// TEST_USER has 2 pre-seeded assessments: 1 high-risk (provider), 1 minimal
+```
+
+### 7.2 Canonical Answer Sets (shared across all layers)
+
+```ts
+// src/__tests__/fixtures/answers.ts
+export const ANSWERS = {
+  NOT_AI_SYSTEM: { isAiSystem: "no" },
+
+  UNACCEPTABLE: {
+    isAiSystem: "yes", role: "provider", prohibitedPractice: "social_scoring"
+  },
+
+  HIGH_RISK_PROVIDER: {
+    isAiSystem: "yes", role: "provider", gpai: "no",
+    prohibitedPractice: "none", safetyComponent: "no",
+    domain: ["employment"], aiFunction: "decision",
+    narrowTask: "no", profilesPersons: "no",
+    interactsWithPeople: "no", syntheticContent: "no", emotionRecognition: "no"
+  },
+
+  HIGH_RISK_DEPLOYER: {
+    /* same as above with role: "deployer" */
+  },
+
+  LIMITED_RISK: {
+    isAiSystem: "yes", role: "provider", gpai: "no",
+    prohibitedPractice: "none", safetyComponent: "no",
+    domain: [], aiFunction: "recommendation",
+    narrowTask: "yes", profilesPersons: "no",
+    interactsWithPeople: "yes", syntheticContent: "no", emotionRecognition: "no"
+  },
+
+  MINIMAL_RISK: {
+    isAiSystem: "yes", role: "provider", gpai: "no",
+    prohibitedPractice: "none", safetyComponent: "no",
+    domain: [], aiFunction: "recommendation",
+    narrowTask: "yes", profilesPersons: "no",
+    interactsWithPeople: "no", syntheticContent: "no", emotionRecognition: "no"
+  }
+};
+```
+
+### 7.3 Mock Files
+
+| File | Purpose |
+|---|---|
+| `src/__tests__/mocks/prisma.ts` | `vi.mock("@/lib/db/client")` — typed mock Prisma client factory |
+| `src/__tests__/mocks/nextauth.ts` | `vi.mock("next-auth")` — `getServerSession` returns `TEST_USER` |
+| `src/__tests__/mocks/storage.ts` | `localStorage` / `sessionStorage` stub (JSDOM Storage) |
+| `src/__tests__/mocks/resend.ts` | `vi.mock("resend")` — prevents real email sends |
+
+---
+
+## 8. Playwright Configuration
+
+```ts
+// playwright.config.ts
+export default defineConfig({
+  globalSetup:    "./playwright/global-setup.ts",
+  globalTeardown: "./playwright/global-teardown.ts",
+  use: {
+    baseURL:    "http://localhost:3000",
+    trace:      "on-first-retry",
+    screenshot: "only-on-failure"
+  },
+  projects: [
+    { name: "chromium",     use: { ...devices["Desktop Chrome"]  } },
+    { name: "firefox",      use: { ...devices["Desktop Firefox"] } },
+    { name: "mobile-safari",use: { ...devices["iPhone 13"]       } }
+  ],
+  reporter: [
+    ["html",  { outputFolder: "playwright-report"         }],
+    ["junit", { outputFile:   "test-results/junit.xml"    }]
+  ],
+  webServer: {
+    command:             "pnpm dev",
+    url:                 "http://localhost:3000",
+    reuseExistingServer: !process.env.CI
+  }
+});
+```
+
+---
+
+## 9. Out of Scope (P1/P2 Features)
+
+Excluded pending implementation:
+
+- Documentation templates (`/api/templates`)
+- Assessment comparison UI
+- Email reminder integration (Resend) — mock boundary only
+- Multi-language / i18n
+- API key management UI
+- Compliance timeline visualisation
+- Team plan multi-user scoping
+
+---
+
+## 10. Test Execution Reference
+
+```bash
+# All unit tests
+pnpm vitest run
+
+# Unit tests with v8 coverage report
+pnpm vitest run --coverage
+
+# Integration tests only
+pnpm vitest run src/__tests__/integration
+
+# Property-based tests only
+pnpm vitest run src/__tests__/property
+
+# Watch mode during development
+pnpm vitest
+
+# All E2E tests (requires running dev server)
+pnpm playwright test
+
+# Headed / debug single spec
+pnpm playwright test playwright/tests/questionnaire.spec.ts --headed --debug
+
+# Accessibility suite
+pnpm playwright test playwright/tests/accessibility.spec.ts
+
+# Performance suite
+pnpm playwright test playwright/tests/performance.spec.ts
+
+# View last E2E HTML report
+pnpm playwright show-report
+```
