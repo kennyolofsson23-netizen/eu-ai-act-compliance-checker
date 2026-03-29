@@ -1,10 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Globe } from "lucide-react";
-import {
-  SUPPORTED_LOCALES,
-  getLocaleDisplayName,
-} from "@/lib/i18n/config";
+import { SUPPORTED_LOCALES, getLocaleDisplayName } from "@/lib/i18n/config";
 import type { SupportedLocale } from "@/lib/i18n/config";
 
 interface LanguageSelectorProps {

@@ -38,9 +38,7 @@ export async function GET(request: NextRequest) {
       }),
     );
 
-    const sent = results.filter(
-      (r) => r.status === "fulfilled",
-    ).length;
+    const sent = results.filter((r) => r.status === "fulfilled").length;
 
     return NextResponse.json({ sent, total: assessments.length });
   } catch {

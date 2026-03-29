@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { Shield, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  Clock,
+} from "lucide-react";
 
 export interface AssessmentCardProps {
   id: string;
@@ -42,7 +48,10 @@ export default function AssessmentCard({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Icon className={`h-5 w-5 shrink-0 ${colorClass}`} aria-hidden="true" />
+          <Icon
+            className={`h-5 w-5 shrink-0 ${colorClass}`}
+            aria-hidden="true"
+          />
           <div>
             <h3 className="font-semibold text-slate-900">{systemName}</h3>
             <p className="text-sm text-slate-500 capitalize">

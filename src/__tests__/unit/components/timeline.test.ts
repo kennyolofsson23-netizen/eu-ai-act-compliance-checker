@@ -15,7 +15,11 @@ const KNOWN_DEADLINES: Record<string, string> = {
   "cease-prohibited": "2024-02-02",
 };
 
-function makeObligation(id: string, title = "Test", article = "Article X"): Obligation {
+function makeObligation(
+  id: string,
+  title = "Test",
+  article = "Article X",
+): Obligation {
   return {
     id,
     title,

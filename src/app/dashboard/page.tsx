@@ -3,7 +3,14 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Shield, Plus, Clock, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import {
+  Shield,
+  Plus,
+  Clock,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
 interface AssessmentSummary {
   id: string;
@@ -93,7 +100,10 @@ export default function DashboardPage() {
 
         {assessments.length === 0 ? (
           <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-            <Shield className="h-12 w-12 text-slate-300 mx-auto mb-4" aria-hidden="true" />
+            <Shield
+              className="h-12 w-12 text-slate-300 mx-auto mb-4"
+              aria-hidden="true"
+            />
             <h2 className="text-lg font-semibold text-slate-700 mb-2">
               No assessments yet
             </h2>
@@ -112,7 +122,8 @@ export default function DashboardPage() {
           <div className="grid gap-4">
             {assessments.map((assessment) => {
               const Icon = RISK_ICONS[assessment.riskLevel] ?? Shield;
-              const colorClass = RISK_COLORS[assessment.riskLevel] ?? "text-slate-500";
+              const colorClass =
+                RISK_COLORS[assessment.riskLevel] ?? "text-slate-500";
               return (
                 <div
                   key={assessment.id}
@@ -120,13 +131,17 @@ export default function DashboardPage() {
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <Icon className={`h-5 w-5 shrink-0 ${colorClass}`} aria-hidden="true" />
+                      <Icon
+                        className={`h-5 w-5 shrink-0 ${colorClass}`}
+                        aria-hidden="true"
+                      />
                       <div>
                         <h3 className="font-semibold text-slate-900">
                           {assessment.systemName}
                         </h3>
                         <p className="text-sm text-slate-500 capitalize">
-                          {assessment.riskLevel.replace("-", " ")} risk · {assessment.role}
+                          {assessment.riskLevel.replace("-", " ")} risk ·{" "}
+                          {assessment.role}
                           {assessment.isGpai ? " · GPAI" : ""}
                         </p>
                       </div>

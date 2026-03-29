@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { Shield, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  Clock,
+} from "lucide-react";
 
 export interface AssessmentListItem {
   id: string;
@@ -45,7 +51,8 @@ export default function AssessmentList({ assessments }: AssessmentListProps) {
     <ul className="space-y-3" aria-label="Your assessments">
       {assessments.map((assessment) => {
         const Icon = RISK_ICONS[assessment.riskLevel] ?? Shield;
-        const colorClass = RISK_COLORS[assessment.riskLevel] ?? "text-slate-500";
+        const colorClass =
+          RISK_COLORS[assessment.riskLevel] ?? "text-slate-500";
         return (
           <li
             key={assessment.id}

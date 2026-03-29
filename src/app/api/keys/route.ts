@@ -38,9 +38,10 @@ export async function POST(request: NextRequest) {
   }
 
   const body = (await request.json().catch(() => ({}))) as { name?: string };
-  const name = typeof body.name === "string" && body.name.trim()
-    ? body.name.trim()
-    : "Default";
+  const name =
+    typeof body.name === "string" && body.name.trim()
+      ? body.name.trim()
+      : "Default";
 
   const { key, keyHash, keyPrefix } = generateApiKey();
 

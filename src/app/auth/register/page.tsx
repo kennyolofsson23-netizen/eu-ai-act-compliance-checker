@@ -24,7 +24,10 @@ export default function RegisterPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError((data as { error?: string }).error ?? "Registration failed. Please try again.");
+        setError(
+          (data as { error?: string }).error ??
+            "Registration failed. Please try again.",
+        );
         setLoading(false);
         return;
       }
@@ -39,7 +42,10 @@ export default function RegisterPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Shield className="h-10 w-10 text-blue-600 mx-auto mb-3" aria-hidden="true" />
+          <Shield
+            className="h-10 w-10 text-blue-600 mx-auto mb-3"
+            aria-hidden="true"
+          />
           <h1 className="text-2xl font-bold text-slate-900">Create account</h1>
           <p className="text-slate-500 mt-1 text-sm">
             Save and track your compliance assessments
@@ -57,7 +63,10 @@ export default function RegisterPage() {
           )}
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Name
             </label>
             <input
@@ -72,7 +81,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -88,7 +100,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Password
             </label>
             <input

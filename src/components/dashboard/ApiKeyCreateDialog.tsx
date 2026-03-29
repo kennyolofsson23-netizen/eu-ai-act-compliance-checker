@@ -3,10 +3,18 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 
 interface ApiKeyCreateDialogProps {
-  onCreated: (key: { id: string; name: string; keyPrefix: string; key: string; createdAt: string }) => void;
+  onCreated: (key: {
+    id: string;
+    name: string;
+    keyPrefix: string;
+    key: string;
+    createdAt: string;
+  }) => void;
 }
 
-export default function ApiKeyCreateDialog({ onCreated }: ApiKeyCreateDialogProps) {
+export default function ApiKeyCreateDialog({
+  onCreated,
+}: ApiKeyCreateDialogProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +30,15 @@ export default function ApiKeyCreateDialog({ onCreated }: ApiKeyCreateDialogProp
         body: JSON.stringify({ name: name.trim() || "Default" }),
       });
       if (!res.ok) throw new Error("Failed to create key");
-      const data = (await res.json()) as { apiKey: { id: string; name: string; keyPrefix: string; key: string; createdAt: string } };
+      const data = (await res.json()) as {
+        apiKey: {
+          id: string;
+          name: string;
+          keyPrefix: string;
+          key: string;
+          createdAt: string;
+        };
+      };
       onCreated(data.apiKey);
       setOpen(false);
       setName("");

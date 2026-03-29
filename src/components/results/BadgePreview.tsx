@@ -37,9 +37,7 @@ export default function BadgePreview({
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
-      <h3 className="text-sm font-semibold text-slate-700">
-        Compliance Badge
-      </h3>
+      <h3 className="text-sm font-semibold text-slate-700">Compliance Badge</h3>
 
       <div className="flex items-center gap-3">
         {/* Badge preview */}
@@ -84,9 +82,7 @@ export default function BadgePreview({
         </div>
       </div>
 
-      <p className="text-xs text-slate-400">
-        System: {systemName}
-      </p>
+      <p className="text-xs text-slate-400">System: {systemName}</p>
     </div>
   );
 }

@@ -27,7 +27,9 @@ export default function SettingsPage() {
       <div className="container mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center gap-3 mb-8">
           <Settings className="h-6 w-6 text-slate-600" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-slate-900">Account Settings</h1>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Account Settings
+          </h1>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-4">

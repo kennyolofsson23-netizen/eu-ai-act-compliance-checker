@@ -35,13 +35,17 @@ export async function GET(
       isGpai: assessment.isGpai,
       annexCategory: assessment.annexCategory ?? undefined,
       citedArticles: JSON.parse(assessment.citedArticles) as string[],
-      obligations: JSON.parse(assessment.obligations) as AssessmentData["obligations"],
+      obligations: JSON.parse(
+        assessment.obligations,
+      ) as AssessmentData["obligations"],
       answers: JSON.parse(assessment.answers) as AssessmentData["answers"],
       createdAt: assessment.createdAt.toISOString(),
       updatedAt: assessment.updatedAt.toISOString(),
     };
 
-    const pdfBuffer = await generateAssessmentPdf({ assessment: assessmentData });
+    const pdfBuffer = await generateAssessmentPdf({
+      assessment: assessmentData,
+    });
     const filename = getPdfFilename(assessmentData);
 
     return new NextResponse(new Uint8Array(pdfBuffer), {

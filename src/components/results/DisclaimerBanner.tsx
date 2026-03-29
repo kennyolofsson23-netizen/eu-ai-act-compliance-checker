@@ -6,8 +6,8 @@ export default function DisclaimerBanner() {
       <Info className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
       <p className="text-sm leading-relaxed">
         <span className="font-semibold">Disclaimer:</span> This tool provides
-        educational guidance based on publicly available information about the EU
-        AI Act. The results are{" "}
+        educational guidance based on publicly available information about the
+        EU AI Act. The results are{" "}
         <span className="font-semibold">not legal advice</span>. You should
         consult qualified legal counsel for compliance decisions affecting your
         business.

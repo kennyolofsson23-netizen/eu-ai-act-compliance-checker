@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getTemplate, getAllTemplates, TEMPLATE_IDS } from "@/lib/templates/index";
+import {
+  getTemplate,
+  getAllTemplates,
+  TEMPLATE_IDS,
+} from "@/lib/templates/index";
 import type { TemplateId } from "@/lib/templates/index";
 
 export async function GET(

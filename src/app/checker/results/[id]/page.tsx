@@ -24,7 +24,9 @@ export default async function SavedResultPage({ params }: Props) {
     isGpai: assessment.isGpai,
     annexCategory: assessment.annexCategory ?? undefined,
     citedArticles: JSON.parse(assessment.citedArticles) as string[],
-    obligations: JSON.parse(assessment.obligations) as AssessmentData["obligations"],
+    obligations: JSON.parse(
+      assessment.obligations,
+    ) as AssessmentData["obligations"],
     answers: JSON.parse(assessment.answers) as AssessmentData["answers"],
     createdAt: assessment.createdAt.toISOString(),
     updatedAt: assessment.updatedAt.toISOString(),

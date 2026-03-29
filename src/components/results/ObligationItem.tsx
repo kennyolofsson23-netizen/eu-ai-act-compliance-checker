@@ -15,8 +15,12 @@ export default function ObligationItem({ obligation }: ObligationItemProps) {
       <div>
         <p className="font-medium text-slate-800">{obligation.title}</p>
         <p className="text-sm text-slate-500 mt-0.5">{obligation.summary}</p>
-        <p className="text-sm text-slate-600 mt-1">{obligation.practicalMeaning}</p>
-        <span className="text-xs text-blue-600 font-medium">{obligation.article}</span>
+        <p className="text-sm text-slate-600 mt-1">
+          {obligation.practicalMeaning}
+        </p>
+        <span className="text-xs text-blue-600 font-medium">
+          {obligation.article}
+        </span>
         {obligation.deadline && (
           <span className="ml-2 text-xs text-slate-400">
             Deadline: {obligation.deadline}

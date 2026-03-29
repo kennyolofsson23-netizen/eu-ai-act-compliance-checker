@@ -33,7 +33,10 @@ export default function LoginPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Shield className="h-10 w-10 text-blue-600 mx-auto mb-3" aria-hidden="true" />
+          <Shield
+            className="h-10 w-10 text-blue-600 mx-auto mb-3"
+            aria-hidden="true"
+          />
           <h1 className="text-2xl font-bold text-slate-900">Sign in</h1>
           <p className="text-slate-500 mt-1 text-sm">
             Access your saved assessments
@@ -51,7 +54,10 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -67,7 +73,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Password
             </label>
             <input
@@ -92,7 +101,10 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-slate-500">
             No account?{" "}
-            <Link href="/auth/register" className="text-blue-600 hover:underline">
+            <Link
+              href="/auth/register"
+              className="text-blue-600 hover:underline"
+            >
               Create one
             </Link>
           </p>
