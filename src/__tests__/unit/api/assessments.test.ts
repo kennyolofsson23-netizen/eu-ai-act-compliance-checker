@@ -69,7 +69,7 @@ const mockAssessment = {
 describe("POST /api/assessments", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as never);
     vi.mocked(prisma.assessment.create).mockResolvedValue(
       mockAssessment as never,
     );
@@ -197,7 +197,7 @@ describe("GET /api/assessments", () => {
   });
 
   it("returns 401 for unauthenticated requests", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as never);
     const res = await GET(getRequest());
     expect(res.status).toBe(401);
   });

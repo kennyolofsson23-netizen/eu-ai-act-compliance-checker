@@ -94,7 +94,7 @@ describe("GET /api/assessments/[id]", () => {
   });
 
   it("allows anonymous access when anonymousId cookie matches", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as never);
     vi.mocked(prisma.assessment.findUnique).mockResolvedValue({
       ...baseAssessment,
       userId: null,
@@ -108,7 +108,7 @@ describe("GET /api/assessments/[id]", () => {
   });
 
   it("returns 403 when anonymous id does not match", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as never);
     vi.mocked(prisma.assessment.findUnique).mockResolvedValue({
       ...baseAssessment,
       userId: null,
@@ -142,7 +142,7 @@ describe("PATCH /api/assessments/[id]", () => {
   });
 
   it("returns 401 for unauthenticated requests", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as never);
     const res = await PATCH(
       req("PATCH", "assess-1", { body: { systemName: "x" } }),
       makeParams("assess-1"),
@@ -213,7 +213,7 @@ describe("DELETE /api/assessments/[id]", () => {
   });
 
   it("returns 401 for unauthenticated requests", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as never);
     const res = await DELETE(req("DELETE", "assess-1"), makeParams("assess-1"));
     expect(res.status).toBe(401);
   });
