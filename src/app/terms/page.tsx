@@ -25,9 +25,9 @@ export default function TermsPage() {
             </h2>
             <p>
               By accessing and using the EU AI Act Compliance Checker
-              (&quot;Service&quot;), you accept and agree to be bound by the terms and
-              provision of this agreement. If you do not agree to abide by the
-              above, please do not use this service.
+              (&quot;Service&quot;), you accept and agree to be bound by the
+              terms and provision of this agreement. If you do not agree to
+              abide by the above, please do not use this service.
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
@@ -51,8 +51,8 @@ export default function TermsPage() {
                 contained on the Service
               </li>
               <li>
-                Transferring the materials to another person or &quot;mirroring&quot; the
-                materials on any other server
+                Transferring the materials to another person or
+                &quot;mirroring&quot; the materials on any other server
               </li>
               <li>
                 Removing any copyright or other proprietary notations from the
@@ -66,10 +66,10 @@ export default function TermsPage() {
             </h2>
             <p>
               The materials on the EU AI Act Compliance Checker are provided on
-              an &apos;as is&apos; basis. The EU AI Act Compliance Checker makes no
-              warranties, expressed or implied, and hereby disclaims and negates
-              all other warranties including, without limitation, implied
-              warranties or conditions of merchantability, fitness for a
+              an &apos;as is&apos; basis. The EU AI Act Compliance Checker makes
+              no warranties, expressed or implied, and hereby disclaims and
+              negates all other warranties including, without limitation,
+              implied warranties or conditions of merchantability, fitness for a
               particular purpose, or non-infringement of intellectual property
               or other violation of rights.
             </p>

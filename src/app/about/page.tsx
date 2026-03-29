@@ -21,8 +21,8 @@ export default function AboutPage() {
           <div className="prose prose-lg max-w-none space-y-6 text-slate-700">
             <p>
               The EU AI Act Compliance Checker is a free tool designed to help
-              organizations quickly assess their AI systems&apos; compliance with the
-              European Union&apos;s groundbreaking AI Act.
+              organizations quickly assess their AI systems&apos; compliance
+              with the European Union&apos;s groundbreaking AI Act.
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
