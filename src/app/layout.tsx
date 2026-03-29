@@ -1,89 +1,45 @@
-import type { Metadata, Viewport } from 'next'
-import { ReactNode } from 'react'
+import type { Metadata } from 'next'
 import './globals.css'
-
-const APP_NAME = 'EU AI Act Compliance Checker'
-const APP_DESCRIPTION = 'EU AI Act Compliance Checker is a free AI compliance tool that answers 12 questions about your AI product to instantly get your EU AI Act risk classification, obligation checklist, and documentation templates.'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import { APP_NAME, APP_URL, APP_DESCRIPTION } from '@/lib/constants'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: {
-    default: `${APP_NAME} - Free EU AI Act Risk Assessment`,
-    template: `%s | ${APP_NAME}`
+    default: 'EU AI Act Compliance Checker — Free Risk Classification Tool',
+    template: '%s | EU AI Act Compliance Checker',
   },
   description: APP_DESCRIPTION,
-  applicationName: APP_NAME,
-  authors: [{ name: 'EU AI Compliance Team' }],
-  creator: 'EU AI Compliance Team',
-  keywords: [
-    'EU AI Act',
-    'AI compliance',
-    'risk assessment',
-    'AI regulation',
-    'compliance checker',
-    'high-risk AI',
-    'AI obligations',
-    'GDPR',
-    'compliance documentation',
-    'AI certification'
-  ],
+  keywords: ['EU AI Act', 'AI compliance', 'risk classification', 'GPAI', 'high-risk AI', 'AI regulation'],
+  authors: [{ name: 'EU AI Act Compliance Checker' }],
+  creator: 'EU AI Act Compliance Checker',
+  metadataBase: new URL(APP_URL),
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    url: APP_URL,
     siteName: APP_NAME,
-    title: `${APP_NAME} - Free EU AI Act Risk Assessment`,
+    title: 'EU AI Act Compliance Checker — Free Risk Classification Tool',
     description: APP_DESCRIPTION,
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: APP_NAME,
-        type: 'image/png'
-      }
-    ]
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: APP_NAME }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${APP_NAME} - Free EU AI Act Risk Assessment`,
+    title: 'EU AI Act Compliance Checker — Free Risk Classification Tool',
     description: APP_DESCRIPTION,
-    images: ['/twitter-image.png']
+    images: ['/og-image.png'],
   },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
-      { url: '/icon.svg', type: 'image/svg+xml' }
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
-    ]
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
-  robots: 'index, follow',
-  alternates: {
-    canonical: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  }
 }
 
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  colorScheme: 'light'
-}
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#ffffff" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-        {/* JSON-LD Schemas */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -91,44 +47,37 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               '@context': 'https://schema.org',
               '@type': 'SoftwareApplication',
               name: APP_NAME,
+              url: APP_URL,
               description: APP_DESCRIPTION,
-              url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
               applicationCategory: 'BusinessApplication',
-              offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'EUR'
-              },
-              author: {
+              operatingSystem: 'Web',
+              offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+              provider: {
                 '@type': 'Organization',
-                name: 'EU AI Compliance Team'
-              }
-            })
+                name: APP_NAME,
+                url: APP_URL,
+              },
+            }),
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: APP_NAME,
-              url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-              description: APP_DESCRIPTION,
-              logo: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/logo.png`,
-              sameAs: []
-            })
-          }}
-        />
-
-        {/* Plausible Analytics */}
-        <script defer data-domain={process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN || 'localhost'} src="https://plausible.io/js/script.js"></script>
-
-        {/* Permissions Policy */}
-        <meta name="permissions-policy" content="geolocation=(), microphone=(), camera=()" />
+        {process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN && (
+          <script
+            defer
+            data-domain={process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN}
+            src="https://plausible.io/js/script.js"
+          />
+        )}
       </head>
-      <body className="antialiased">
-        {children}
+      <body className="min-h-screen bg-white font-sans antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md"
+        >
+          Skip to main content
+        </a>
+        <Header />
+        <main id="main-content">{children}</main>
+        <Footer />
       </body>
     </html>
   )
