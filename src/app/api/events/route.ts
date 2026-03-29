@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/client";
 import { analyticsEventSchema } from "@/lib/validation/schemas";
+import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit/limiter";
 
 export async function POST(request: NextRequest) {
+  const rawIp = request.headers.get("x-forwarded-for");
+  const ip = rawIp ? rawIp.split(",")[0].trim() : "anonymous";
+  const rl = await rateLimit(
+    `events_${ip}`,
+    RATE_LIMITS.EVENTS.limit,
+    RATE_LIMITS.EVENTS.windowMs,
+  );
+  if (!rl.success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
