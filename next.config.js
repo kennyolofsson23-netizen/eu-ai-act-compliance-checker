@@ -4,7 +4,6 @@ const nextConfig = {
   swcMinify: true,
   typescript: {
     tsconfigPath: "./tsconfig.json",
-    tsconfigValidation: true,
   },
   headers: async () => {
     return [

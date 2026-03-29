@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle, Loader } from "lucide-react";
 
 interface FormData {
-  [key: string]: string | boolean;
+  [key: string]: string | boolean | string[];
 }
 
 interface RiskResult {
@@ -161,7 +161,7 @@ export default function ComplianceCheckerForm() {
   const [result, setResult] = useState<RiskResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleAnswer = (value: string | boolean) => {
+  const handleAnswer = (value: string | boolean | string[]) => {
     const questionId = ASSESSMENT_QUESTIONS[currentQuestion].id;
     setFormData((prev) => ({
       ...prev,
@@ -299,12 +299,12 @@ export default function ComplianceCheckerForm() {
                         type="checkbox"
                         checked={
                           Array.isArray(formData[question.id]) &&
-                          formData[question.id].includes(option)
+                          (formData[question.id] as string[]).includes(option)
                         }
                         onChange={(e) => {
                           const current = Array.isArray(formData[question.id])
-                            ? formData[question.id]
-                            : [];
+                            ? (formData[question.id] as string[])
+                            : ([] as string[]);
                           if (e.target.checked) {
                             handleAnswer([...current, option]);
                           } else {

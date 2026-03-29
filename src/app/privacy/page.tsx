@@ -24,7 +24,7 @@ export default function PrivacyPage() {
               1. Introduction
             </h2>
             <p>
-              The EU AI Act Compliance Checker ("we," "us," or "our") operates
+              The EU AI Act Compliance Checker (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates
               the euaiacompliance.app website. This page informs you of our
               policies regarding the collection, use, and disclosure of personal
               data when you use our Service and the choices you have associated

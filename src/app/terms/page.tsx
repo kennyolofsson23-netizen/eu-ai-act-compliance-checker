@@ -25,7 +25,7 @@ export default function TermsPage() {
             </h2>
             <p>
               By accessing and using the EU AI Act Compliance Checker
-              ("Service"), you accept and agree to be bound by the terms and
+              (&quot;Service&quot;), you accept and agree to be bound by the terms and
               provision of this agreement. If you do not agree to abide by the
               above, please do not use this service.
             </p>
@@ -51,7 +51,7 @@ export default function TermsPage() {
                 contained on the Service
               </li>
               <li>
-                Transferring the materials to another person or "mirroring" the
+                Transferring the materials to another person or &quot;mirroring&quot; the
                 materials on any other server
               </li>
               <li>
@@ -66,7 +66,7 @@ export default function TermsPage() {
             </h2>
             <p>
               The materials on the EU AI Act Compliance Checker are provided on
-              an 'as is' basis. The EU AI Act Compliance Checker makes no
+              an &apos;as is&apos; basis. The EU AI Act Compliance Checker makes no
               warranties, expressed or implied, and hereby disclaims and negates
               all other warranties including, without limitation, implied
               warranties or conditions of merchantability, fitness for a
@@ -117,7 +117,7 @@ export default function TermsPage() {
               linked to its website and is not responsible for the contents of
               any such linked site. The inclusion of any link does not imply
               endorsement by the EU AI Act Compliance Checker of the site. Use
-              of any such linked website is at the user's own risk.
+              of any such linked website is at the user&apos;s own risk.
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
