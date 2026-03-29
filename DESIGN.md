@@ -25,21 +25,27 @@
 ## 1. Design Principles
 
 ### 1.1 Trust First
+
 Compliance tooling demands credibility. Every visual and copy decision must communicate authority, accuracy, and seriousness. Avoid playful gradients, cartoon illustrations, or casual language. Use institutional blues, clean white space, and legalese-adjacent hierarchy.
 
 ### 1.2 Clarity Over Cleverness
+
 Users are completing a compliance task, not browsing for entertainment. Reduce cognitive load at every step: one primary action per screen, scannable text over walls of prose, visible progress indicators, and never hide where the user is in the flow.
 
 ### 1.3 Accessible by Default
+
 WCAG AA compliance is a non-negotiable baseline, not an afterthought. All interactive elements must be keyboard-operable, screen-reader-friendly, and meet minimum contrast ratios. This is especially important given that compliance professionals may use assistive technology.
 
 ### 1.4 Progressive Disclosure
+
 Surface only what is needed at each step. The 12-question wizard shows one question at a time. The results page reveals obligations in a scannable list before offering downloads or next-steps. Do not overwhelm users with all information simultaneously.
 
 ### 1.5 Free & Frictionless
+
 The product's competitive advantage is zero-cost access. Never design dark patterns suggesting upsells, paywalls, or artificial urgency. Reinforce "free forever" messaging organically at natural inflection points.
 
 ### 1.6 Institutional Polish
+
 Model the visual language after EU official publications and enterprise compliance SaaS (e.g., OneTrust, TrustArc) rather than consumer apps. Serif accents on large display text, structured grids, muted brand color — professional, not playful.
 
 ---
@@ -47,6 +53,7 @@ Model the visual language after EU official publications and enterprise complian
 ## 2. Visual Style
 
 ### 2.1 Overall Aesthetic
+
 - **Style**: Clean institutional SaaS with subtle EU regulatory references
 - **Mood**: Trustworthy, authoritative, approachable
 - **Layout**: Wide-margin content columns, generous whitespace, no decorative clutter
@@ -55,6 +62,7 @@ Model the visual language after EU official publications and enterprise complian
 - **Animation**: Minimal and purposeful — progress bar transitions (300ms ease-out), accordion expand/collapse (200ms ease), hover state color transitions (150ms)
 
 ### 2.2 Key Visual Motifs
+
 - **Progress indicators**: Horizontal step-progress bar (blue fill on slate track)
 - **Risk badges**: Color-coded pill/banner for each of the 4 risk levels
 - **Checklist items**: CheckCircle icon + text, consistent spacing
@@ -67,92 +75,96 @@ Model the visual language after EU official publications and enterprise complian
 
 ### 3.1 Primary Brand Colors
 
-| Role | Name | Hex | Tailwind class |
-|------|------|-----|----------------|
-| Brand primary | EU Blue | `#2563EB` | `blue-600` |
-| Brand primary hover | EU Blue Dark | `#1D4ED8` | `blue-700` |
-| Brand primary light | EU Blue Tint | `#EFF6FF` | `blue-50` |
-| Brand accent | EU Blue Mid | `#BFDBFE` | `blue-200` |
-| Link / interactive | EU Blue Text | `#1E40AF` | `blue-800` |
-| Focus ring | EU Blue Focus | `#93C5FD` | `blue-300` |
+| Role                | Name          | Hex       | Tailwind class |
+| ------------------- | ------------- | --------- | -------------- |
+| Brand primary       | EU Blue       | `#2563EB` | `blue-600`     |
+| Brand primary hover | EU Blue Dark  | `#1D4ED8` | `blue-700`     |
+| Brand primary light | EU Blue Tint  | `#EFF6FF` | `blue-50`      |
+| Brand accent        | EU Blue Mid   | `#BFDBFE` | `blue-200`     |
+| Link / interactive  | EU Blue Text  | `#1E40AF` | `blue-800`     |
+| Focus ring          | EU Blue Focus | `#93C5FD` | `blue-300`     |
 
 ### 3.2 Neutral Scale
 
-| Role | Name | Hex | Tailwind class |
-|------|------|-----|----------------|
-| Page background | White | `#FFFFFF` | `white` |
-| Surface / card bg | Slate 50 | `#F8FAFC` | `slate-50` |
-| Border default | Slate 200 | `#E2E8F0` | `slate-200` |
-| Border hover | Slate 300 | `#CBD5E1` | `slate-300` |
-| Text muted | Slate 500 | `#64748B` | `slate-500` |
-| Text secondary | Slate 600 | `#475569` | `slate-600` |
-| Text body | Slate 700 | `#334155` | `slate-700` |
-| Text heading | Slate 900 | `#0F172A` | `slate-900` |
+| Role              | Name      | Hex       | Tailwind class |
+| ----------------- | --------- | --------- | -------------- |
+| Page background   | White     | `#FFFFFF` | `white`        |
+| Surface / card bg | Slate 50  | `#F8FAFC` | `slate-50`     |
+| Border default    | Slate 200 | `#E2E8F0` | `slate-200`    |
+| Border hover      | Slate 300 | `#CBD5E1` | `slate-300`    |
+| Text muted        | Slate 500 | `#64748B` | `slate-500`    |
+| Text secondary    | Slate 600 | `#475569` | `slate-600`    |
+| Text body         | Slate 700 | `#334155` | `slate-700`    |
+| Text heading      | Slate 900 | `#0F172A` | `slate-900`    |
 
 ### 3.3 Risk Level Semantic Colors
 
 These four palettes are the most critical semantic colors in the product. They must always appear together as a reference system and must meet WCAG AA contrast on their respective backgrounds.
 
 #### Unacceptable Risk (Prohibited)
-| Element | Hex | Tailwind | Contrast on bg |
-|---------|-----|----------|---------------|
-| Background | `#FEF2F2` | `red-50` | — |
-| Border | `#FECACA` | `red-200` | — |
-| Banner bg | `#FEE2E2` | `red-100` | — |
-| Heading text | `#7F1D1D` | `red-900` | 12.6:1 ✅ |
-| Body text | `#991B1B` | `red-800` | 9.5:1 ✅ |
-| Icon / badge | `#DC2626` | `red-600` | 5.1:1 ✅ |
-| Pill border | `#FCA5A5` | `red-300` | — |
+
+| Element      | Hex       | Tailwind  | Contrast on bg |
+| ------------ | --------- | --------- | -------------- |
+| Background   | `#FEF2F2` | `red-50`  | —              |
+| Border       | `#FECACA` | `red-200` | —              |
+| Banner bg    | `#FEE2E2` | `red-100` | —              |
+| Heading text | `#7F1D1D` | `red-900` | 12.6:1 ✅      |
+| Body text    | `#991B1B` | `red-800` | 9.5:1 ✅       |
+| Icon / badge | `#DC2626` | `red-600` | 5.1:1 ✅       |
+| Pill border  | `#FCA5A5` | `red-300` | —              |
 
 #### High Risk
-| Element | Hex | Tailwind | Contrast on bg |
-|---------|-----|----------|---------------|
-| Background | `#FFF7ED` | `orange-50` | — |
-| Border | `#FED7AA` | `orange-200` | — |
-| Banner bg | `#FFEDD5` | `orange-100` | — |
-| Heading text | `#431407` | `orange-950` | 14.1:1 ✅ |
-| Body text | `#9A3412` | `orange-800` | 8.3:1 ✅ |
-| Icon / badge | `#EA580C` | `orange-600` | 4.7:1 ✅ |
-| Pill border | `#FDBA74` | `orange-300` | — |
+
+| Element      | Hex       | Tailwind     | Contrast on bg |
+| ------------ | --------- | ------------ | -------------- |
+| Background   | `#FFF7ED` | `orange-50`  | —              |
+| Border       | `#FED7AA` | `orange-200` | —              |
+| Banner bg    | `#FFEDD5` | `orange-100` | —              |
+| Heading text | `#431407` | `orange-950` | 14.1:1 ✅      |
+| Body text    | `#9A3412` | `orange-800` | 8.3:1 ✅       |
+| Icon / badge | `#EA580C` | `orange-600` | 4.7:1 ✅       |
+| Pill border  | `#FDBA74` | `orange-300` | —              |
 
 #### Limited Risk
-| Element | Hex | Tailwind | Contrast on bg |
-|---------|-----|----------|---------------|
-| Background | `#FEFCE8` | `yellow-50` | — |
-| Border | `#FEF08A` | `yellow-200` | — |
-| Banner bg | `#FEF9C3` | `yellow-100` | — |
-| Heading text | `#713F12` | `yellow-900` | 11.2:1 ✅ |
-| Body text | `#854D0E` | `yellow-800` | 8.8:1 ✅ |
-| Icon / badge | `#CA8A04` | `yellow-600` | 4.6:1 ✅ |
-| Pill border | `#FDE047` | `yellow-300` | — |
+
+| Element      | Hex       | Tailwind     | Contrast on bg |
+| ------------ | --------- | ------------ | -------------- |
+| Background   | `#FEFCE8` | `yellow-50`  | —              |
+| Border       | `#FEF08A` | `yellow-200` | —              |
+| Banner bg    | `#FEF9C3` | `yellow-100` | —              |
+| Heading text | `#713F12` | `yellow-900` | 11.2:1 ✅      |
+| Body text    | `#854D0E` | `yellow-800` | 8.8:1 ✅       |
+| Icon / badge | `#CA8A04` | `yellow-600` | 4.6:1 ✅       |
+| Pill border  | `#FDE047` | `yellow-300` | —              |
 
 #### Minimal Risk
-| Element | Hex | Tailwind | Contrast on bg |
-|---------|-----|----------|---------------|
-| Background | `#F0FDF4` | `green-50` | — |
-| Border | `#BBF7D0` | `green-200` | — |
-| Banner bg | `#DCFCE7` | `green-100` | — |
-| Heading text | `#14532D` | `green-900` | 13.1:1 ✅ |
-| Body text | `#166534` | `green-800` | 9.8:1 ✅ |
-| Icon / badge | `#16A34A` | `green-600` | 5.3:1 ✅ |
-| Pill border | `#86EFAC` | `green-300` | — |
+
+| Element      | Hex       | Tailwind    | Contrast on bg |
+| ------------ | --------- | ----------- | -------------- |
+| Background   | `#F0FDF4` | `green-50`  | —              |
+| Border       | `#BBF7D0` | `green-200` | —              |
+| Banner bg    | `#DCFCE7` | `green-100` | —              |
+| Heading text | `#14532D` | `green-900` | 13.1:1 ✅      |
+| Body text    | `#166534` | `green-800` | 9.8:1 ✅       |
+| Icon / badge | `#16A34A` | `green-600` | 5.3:1 ✅       |
+| Pill border  | `#86EFAC` | `green-300` | —              |
 
 ### 3.4 Status / Feedback Colors
 
-| Role | Hex | Tailwind |
-|------|-----|----------|
-| Success | `#16A34A` | `green-600` |
-| Warning | `#D97706` | `amber-600` |
-| Error / destructive | `#DC2626` | `red-600` |
-| Info | `#2563EB` | `blue-600` |
+| Role                | Hex       | Tailwind    |
+| ------------------- | --------- | ----------- |
+| Success             | `#16A34A` | `green-600` |
+| Warning             | `#D97706` | `amber-600` |
+| Error / destructive | `#DC2626` | `red-600`   |
+| Info                | `#2563EB` | `blue-600`  |
 
 ### 3.5 Gradient Definitions
 
-| Name | CSS | Usage |
-|------|-----|-------|
-| Hero gradient | `bg-gradient-to-b from-blue-50 to-white` | Hero section background |
-| Checker gradient | `bg-gradient-to-b from-blue-50 to-white` | Assessment page bg |
-| Badge gradient | `bg-gradient-to-br from-blue-600 to-blue-800` | Compliance badge card |
+| Name             | CSS                                           | Usage                   |
+| ---------------- | --------------------------------------------- | ----------------------- |
+| Hero gradient    | `bg-gradient-to-b from-blue-50 to-white`      | Hero section background |
+| Checker gradient | `bg-gradient-to-b from-blue-50 to-white`      | Assessment page bg      |
+| Badge gradient   | `bg-gradient-to-br from-blue-600 to-blue-800` | Compliance badge card   |
 
 ---
 
@@ -162,8 +174,17 @@ These four palettes are the most critical semantic colors in the product. They m
 
 ```css
 /* Primary — system sans-serif, mapped via CSS var in tailwind.config.ts */
-font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system,
-             BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-family:
+  var(--font-sans),
+  ui-sans-serif,
+  system-ui,
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Roboto,
+  "Helvetica Neue",
+  Arial,
+  sans-serif;
 ```
 
 No web font loading in v1 (performance + privacy). If a web font is added later, use **Inter** (sans-serif) via `next/font/google` with `display: swap`.
@@ -172,18 +193,18 @@ No web font loading in v1 (performance + privacy). If a web font is added later,
 
 All values use Tailwind's default scale. Pixel equivalents assume 16px base.
 
-| Token | Tailwind | px | Line height | Weight | Use case |
-|-------|----------|----|-------------|--------|----------|
-| `display-2xl` | `text-6xl` | 60px | `leading-tight` (1.25) | `font-bold` (700) | Hero H1 (desktop) |
-| `display-xl` | `text-5xl` | 48px | `leading-tight` | `font-bold` | Hero H1 (mobile) |
-| `display-lg` | `text-4xl` | 36px | `leading-tight` | `font-bold` | Section headings H2 |
-| `display-md` | `text-3xl` | 30px | `leading-snug` (1.375) | `font-bold` | Checker form heading |
-| `display-sm` | `text-2xl` | 24px | `leading-snug` | `font-semibold` (600) | Card headings, sub-sections |
-| `body-xl` | `text-xl` | 20px | `leading-relaxed` (1.625) | `font-normal` (400) | Hero subtitle, section subtitles |
-| `body-lg` | `text-lg` | 18px | `leading-relaxed` | `font-normal` | About page prose |
-| `body-md` | `text-base` | 16px | `leading-relaxed` | `font-normal` | Default body text |
-| `body-sm` | `text-sm` | 14px | `leading-normal` (1.5) | `font-medium` (500) | Nav links, meta labels, footer |
-| `body-xs` | `text-xs` | 12px | `leading-normal` | `font-normal` | Legal disclaimers, captions |
+| Token         | Tailwind    | px   | Line height               | Weight                | Use case                         |
+| ------------- | ----------- | ---- | ------------------------- | --------------------- | -------------------------------- |
+| `display-2xl` | `text-6xl`  | 60px | `leading-tight` (1.25)    | `font-bold` (700)     | Hero H1 (desktop)                |
+| `display-xl`  | `text-5xl`  | 48px | `leading-tight`           | `font-bold`           | Hero H1 (mobile)                 |
+| `display-lg`  | `text-4xl`  | 36px | `leading-tight`           | `font-bold`           | Section headings H2              |
+| `display-md`  | `text-3xl`  | 30px | `leading-snug` (1.375)    | `font-bold`           | Checker form heading             |
+| `display-sm`  | `text-2xl`  | 24px | `leading-snug`            | `font-semibold` (600) | Card headings, sub-sections      |
+| `body-xl`     | `text-xl`   | 20px | `leading-relaxed` (1.625) | `font-normal` (400)   | Hero subtitle, section subtitles |
+| `body-lg`     | `text-lg`   | 18px | `leading-relaxed`         | `font-normal`         | About page prose                 |
+| `body-md`     | `text-base` | 16px | `leading-relaxed`         | `font-normal`         | Default body text                |
+| `body-sm`     | `text-sm`   | 14px | `leading-normal` (1.5)    | `font-medium` (500)   | Nav links, meta labels, footer   |
+| `body-xs`     | `text-xs`   | 12px | `leading-normal`          | `font-normal`         | Legal disclaimers, captions      |
 
 ### 4.3 Heading Hierarchy per Page
 
@@ -209,46 +230,51 @@ Tailwind's default 4px base scale applies throughout.
 
 ### 5.1 Component Internal Spacing
 
-| Context | Padding | Tailwind |
-|---------|---------|----------|
+| Context          | Padding      | Tailwind         |
+| ---------------- | ------------ | ---------------- |
 | Section vertical | 80px / 128px | `py-20 md:py-32` |
-| Card / panel | 24px / 32px | `p-6 md:p-8` |
-| Button (default) | 10px 16px | default shadcn |
-| Button (lg) | 12px 24px | `size="lg"` |
-| Nav item | 8px 0 | `py-2` |
-| Form option row | 16px | `p-4` |
-| FAQ item | 16px 24px | `px-6 py-4` |
-| Footer section | 48px | `py-12` |
-| Header height | 64px | `h-16` |
+| Card / panel     | 24px / 32px  | `p-6 md:p-8`     |
+| Button (default) | 10px 16px    | default shadcn   |
+| Button (lg)      | 12px 24px    | `size="lg"`      |
+| Nav item         | 8px 0        | `py-2`           |
+| Form option row  | 16px         | `p-4`            |
+| FAQ item         | 16px 24px    | `px-6 py-4`      |
+| Footer section   | 48px         | `py-12`          |
+| Header height    | 64px         | `h-16`           |
 
 ### 5.2 Layout Container
 
 ```css
 /* Applied to all sections */
 .container {
-  max-width: 1280px;        /* max-w-7xl */
+  max-width: 1280px; /* max-w-7xl */
   margin-inline: auto;
-  padding-inline: 16px;     /* px-4 */
+  padding-inline: 16px; /* px-4 */
 }
 
 /* Responsive overrides */
-@screen sm { padding-inline: 24px; }  /* sm:px-6 */
-@screen lg { padding-inline: 32px; }  /* lg:px-8 */
+@screen sm {
+  padding-inline: 24px;
+} /* sm:px-6 */
+@screen lg {
+  padding-inline: 32px;
+} /* lg:px-8 */
 ```
 
 Narrow content columns (checker form, about prose, FAQ):
+
 - `max-w-2xl` (672px) — Checker form, results panel
 - `max-w-3xl` (768px) — FAQ section
 - `max-w-4xl` (896px) — About page prose
 
 ### 5.3 Grid Gaps
 
-| Grid | Gap | Tailwind |
-|------|-----|----------|
-| Feature cards (3-col) | 32px | `gap-8` |
-| HowItWorks steps (4-col) | 24px | `gap-6` |
-| Footer columns (4-col) | 32px | `gap-8` |
-| Assessment option rows | 12px | `space-y-3` |
+| Grid                     | Gap  | Tailwind    |
+| ------------------------ | ---- | ----------- |
+| Feature cards (3-col)    | 32px | `gap-8`     |
+| HowItWorks steps (4-col) | 24px | `gap-6`     |
+| Footer columns (4-col)   | 32px | `gap-8`     |
+| Assessment option rows   | 12px | `space-y-3` |
 
 ---
 
@@ -333,6 +359,7 @@ Plain text prose pages with no interactive elements beyond navigation.
 ## 7. Page Layouts
 
 All pages share the root shell:
+
 ```
 ┌─────────────────────────────────┐
 │  <Header> (sticky, h-16)        │
@@ -349,6 +376,7 @@ All pages share the root shell:
 ### 7.1 Homepage (`/`)
 
 #### Mobile (< 640px)
+
 ```
 Header (full-width, hamburger menu hidden nav)
 ─────────────────────────────
@@ -379,6 +407,7 @@ Footer (1-column stacked)
 ```
 
 #### Tablet (640px–1023px)
+
 ```
 Header (full nav visible)
 ─────────────────────────────
@@ -403,6 +432,7 @@ Footer: 4-column grid (md:grid-cols-4)
 ```
 
 #### Desktop (≥ 1024px)
+
 ```
 Header (max-w-7xl, nav + CTA)
 ─────────────────────────────
@@ -430,6 +460,7 @@ Footer: 4-column (md:grid-cols-4)
 ### 7.2 Checker Page (`/checker`)
 
 #### Mobile (< 640px)
+
 ```
 Header
 ─────────────────────────────
@@ -452,6 +483,7 @@ Footer
 ```
 
 #### Tablet / Desktop (≥ 640px)
+
 ```
 Header
 ─────────────────────────────
@@ -474,6 +506,7 @@ Footer
 ```
 
 #### Results screen (within `/checker`, same layout shell)
+
 ```
 Section (py-12 md:py-20, bg-white)
   max-w-2xl centered
@@ -502,6 +535,7 @@ Section (py-12 md:py-20, bg-white)
 ### 7.3 About Page (`/about`)
 
 #### All breakpoints
+
 ```
 Header
 ─────────────────────────────
@@ -521,6 +555,7 @@ Footer
 ### 7.4 Privacy & Terms Pages (`/privacy`, `/terms`)
 
 Same layout as About page. Identical structural pattern:
+
 - `max-w-4xl mx-auto`
 - `py-12 md:py-20`
 - H1 → H2 hierarchy
@@ -536,51 +571,58 @@ Same layout as About page. Identical structural pattern:
 **shadcn equivalent**: Custom — no direct shadcn component, but uses shadcn `Button`.
 
 #### Structure
+
 ```tsx
-<header className="sticky top-0 z-50 w-full border-b border-slate-200
-                   bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+<header
+  className="sticky top-0 z-50 w-full border-b border-slate-200
+                   bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+>
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="flex h-16 items-center justify-between">
-      <Logo />          {/* h-8 w-8 blue rounded-md + wordmark */}
-      <DesktopNav />    {/* hidden md:flex */}
-      <MobileMenu />    {/* md:hidden — hamburger trigger */}
-      <CTAButton />     {/* "Start Assessment" */}
+      <Logo /> {/* h-8 w-8 blue rounded-md + wordmark */}
+      <DesktopNav /> {/* hidden md:flex */}
+      <MobileMenu /> {/* md:hidden — hamburger trigger */}
+      <CTAButton /> {/* "Start Assessment" */}
     </div>
   </div>
 </header>
 ```
 
 #### Logo
+
 - Container: `h-8 w-8 rounded-md bg-blue-600 flex items-center justify-center`
 - Text: `span.text-white.font-bold.text-sm` — "AI"
 - Wordmark: `Link.font-bold.text-lg.hover:text-blue-600.transition-colors` — "EU AI Compliance"
 
 #### Desktop Nav (hidden md:flex)
+
 - Items: `text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors`
 - Active route: `text-slate-900 font-semibold` (add via `usePathname`)
 - Gap: `gap-8`
 
-#### Mobile Nav (md:hidden) — *To be implemented*
+#### Mobile Nav (md:hidden) — _To be implemented_
+
 - Trigger: shadcn `Button` variant="ghost", `size="icon"`, Lucide `Menu` icon
 - Overlay: full-screen `Sheet` (shadcn) sliding from right
 - Contains same nav links as desktop, stacked vertically
 - Close button top-right with `X` icon
 
 #### CTA Button
+
 - `Button asChild className="bg-blue-600 hover:bg-blue-700 text-white"`
 - Text: "Start Assessment"
 - Hidden on very small screens if needed: `hidden sm:inline-flex`
 
 #### States
 
-| State | Visual |
-|-------|--------|
-| Default | White bg, border-b slate-200 |
-| Scrolled | backdrop-blur active (CSS) |
-| Nav link hover | text-slate-900 |
-| Nav link active | text-slate-900 font-semibold |
-| CTA hover | bg-blue-700 |
-| CTA focus | focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 |
+| State           | Visual                                                                       |
+| --------------- | ---------------------------------------------------------------------------- |
+| Default         | White bg, border-b slate-200                                                 |
+| Scrolled        | backdrop-blur active (CSS)                                                   |
+| Nav link hover  | text-slate-900                                                               |
+| Nav link active | text-slate-900 font-semibold                                                 |
+| CTA hover       | bg-blue-700                                                                  |
+| CTA focus       | focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 |
 
 ---
 
@@ -589,6 +631,7 @@ Same layout as About page. Identical structural pattern:
 **File**: `src/components/layout/Footer.tsx`
 
 #### Structure
+
 ```
 bg-slate-50 border-t border-slate-200
   max-w-7xl, px-4 sm:px-6 lg:px-8, py-12
@@ -605,10 +648,12 @@ bg-slate-50 border-t border-slate-200
 ```
 
 #### Link style
+
 - `text-sm text-slate-600 hover:text-slate-900 transition-colors`
 - Column header: `font-semibold text-sm text-slate-900 mb-4`
 
 #### Bottom bar
+
 - Copyright: `text-sm text-slate-600`
 - Support link: same link style
 
@@ -619,44 +664,57 @@ bg-slate-50 border-t border-slate-200
 **File**: `src/components/sections/Hero.tsx`
 
 #### Badge Pill
+
 ```tsx
-<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full
-                bg-blue-100 text-blue-700 text-sm font-medium mb-6">
+<div
+  className="inline-flex items-center gap-2 px-4 py-2 rounded-full
+                bg-blue-100 text-blue-700 text-sm font-medium mb-6"
+>
   <Shield className="w-4 h-4" />
   Enterprise Compliance Made Free
 </div>
 ```
+
 - Centered: `text-center` on parent
 
 #### H1
+
 ```
 text-5xl md:text-6xl font-bold tracking-tight mb-6 text-slate-900
 ```
 
 #### Subtitle
+
 ```
 text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed
 ```
 
 #### CTA Group
+
 ```
 flex flex-col sm:flex-row gap-4 justify-center mb-12
 ```
+
 - Primary: `Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white"`
   Contains: "Start Free Assessment" + `ArrowRight` icon (w-4 h-4)
 - Secondary: `Button variant="outline" size="lg"` → "Learn How It Works"
 
 #### Tagline
+
 ```
 text-sm text-slate-500
 ```
+
 Content: "Takes 5 minutes • No credit card required • Instant results"
 
 #### Stats row
+
 ```
 mt-16 grid grid-cols-1 md:grid-cols-3 gap-8
 ```
+
 Each stat cell:
+
 ```tsx
 <div className="text-center">
   <div className="text-4xl font-bold text-blue-600 mb-2">{value}</div>
@@ -671,9 +729,12 @@ Each stat cell:
 **File**: `src/components/sections/Features.tsx`
 
 #### Card
+
 ```tsx
-<div className="p-6 rounded-lg border border-slate-200
-                hover:border-blue-300 hover:shadow-lg transition-all duration-150">
+<div
+  className="p-6 rounded-lg border border-slate-200
+                hover:border-blue-300 hover:shadow-lg transition-all duration-150"
+>
   <Icon className="w-8 h-8 text-blue-600 mb-4" />
   <h3 className="text-lg font-semibold mb-2">{title}</h3>
   <p className="text-slate-600">{description}</p>
@@ -681,13 +742,15 @@ Each stat cell:
 ```
 
 #### Card States
-| State | Classes |
-|-------|---------|
-| Default | `border-slate-200` |
-| Hover | `border-blue-300 shadow-lg` |
+
+| State        | Classes                              |
+| ------------ | ------------------------------------ |
+| Default      | `border-slate-200`                   |
+| Hover        | `border-blue-300 shadow-lg`          |
 | Focus-within | `ring-2 ring-blue-500 ring-offset-2` |
 
 #### Grid
+
 ```
 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8
 ```
@@ -699,10 +762,13 @@ grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8
 **File**: `src/components/sections/HowItWorks.tsx`
 
 #### Step card
+
 ```tsx
 <div className="bg-white p-6 rounded-lg border border-slate-200 h-full">
-  <div className="w-10 h-10 rounded-full bg-blue-600 text-white
-                  font-bold flex items-center justify-center mb-4">
+  <div
+    className="w-10 h-10 rounded-full bg-blue-600 text-white
+                  font-bold flex items-center justify-center mb-4"
+  >
     {step.number}
   </div>
   <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
@@ -711,13 +777,17 @@ grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8
 ```
 
 #### Arrow connector (desktop only)
+
 ```tsx
-{index < steps.length - 1 && (
-  <div className="hidden lg:flex absolute -right-3 top-12 text-slate-300">
-    <ArrowRight className="w-6 h-6" />
-  </div>
-)}
+{
+  index < steps.length - 1 && (
+    <div className="hidden lg:flex absolute -right-3 top-12 text-slate-300">
+      <ArrowRight className="w-6 h-6" />
+    </div>
+  );
+}
 ```
+
 Parent step wrapper must be `relative`.
 
 ---
@@ -728,6 +798,7 @@ Parent step wrapper must be `relative`.
 **shadcn equivalent**: Use shadcn `Accordion` component for production (currently custom).
 
 #### Current implementation (custom accordion)
+
 ```tsx
 <div className="border border-slate-200 rounded-lg overflow-hidden">
   <button
@@ -738,8 +809,10 @@ Parent step wrapper must be `relative`.
     aria-controls={`faq-answer-${index}`}
   >
     <span>{faq.question}</span>
-    <ChevronDown className={`w-5 h-5 text-slate-600 transition-transform duration-200
-                             ${openIndex === index ? 'rotate-180' : ''}`} />
+    <ChevronDown
+      className={`w-5 h-5 text-slate-600 transition-transform duration-200
+                             ${openIndex === index ? "rotate-180" : ""}`}
+    />
   </button>
   <div
     id={`faq-answer-${index}`}
@@ -754,13 +827,22 @@ Parent step wrapper must be `relative`.
 ```
 
 #### shadcn Accordion migration (recommended)
+
 ```tsx
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 <Accordion type="single" collapsible className="space-y-4">
   {faqs.map((faq, i) => (
-    <AccordionItem key={i} value={`item-${i}`}
-                   className="border border-slate-200 rounded-lg px-6">
+    <AccordionItem
+      key={i}
+      value={`item-${i}`}
+      className="border border-slate-200 rounded-lg px-6"
+    >
       <AccordionTrigger className="font-semibold hover:no-underline">
         {faq.question}
       </AccordionTrigger>
@@ -769,7 +851,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
       </AccordionContent>
     </AccordionItem>
   ))}
-</Accordion>
+</Accordion>;
 ```
 
 ---
@@ -781,35 +863,44 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 **Future shadcn components**: `Progress`, `Card`, `RadioGroup`, `Checkbox`
 
 #### Progress bar
+
 ```tsx
-{/* Current implementation */}
+{
+  /* Current implementation */
+}
 <div className="w-full bg-slate-200 rounded-full h-2">
   <div
     className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-    style={{ width: `${((currentQuestion + 1) / ASSESSMENT_QUESTIONS.length) * 100}%` }}
+    style={{
+      width: `${((currentQuestion + 1) / ASSESSMENT_QUESTIONS.length) * 100}%`,
+    }}
     role="progressbar"
     aria-valuenow={currentQuestion + 1}
     aria-valuemin={1}
     aria-valuemax={ASSESSMENT_QUESTIONS.length}
     aria-label={`Question ${currentQuestion + 1} of ${ASSESSMENT_QUESTIONS.length}`}
   />
-</div>
+</div>;
 
-{/* shadcn Progress migration */}
-import { Progress } from "@/components/ui/progress"
+{
+  /* shadcn Progress migration */
+}
+import { Progress } from "@/components/ui/progress";
 <Progress
   value={((currentQuestion + 1) / ASSESSMENT_QUESTIONS.length) * 100}
   className="h-2"
   aria-label={`Question ${currentQuestion + 1} of ${ASSESSMENT_QUESTIONS.length}`}
-/>
+/>;
 ```
 
 #### Question card
+
 ```
 bg-white rounded-lg border border-slate-200 p-8 mb-8
 ```
 
 #### Select option button (radio-style)
+
 ```tsx
 <button
   key={option}
@@ -819,9 +910,10 @@ bg-white rounded-lg border border-slate-200 p-8 mb-8
   className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-150
     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
     focus-visible:ring-offset-2
-    ${formData[question.id] === option
-      ? 'border-blue-600 bg-blue-50 text-slate-900'
-      : 'border-slate-200 hover:border-slate-300 text-slate-700'
+    ${
+      formData[question.id] === option
+        ? "border-blue-600 bg-blue-50 text-slate-900"
+        : "border-slate-200 hover:border-slate-300 text-slate-700"
     }`}
 >
   <div className="flex items-center justify-between">
@@ -832,14 +924,16 @@ bg-white rounded-lg border border-slate-200 p-8 mb-8
   </div>
 </button>
 ```
+
 Wrap option group in `<div role="radiogroup" aria-labelledby="question-heading">`.
 
 #### Checkbox option row
+
 ```tsx
 <label
   className={`flex items-center p-4 border-2 rounded-lg cursor-pointer
     transition-all duration-150
-    ${isChecked ? 'border-blue-600 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}
+    ${isChecked ? "border-blue-600 bg-blue-50" : "border-slate-200 hover:border-slate-300"}
     focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2`}
 >
   <input
@@ -852,6 +946,7 @@ Wrap option group in `<div role="radiogroup" aria-labelledby="question-heading">
 ```
 
 #### Navigation buttons
+
 ```tsx
 <div className="flex gap-4">
   <Button
@@ -867,36 +962,51 @@ Wrap option group in `<div role="radiogroup" aria-labelledby="question-heading">
     onClick={handleNext}
     disabled={!isAnswered}
     className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-    aria-label={currentQuestion === ASSESSMENT_QUESTIONS.length - 1
-      ? 'Submit and get results'
-      : 'Go to next question'}
+    aria-label={
+      currentQuestion === ASSESSMENT_QUESTIONS.length - 1
+        ? "Submit and get results"
+        : "Go to next question"
+    }
   >
-    {currentQuestion === ASSESSMENT_QUESTIONS.length - 1 ? 'Get Results' : 'Next'}
+    {currentQuestion === ASSESSMENT_QUESTIONS.length - 1
+      ? "Get Results"
+      : "Next"}
   </Button>
 </div>
 ```
 
 #### Button states
 
-| State | Classes |
-|-------|---------|
-| Default (primary) | `bg-blue-600 text-white` |
-| Hover (primary) | `bg-blue-700` |
-| Disabled | `opacity-50 cursor-not-allowed` |
-| Focus | `focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2` |
-| Default (outline) | `border border-slate-300 text-slate-700 bg-white` |
-| Hover (outline) | `bg-slate-50` |
+| State             | Classes                                                                        |
+| ----------------- | ------------------------------------------------------------------------------ |
+| Default (primary) | `bg-blue-600 text-white`                                                       |
+| Hover (primary)   | `bg-blue-700`                                                                  |
+| Disabled          | `opacity-50 cursor-not-allowed`                                                |
+| Focus             | `focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2` |
+| Default (outline) | `border border-slate-300 text-slate-700 bg-white`                              |
+| Hover (outline)   | `bg-slate-50`                                                                  |
 
 ---
 
 ### 8.8 Loading State (Checker)
 
 ```tsx
-<div className="flex items-center justify-center py-12" role="status" aria-live="polite">
+<div
+  className="flex items-center justify-center py-12"
+  role="status"
+  aria-live="polite"
+>
   <div className="text-center">
-    <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" aria-hidden="true" />
-    <p className="text-lg font-medium text-slate-900">Analyzing your responses...</p>
-    <p className="text-sm text-slate-600 mt-2">Assessing EU AI Act compliance requirements</p>
+    <Loader
+      className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4"
+      aria-hidden="true"
+    />
+    <p className="text-lg font-medium text-slate-900">
+      Analyzing your responses...
+    </p>
+    <p className="text-sm text-slate-600 mt-2">
+      Assessing EU AI Act compliance requirements
+    </p>
   </div>
 </div>
 ```
@@ -915,54 +1025,60 @@ Wrap option group in `<div role="radiogroup" aria-labelledby="question-heading">
 ```typescript
 const riskConfig = {
   unacceptable: {
-    banner: 'bg-red-100 border-red-300',
-    heading: 'text-red-900',
-    body: 'text-red-800',
-    badge: 'bg-red-600',
-    label: 'Unacceptable Risk',
+    banner: "bg-red-100 border-red-300",
+    heading: "text-red-900",
+    body: "text-red-800",
+    badge: "bg-red-600",
+    label: "Unacceptable Risk",
     icon: XCircle,
   },
   high: {
-    banner: 'bg-orange-100 border-orange-300',
-    heading: 'text-orange-950',
-    body: 'text-orange-800',
-    badge: 'bg-orange-600',
-    label: 'High Risk',
+    banner: "bg-orange-100 border-orange-300",
+    heading: "text-orange-950",
+    body: "text-orange-800",
+    badge: "bg-orange-600",
+    label: "High Risk",
     icon: AlertTriangle,
   },
   limited: {
-    banner: 'bg-yellow-100 border-yellow-300',
-    heading: 'text-yellow-900',
-    body: 'text-yellow-800',
-    badge: 'bg-yellow-600',
-    label: 'Limited Risk',
+    banner: "bg-yellow-100 border-yellow-300",
+    heading: "text-yellow-900",
+    body: "text-yellow-800",
+    badge: "bg-yellow-600",
+    label: "Limited Risk",
     icon: Info,
   },
   minimal: {
-    banner: 'bg-green-100 border-green-300',
-    heading: 'text-green-900',
-    body: 'text-green-800',
-    badge: 'bg-green-600',
-    label: 'Minimal Risk',
+    banner: "bg-green-100 border-green-300",
+    heading: "text-green-900",
+    body: "text-green-800",
+    badge: "bg-green-600",
+    label: "Minimal Risk",
     icon: CheckCircle2,
   },
-}
+};
 ```
 
 #### Risk level heading
+
 ```
 text-5xl font-bold mb-4 capitalize  [color: heading from riskConfig]
 ```
 
 #### Obligation list item
+
 ```tsx
 <li className="flex gap-3 items-start">
-  <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+  <CheckCircle
+    className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5"
+    aria-hidden="true"
+  />
   <span className="text-slate-700">{obligation}</span>
 </li>
 ```
 
 #### "Download Report" button (disabled state)
+
 - `disabled` attribute set
 - `title="Coming soon"` for tooltip
 - `cursor-not-allowed opacity-50`
@@ -975,16 +1091,16 @@ Used within results and potentially in a future compliance badge feature.
 
 ```tsx
 interface RiskBadgeProps {
-  level: 'unacceptable' | 'high' | 'limited' | 'minimal'
-  size?: 'sm' | 'md' | 'lg'
+  level: "unacceptable" | "high" | "limited" | "minimal";
+  size?: "sm" | "md" | "lg";
 }
 ```
 
-| Variant | Classes |
-|---------|---------|
-| sm | `text-xs px-2 py-0.5 rounded-full font-medium` |
-| md | `text-sm px-3 py-1 rounded-full font-semibold` |
-| lg | `text-base px-4 py-1.5 rounded-full font-bold` |
+| Variant | Classes                                        |
+| ------- | ---------------------------------------------- |
+| sm      | `text-xs px-2 py-0.5 rounded-full font-medium` |
+| md      | `text-sm px-3 py-1 rounded-full font-semibold` |
+| lg      | `text-base px-4 py-1.5 rounded-full font-bold` |
 
 Background + text from `riskConfig` lookup.
 
@@ -997,23 +1113,24 @@ Background + text from `riskConfig` lookup.
 
 Variants in use:
 
-| Variant | Use case | Key classes |
-|---------|----------|-------------|
-| default | Primary CTA | `bg-primary text-primary-foreground hover:bg-primary/90` |
-| outline | Secondary CTA | `border border-input bg-background hover:bg-accent` |
-| ghost | Icon buttons, nav | `hover:bg-accent hover:text-accent-foreground` |
-| destructive | Danger actions | `bg-destructive text-destructive-foreground` |
+| Variant     | Use case          | Key classes                                              |
+| ----------- | ----------------- | -------------------------------------------------------- |
+| default     | Primary CTA       | `bg-primary text-primary-foreground hover:bg-primary/90` |
+| outline     | Secondary CTA     | `border border-input bg-background hover:bg-accent`      |
+| ghost       | Icon buttons, nav | `hover:bg-accent hover:text-accent-foreground`           |
+| destructive | Danger actions    | `bg-destructive text-destructive-foreground`             |
 
 Sizes:
 
-| Size | Height | Padding |
-|------|--------|---------|
-| sm | h-8 | px-3 text-xs |
-| default | h-9 | px-4 py-2 text-sm |
-| lg | h-11 | px-8 text-base |
-| icon | h-9 w-9 | p-2 |
+| Size    | Height  | Padding           |
+| ------- | ------- | ----------------- |
+| sm      | h-8     | px-3 text-xs      |
+| default | h-9     | px-4 py-2 text-sm |
+| lg      | h-11    | px-8 text-base    |
+| icon    | h-9 w-9 | p-2               |
 
 Custom override for brand primary:
+
 ```tsx
 className="bg-blue-600 hover:bg-blue-700 text-white
            focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -1026,9 +1143,14 @@ className="bg-blue-600 hover:bg-blue-700 text-white
 Used in checker results and About page footer.
 
 ```tsx
-<div className="flex gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800"
-     role="note">
-  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-600" aria-hidden="true" />
+<div
+  className="flex gap-3 p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800"
+  role="note"
+>
+  <AlertCircle
+    className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-600"
+    aria-hidden="true"
+  />
   <div>
     <p className="text-sm font-medium">Not Legal Advice</p>
     <p className="text-sm mt-1">
@@ -1057,9 +1179,12 @@ Shareable embed/image for users to display their compliance status.
 ```
 
 Tailwind structure:
+
 ```tsx
-<div className="bg-gradient-to-br from-blue-600 to-blue-800
-                text-white rounded-xl p-6 w-64 shadow-lg">
+<div
+  className="bg-gradient-to-br from-blue-600 to-blue-800
+                text-white rounded-xl p-6 w-64 shadow-lg"
+>
   <div className="text-xs font-medium uppercase tracking-widest opacity-75 mb-3">
     EU AI Act Compliance
   </div>
@@ -1077,24 +1202,25 @@ Tailwind structure:
 ### 9.1 Colour Contrast
 
 Minimum requirements (WCAG 2.1 Level AA):
+
 - **Normal text** (< 18pt / < 14pt bold): **4.5:1** contrast ratio
 - **Large text** (≥ 18pt / ≥ 14pt bold): **3:1** contrast ratio
 - **UI components and graphical objects**: **3:1** contrast ratio
 
 Verified pairs:
 
-| Foreground | Background | Ratio | Pass |
-|-----------|------------|-------|------|
-| `#0F172A` slate-900 | `#FFFFFF` white | 19.1:1 | ✅ AA |
-| `#475569` slate-600 | `#FFFFFF` white | 5.9:1 | ✅ AA |
-| `#FFFFFF` white | `#2563EB` blue-600 | 4.8:1 | ✅ AA |
-| `#1E40AF` blue-800 | `#FFFFFF` white | 8.6:1 | ✅ AA |
-| `#1E40AF` blue-800 | `#EFF6FF` blue-50 | 7.8:1 | ✅ AA |
-| `#7F1D1D` red-900 | `#FEE2E2` red-100 | 12.6:1 | ✅ AA |
+| Foreground           | Background           | Ratio  | Pass  |
+| -------------------- | -------------------- | ------ | ----- |
+| `#0F172A` slate-900  | `#FFFFFF` white      | 19.1:1 | ✅ AA |
+| `#475569` slate-600  | `#FFFFFF` white      | 5.9:1  | ✅ AA |
+| `#FFFFFF` white      | `#2563EB` blue-600   | 4.8:1  | ✅ AA |
+| `#1E40AF` blue-800   | `#FFFFFF` white      | 8.6:1  | ✅ AA |
+| `#1E40AF` blue-800   | `#EFF6FF` blue-50    | 7.8:1  | ✅ AA |
+| `#7F1D1D` red-900    | `#FEE2E2` red-100    | 12.6:1 | ✅ AA |
 | `#431407` orange-950 | `#FFEDD5` orange-100 | 14.1:1 | ✅ AA |
 | `#713F12` yellow-900 | `#FEF9C3` yellow-100 | 11.2:1 | ✅ AA |
-| `#14532D` green-900 | `#DCFCE7` green-100 | 13.1:1 | ✅ AA |
-| `#334155` slate-700 | `#F8FAFC` slate-50 | 8.9:1 | ✅ AA |
+| `#14532D` green-900  | `#DCFCE7` green-100  | 13.1:1 | ✅ AA |
+| `#334155` slate-700  | `#F8FAFC` slate-50   | 8.9:1  | ✅ AA |
 
 **Never use** yellow-300/400 text on white or light backgrounds (fails contrast).
 **Never use** slate-400 text on white for body copy (4.1:1 — fails AA for normal text).
@@ -1103,24 +1229,25 @@ Verified pairs:
 
 All interactive elements must be reachable and operable via keyboard:
 
-| Component | Tab order | Enter/Space | Arrow keys | Escape |
-|-----------|-----------|-------------|------------|--------|
-| Header nav links | Sequential | Navigate | — | — |
-| Header CTA button | After nav | Activate | — | — |
-| Hero buttons | Sequential | Activate | — | — |
-| FAQ accordion trigger | Sequential | Toggle open/close | Up/Down (when implemented with shadcn) | Close |
-| Checker option buttons | Sequential | Select option | Up/Down within group | — |
-| Checkbox options | Sequential | Toggle checked | Up/Down within group | — |
-| Previous/Next buttons | After options | Activate | — | — |
-| Mobile menu trigger | In flow | Open menu | — | Close menu |
-| Mobile menu items | Within menu | Navigate | — | Close menu |
-| Footer links | Sequential | Navigate | — | — |
+| Component              | Tab order     | Enter/Space       | Arrow keys                             | Escape     |
+| ---------------------- | ------------- | ----------------- | -------------------------------------- | ---------- |
+| Header nav links       | Sequential    | Navigate          | —                                      | —          |
+| Header CTA button      | After nav     | Activate          | —                                      | —          |
+| Hero buttons           | Sequential    | Activate          | —                                      | —          |
+| FAQ accordion trigger  | Sequential    | Toggle open/close | Up/Down (when implemented with shadcn) | Close      |
+| Checker option buttons | Sequential    | Select option     | Up/Down within group                   | —          |
+| Checkbox options       | Sequential    | Toggle checked    | Up/Down within group                   | —          |
+| Previous/Next buttons  | After options | Activate          | —                                      | —          |
+| Mobile menu trigger    | In flow       | Open menu         | —                                      | Close menu |
+| Mobile menu items      | Within menu   | Navigate          | —                                      | Close menu |
+| Footer links           | Sequential    | Navigate          | —                                      | —          |
 
 Focus styles must always be visible:
+
 ```css
 /* Applied globally via tailwind.config or globals.css */
 :focus-visible {
-  outline: 2px solid #2563EB;      /* blue-600 */
+  outline: 2px solid #2563eb; /* blue-600 */
   outline-offset: 2px;
 }
 ```
@@ -1130,6 +1257,7 @@ Never suppress focus with `outline: none` unless replacing with an equivalent vi
 ### 9.3 ARIA Labels and Roles
 
 #### Header
+
 ```tsx
 <header role="banner">
 <nav aria-label="Main navigation">
@@ -1138,23 +1266,28 @@ Never suppress focus with `outline: none` unless replacing with an equivalent vi
 ```
 
 #### Main landmarks
+
 ```tsx
 <main id="main-content">  {/* skip-link target */}
 <footer role="contentinfo">
 ```
 
 #### Skip-to-content link (add to layout.tsx)
+
 ```tsx
-<a href="#main-content"
-   className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4
+<a
+  href="#main-content"
+  className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4
               focus:z-[100] focus:px-4 focus:py-2 focus:bg-white
               focus:border focus:border-blue-600 focus:rounded focus:text-blue-600
-              focus:text-sm focus:font-medium">
+              focus:text-sm focus:font-medium"
+>
   Skip to main content
 </a>
 ```
 
 #### Checker form
+
 ```tsx
 <section aria-labelledby="assessment-heading">
 <h1 id="assessment-heading">EU AI Act Assessment</h1>
@@ -1181,6 +1314,7 @@ Never suppress focus with `outline: none` unless replacing with an equivalent vi
 ```
 
 #### Results
+
 ```tsx
 <section aria-labelledby="results-heading" aria-live="polite">
 <h1 id="results-heading">Your Compliance Assessment</h1>
@@ -1192,6 +1326,7 @@ Never suppress focus with `outline: none` unless replacing with an equivalent vi
 ```
 
 #### FAQ
+
 ```tsx
 <section aria-labelledby="faq-heading">
 <h2 id="faq-heading">Frequently Asked Questions</h2>
@@ -1212,16 +1347,16 @@ Never suppress focus with `outline: none` unless replacing with an equivalent vi
 
 Per WCAG 2.5.5 (Target Size AA — 24×24px minimum; AAA — 44×44px):
 
-| Element | Min size | Implementation |
-|---------|----------|----------------|
-| Nav links | 44×44px | `py-3 px-2` (desktop); `py-4` (mobile menu) |
-| Header CTA | 44px height | `h-11` via `size="lg"` |
-| FAQ trigger | 52px height | `py-4` gives ~52px minimum |
-| Assessment option rows | 56px height | `p-4` on content + min-h implied |
-| Previous/Next buttons | 44px height | `h-11` via `size="lg"` or `size="default"` (h-9 = 36px — upgrade to lg) |
-| Checkbox labels | 48px height | `p-4` on label wrapper |
-| Footer links | 32px height | Acceptable for desktop; mobile stack with `py-2` |
-| Mobile menu items | 48px height | `py-3 px-6` |
+| Element                | Min size    | Implementation                                                          |
+| ---------------------- | ----------- | ----------------------------------------------------------------------- |
+| Nav links              | 44×44px     | `py-3 px-2` (desktop); `py-4` (mobile menu)                             |
+| Header CTA             | 44px height | `h-11` via `size="lg"`                                                  |
+| FAQ trigger            | 52px height | `py-4` gives ~52px minimum                                              |
+| Assessment option rows | 56px height | `p-4` on content + min-h implied                                        |
+| Previous/Next buttons  | 44px height | `h-11` via `size="lg"` or `size="default"` (h-9 = 36px — upgrade to lg) |
+| Checkbox labels        | 48px height | `p-4` on label wrapper                                                  |
+| Footer links           | 32px height | Acceptable for desktop; mobile stack with `py-2`                        |
+| Mobile menu items      | 48px height | `py-3 px-6`                                                             |
 
 **Critical**: Previous/Next navigation buttons must use `size="lg"` (h-11, 44px) in the checker to meet tap target requirements on mobile.
 
@@ -1253,17 +1388,20 @@ Affects: progress bar transition, FAQ chevron rotation, card hover transitions, 
 ### 9.7 Form Validation Announcements
 
 When Zod validation is added (Phase 2):
+
 - Inline field errors: `role="alert"` on error message element
 - Summary error: `aria-live="assertive"` container at top of form
 - Associate errors with inputs via `aria-describedby`
 
 ```tsx
-<input aria-describedby={hasError ? `${field}-error` : undefined} />
-{hasError && (
-  <p id={`${field}-error`} role="alert" className="text-sm text-red-600 mt-1">
-    {errorMessage}
-  </p>
-)}
+<input aria-describedby={hasError ? `${field}-error` : undefined} />;
+{
+  hasError && (
+    <p id={`${field}-error`} role="alert" className="text-sm text-red-600 mt-1">
+      {errorMessage}
+    </p>
+  );
+}
 ```
 
 ---
@@ -1274,14 +1412,14 @@ When Zod validation is added (Phase 2):
 
 Tailwind defaults (matches all current usage in codebase):
 
-| Name | Min-width | CSS variable | Target devices |
-|------|-----------|--------------|----------------|
-| (default) | 0px | — | Mobile portrait |
-| `sm` | 640px | — | Mobile landscape, small tablet |
-| `md` | 768px | — | Tablet, large mobile |
-| `lg` | 1024px | — | Desktop, laptop |
-| `xl` | 1280px | — | Wide desktop |
-| `2xl` | 1536px | — | Ultra-wide |
+| Name      | Min-width | CSS variable | Target devices                 |
+| --------- | --------- | ------------ | ------------------------------ |
+| (default) | 0px       | —            | Mobile portrait                |
+| `sm`      | 640px     | —            | Mobile landscape, small tablet |
+| `md`      | 768px     | —            | Tablet, large mobile           |
+| `lg`      | 1024px    | —            | Desktop, laptop                |
+| `xl`      | 1280px    | —            | Wide desktop                   |
+| `2xl`     | 1536px    | —            | Ultra-wide                     |
 
 The app's max container is `max-w-7xl` (1280px) — content does not stretch beyond this.
 
@@ -1289,32 +1427,32 @@ The app's max container is `max-w-7xl` (1280px) — content does not stretch bey
 
 #### Default → sm (0–639px to 640px+)
 
-| Element | < 640px | ≥ 640px |
-|---------|---------|---------|
-| Hero CTA group | `flex-col` (stacked full-width) | `flex-row` (side by side) |
-| Header wordmark | Visible | Visible |
-| Footer bottom row | `flex-col items-center` | `flex-row justify-between` |
+| Element           | < 640px                         | ≥ 640px                    |
+| ----------------- | ------------------------------- | -------------------------- |
+| Hero CTA group    | `flex-col` (stacked full-width) | `flex-row` (side by side)  |
+| Header wordmark   | Visible                         | Visible                    |
+| Footer bottom row | `flex-col items-center`         | `flex-row justify-between` |
 
 #### sm → md (640px to 768px+)
 
-| Element | < 768px | ≥ 768px |
-|---------|---------|---------|
-| Header nav links | Hidden | `hidden md:flex` visible |
-| Hero H1 | `text-5xl` | `md:text-6xl` (60px) |
-| Hero/Checker section py | `py-12` / `py-20` | `py-20` / `md:py-32` |
-| Feature cards grid | 1-col | `md:grid-cols-2` |
-| HowItWorks steps | 1-col stacked | `md:grid-cols-2` |
-| Footer columns | 1-col | `md:grid-cols-4` |
-| About/Legal py | `py-12` | `md:py-20` |
-| Stats grid | 1-col | `md:grid-cols-3` |
+| Element                 | < 768px           | ≥ 768px                  |
+| ----------------------- | ----------------- | ------------------------ |
+| Header nav links        | Hidden            | `hidden md:flex` visible |
+| Hero H1                 | `text-5xl`        | `md:text-6xl` (60px)     |
+| Hero/Checker section py | `py-12` / `py-20` | `py-20` / `md:py-32`     |
+| Feature cards grid      | 1-col             | `md:grid-cols-2`         |
+| HowItWorks steps        | 1-col stacked     | `md:grid-cols-2`         |
+| Footer columns          | 1-col             | `md:grid-cols-4`         |
+| About/Legal py          | `py-12`           | `md:py-20`               |
+| Stats grid              | 1-col             | `md:grid-cols-3`         |
 
 #### md → lg (768px to 1024px+)
 
-| Element | < 1024px | ≥ 1024px |
-|---------|---------|---------|
-| Feature cards | 2-col | `lg:grid-cols-3` |
-| HowItWorks steps | 2-col | `lg:grid-cols-4` |
-| HowItWorks arrows | Hidden | `hidden lg:flex` visible |
+| Element           | < 1024px | ≥ 1024px                 |
+| ----------------- | -------- | ------------------------ |
+| Feature cards     | 2-col    | `lg:grid-cols-3`         |
+| HowItWorks steps  | 2-col    | `lg:grid-cols-4`         |
+| HowItWorks arrows | Hidden   | `hidden lg:flex` visible |
 
 #### lg → xl / 2xl
 
@@ -1323,6 +1461,7 @@ No layout changes — container is capped at `max-w-7xl`. Font sizes and spacing
 ### 10.3 Checker-Specific Responsive Behavior
 
 The checker form is always centered in a `max-w-2xl` column:
+
 - Mobile: `px-4` gutter, full bleed question cards
 - Tablet+: Comfortable 672px column with visual breathing room
 - Option rows: always full-width within the card regardless of viewport
@@ -1331,12 +1470,12 @@ The results screen follows the same `max-w-2xl` rule.
 
 ### 10.4 Typography Responsive Adjustments
 
-| Element | Mobile | Desktop |
-|---------|--------|---------|
-| Hero H1 | `text-5xl` (48px) | `md:text-6xl` (60px) |
-| Section H2 | `text-4xl` (36px) | unchanged |
-| Checker H1 | `text-3xl` (30px) | unchanged |
-| Section py | `py-20` | `md:py-32` |
+| Element    | Mobile            | Desktop              |
+| ---------- | ----------------- | -------------------- |
+| Hero H1    | `text-5xl` (48px) | `md:text-6xl` (60px) |
+| Section H2 | `text-4xl` (36px) | unchanged            |
+| Checker H1 | `text-3xl` (30px) | unchanged            |
+| Section py | `py-20`           | `md:py-32`           |
 
 ---
 
@@ -1347,6 +1486,7 @@ The results screen follows the same `max-w-2xl` rule.
 **Trigger**: User clicks "Get Results" on Q12.
 
 **Visual**:
+
 ```
 ┌──────────────────────────────┐
 │          [Spinner]           │
@@ -1372,6 +1512,7 @@ The results screen follows the same `max-w-2xl` rule.
 **Trigger**: `submitForm()` catch block — network error, 4xx, 5xx.
 
 **Visual** (replaces or appears below navigation buttons):
+
 ```
 ┌──────────────────────────────────────────────────────┐
 │ ⚠  Something went wrong                              │
@@ -1397,14 +1538,17 @@ The results screen follows the same `max-w-2xl` rule.
 **Trigger**: User has not selected any option on the current question.
 
 **Visual**:
+
 - "Next" / "Get Results" button: `disabled` + `opacity-50 cursor-not-allowed`
 - No other visual change — options are visible and ready for interaction
 - No error text shown proactively (only after an attempted submit)
 
 If shadcn `Form` + Zod is added, show inline validation:
+
 ```
 Please select an option to continue.
 ```
+
 Positioned below the option group, `text-sm text-red-600`, `role="alert"`.
 
 ---
@@ -1414,6 +1558,7 @@ Positioned below the option group, `text-sm text-red-600`, `role="alert"`.
 **Trigger**: User clicks "Download Report" button.
 
 **Visual**:
+
 - Button renders as `disabled` with `title="Coming soon — we're working on it!"`
 - Optionally: shadcn `Tooltip` wrapper displaying "Coming soon" on hover/focus
 
@@ -1421,8 +1566,13 @@ Positioned below the option group, `text-sm text-red-600`, `role="alert"`.
 <TooltipProvider>
   <Tooltip>
     <TooltipTrigger asChild>
-      <span> {/* span needed because disabled buttons don't fire events */}
-        <Button disabled className="flex-1 opacity-50 cursor-not-allowed bg-blue-600">
+      <span>
+        {" "}
+        {/* span needed because disabled buttons don't fire events */}
+        <Button
+          disabled
+          className="flex-1 opacity-50 cursor-not-allowed bg-blue-600"
+        >
           Download Report
         </Button>
       </span>
@@ -1439,6 +1589,7 @@ Positioned below the option group, `text-sm text-red-600`, `role="alert"`.
 **File**: `src/app/not-found.tsx` (to be created)
 
 **Visual**:
+
 ```
 Header
 ──────────────────────────────
@@ -1481,12 +1632,15 @@ For server-fetched assessment history (dashboard), use Tailwind `animate-pulse` 
 **About, Privacy, Terms**: These are static pages with no data dependencies. No loading or empty states needed.
 
 **FAQ section**: All FAQ items are hardcoded. If the array is ever empty:
+
 ```tsx
-{faqs.length === 0 ? (
-  <p className="text-center text-slate-500 py-8">No FAQ items available.</p>
-) : (
-  <div className="space-y-4">{/* accordion items */}</div>
-)}
+{
+  faqs.length === 0 ? (
+    <p className="text-center text-slate-500 py-8">No FAQ items available.</p>
+  ) : (
+    <div className="space-y-4">{/* accordion items */}</div>
+  );
+}
 ```
 
 ---
@@ -1494,12 +1648,19 @@ For server-fetched assessment history (dashboard), use Tailwind `animate-pulse` 
 ### 11.8 Network / Offline State
 
 Add a global offline banner at the top of `<body>` (above header):
+
 ```tsx
-{/* Only renders when navigator.onLine === false */}
-<div role="alert" aria-live="assertive"
-     className="bg-amber-500 text-white text-sm text-center py-2 px-4 font-medium">
-  You appear to be offline. The assessment requires an internet connection to submit.
-</div>
+{
+  /* Only renders when navigator.onLine === false */
+}
+<div
+  role="alert"
+  aria-live="assertive"
+  className="bg-amber-500 text-white text-sm text-center py-2 px-4 font-medium"
+>
+  You appear to be offline. The assessment requires an internet connection to
+  submit.
+</div>;
 ```
 
 ---
@@ -1508,21 +1669,22 @@ Add a global offline banner at the top of `<body>` (above header):
 
 Components used or recommended for this project:
 
-| Component | Import path | Used in |
-|-----------|-------------|---------|
-| `Button` | `@/components/ui/button` | Header, Hero, Checker, HowItWorks |
-| `Progress` | `@/components/ui/progress` | Checker progress bar (migration) |
-| `Accordion` | `@/components/ui/accordion` | FAQ section (migration) |
-| `Card` | `@/components/ui/card` | Question card, feature cards (migration) |
-| `Checkbox` | `@/components/ui/checkbox` | Checker checkbox questions |
-| `RadioGroup` | `@/components/ui/radio-group` | Checker select questions |
-| `Tooltip` | `@/components/ui/tooltip` | Download Report disabled button |
-| `Sheet` | `@/components/ui/sheet` | Mobile navigation menu |
-| `Badge` | `@/components/ui/badge` | Risk level pill |
-| `Alert` | `@/components/ui/alert` | Error/warning banners |
-| `Separator` | `@/components/ui/separator` | Section dividers |
+| Component    | Import path                   | Used in                                  |
+| ------------ | ----------------------------- | ---------------------------------------- |
+| `Button`     | `@/components/ui/button`      | Header, Hero, Checker, HowItWorks        |
+| `Progress`   | `@/components/ui/progress`    | Checker progress bar (migration)         |
+| `Accordion`  | `@/components/ui/accordion`   | FAQ section (migration)                  |
+| `Card`       | `@/components/ui/card`        | Question card, feature cards (migration) |
+| `Checkbox`   | `@/components/ui/checkbox`    | Checker checkbox questions               |
+| `RadioGroup` | `@/components/ui/radio-group` | Checker select questions                 |
+| `Tooltip`    | `@/components/ui/tooltip`     | Download Report disabled button          |
+| `Sheet`      | `@/components/ui/sheet`       | Mobile navigation menu                   |
+| `Badge`      | `@/components/ui/badge`       | Risk level pill                          |
+| `Alert`      | `@/components/ui/alert`       | Error/warning banners                    |
+| `Separator`  | `@/components/ui/separator`   | Section dividers                         |
 
 Install command for all:
+
 ```bash
 npx shadcn@latest add button progress accordion card checkbox radio-group tooltip sheet badge alert separator
 ```
@@ -1573,4 +1735,4 @@ bg-green-100 border-green-300 text-green-900   → minimal
 
 ---
 
-*End of DESIGN.md*
+_End of DESIGN.md_

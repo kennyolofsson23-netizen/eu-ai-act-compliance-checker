@@ -1,75 +1,89 @@
-'use client'
-import * as React from 'react'
-import { cn } from '@/lib/utils'
-import { X, CheckCircle, AlertCircle, Info } from 'lucide-react'
+"use client";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import { X, CheckCircle, AlertCircle, Info } from "lucide-react";
 
-export type ToastType = 'success' | 'error' | 'info'
+export type ToastType = "success" | "error" | "info";
 
 interface ToastProps {
-  message: string
-  type?: ToastType
-  onClose: () => void
+  message: string;
+  type?: ToastType;
+  onClose: () => void;
 }
 
-export function Toast({ message, type = 'info', onClose }: ToastProps) {
+export function Toast({ message, type = "info", onClose }: ToastProps) {
   React.useEffect(() => {
-    const timer = setTimeout(onClose, 4000)
-    return () => clearTimeout(timer)
-  }, [onClose])
+    const timer = setTimeout(onClose, 4000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
 
-  const icons = { success: CheckCircle, error: AlertCircle, info: Info }
-  const Icon = icons[type]
+  const icons = { success: CheckCircle, error: AlertCircle, info: Info };
+  const Icon = icons[type];
 
   return (
     <div
       role="alert"
       aria-live="assertive"
       className={cn(
-        'fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg border px-4 py-3 shadow-lg max-w-sm',
-        type === 'success' && 'bg-green-50 border-green-200 text-green-800',
-        type === 'error' && 'bg-red-50 border-red-200 text-red-800',
-        type === 'info' && 'bg-blue-50 border-blue-200 text-blue-800'
+        "fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg border px-4 py-3 shadow-lg max-w-sm",
+        type === "success" && "bg-green-50 border-green-200 text-green-800",
+        type === "error" && "bg-red-50 border-red-200 text-red-800",
+        type === "info" && "bg-blue-50 border-blue-200 text-blue-800",
       )}
     >
       <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
       <p className="text-sm font-medium">{message}</p>
-      <button onClick={onClose} className="ml-auto" aria-label="Close notification">
+      <button
+        onClick={onClose}
+        className="ml-auto"
+        aria-label="Close notification"
+      >
         <X className="h-4 w-4" />
       </button>
     </div>
-  )
+  );
 }
 
 interface ToastContextValue {
-  showToast: (message: string, type?: ToastType) => void
+  showToast: (message: string, type?: ToastType) => void;
 }
 
-const ToastContext = React.createContext<ToastContextValue | null>(null)
+const ToastContext = React.createContext<ToastContextValue | null>(null);
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [toasts, setToasts] = React.useState<Array<{ id: string; message: string; type: ToastType }>>([])
+  const [toasts, setToasts] = React.useState<
+    Array<{ id: string; message: string; type: ToastType }>
+  >([]);
 
-  const showToast = React.useCallback((message: string, type: ToastType = 'info') => {
-    const id = Math.random().toString(36).substr(2, 9)
-    setToasts(prev => [...prev, { id, message, type }])
-  }, [])
+  const showToast = React.useCallback(
+    (message: string, type: ToastType = "info") => {
+      const id = Math.random().toString(36).substr(2, 9);
+      setToasts((prev) => [...prev, { id, message, type }]);
+    },
+    [],
+  );
 
   const removeToast = React.useCallback((id: string) => {
-    setToasts(prev => prev.filter(t => t.id !== id))
-  }, [])
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {toasts.map(toast => (
-        <Toast key={toast.id} message={toast.message} type={toast.type} onClose={() => removeToast(toast.id)} />
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
+        />
       ))}
     </ToastContext.Provider>
-  )
+  );
 }
 
 export function useToast() {
-  const ctx = React.useContext(ToastContext)
-  if (!ctx) throw new Error('useToast must be used within ToastProvider')
-  return ctx
+  const ctx = React.useContext(ToastContext);
+  if (!ctx) throw new Error("useToast must be used within ToastProvider");
+  return ctx;
 }

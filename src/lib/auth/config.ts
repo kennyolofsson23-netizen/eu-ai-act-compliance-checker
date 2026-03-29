@@ -1,33 +1,33 @@
-import { NextAuthConfig } from 'next-auth'
+import { NextAuthConfig } from "next-auth";
 
-export const authConfig: Omit<NextAuthConfig, 'providers'> = {
+export const authConfig: Omit<NextAuthConfig, "providers"> = {
   pages: {
-    signIn: '/auth/login',
-    error: '/auth/login',
+    signIn: "/auth/login",
+    error: "/auth/login",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const isDashboard = nextUrl.pathname.startsWith('/dashboard')
+      const isLoggedIn = !!auth?.user;
+      const isDashboard = nextUrl.pathname.startsWith("/dashboard");
       if (isDashboard) {
-        if (isLoggedIn) return true
-        return false
+        if (isLoggedIn) return true;
+        return false;
       }
-      return true
+      return true;
     },
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id
+        token.id = user.id;
       }
-      return token
+      return token;
     },
     session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string
+        session.user.id = token.id as string;
       }
-      return session
+      return session;
     },
   },
-  session: { strategy: 'jwt' },
+  session: { strategy: "jwt" },
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-}
+};

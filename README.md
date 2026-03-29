@@ -77,23 +77,27 @@ The EU AI Act Compliance Checker is a web application that:
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/eu-ai-act-checker.git
    cd eu-ai-act-checker
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your configuration
    ```
 
 4. **Run development server**
+
    ```bash
    npm run dev
    ```
@@ -129,6 +133,7 @@ See [DEV_PLAN](#dev-plan) below for the complete feature roadmap.
 ## SEO & Accessibility
 
 ✅ **Perfect Scores**
+
 - Server-rendered H1 in layout
 - Proper heading hierarchy (H1 → H2 → H3)
 - JSON-LD schemas (SoftwareApplication, FAQPage, Organization)
@@ -172,6 +177,7 @@ Response:
 ## Compliance & Accuracy
 
 This tool is based on:
+
 - EU AI Act (Regulation 2024/1689)
 - European Commission AI Office guidance
 - National regulatory interpretations
@@ -196,6 +202,7 @@ This project is open source and available under the MIT License.
 ## Contact
 
 For questions, feedback, or partnership inquiries:
+
 - Email: contact@euaiacompliance.app
 - Website: [euaiacompliance.app](https://euaiacompliance.app)
 
@@ -210,6 +217,7 @@ For questions, feedback, or partnership inquiries:
 ## DEV_PLAN
 
 ### Phase 1: Foundation (Complete ✅)
+
 - [x] Project scaffolding
 - [x] TypeScript + strict mode
 - [x] Tailwind CSS + shadcn/ui setup
@@ -223,6 +231,7 @@ For questions, feedback, or partnership inquiries:
 - [x] About, Privacy, Terms pages
 
 ### Phase 2: Compliance Assessment (In Progress)
+
 - [ ] Complete 12-question assessment form
 - [ ] Client-side form validation with Zod
 - [ ] Risk classification algorithm
@@ -231,6 +240,7 @@ For questions, feedback, or partnership inquiries:
 - [ ] Compliance badge generation
 
 ### Phase 3: Backend & Database (Next)
+
 - [ ] Set up backend API routes
 - [ ] PostgreSQL database schema
 - [ ] Assessment storage and history
@@ -239,6 +249,7 @@ For questions, feedback, or partnership inquiries:
 - [ ] Email report delivery
 
 ### Phase 4: Advanced Features
+
 - [ ] Compliance tracking dashboard
 - [ ] Obligation progress monitoring
 - [ ] Integration with document templates
@@ -247,6 +258,7 @@ For questions, feedback, or partnership inquiries:
 - [ ] Regulatory update notifications
 
 ### Phase 5: Monetization (Strategic)
+
 - [ ] Free tier (current)
 - [ ] Premium tier with document templates
 - [ ] Enterprise tier with API access
@@ -254,6 +266,7 @@ For questions, feedback, or partnership inquiries:
 - [ ] Automated obligation tracking
 
 ### Phase 6: Distribution & Growth
+
 - [ ] Content marketing (blog)
 - [ ] SEO optimization
 - [ ] Partnerships with AI tools platforms

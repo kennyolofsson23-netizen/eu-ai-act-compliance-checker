@@ -1,12 +1,16 @@
-import { Progress } from '@/components/ui/progress'
+import { Progress } from "@/components/ui/progress";
 
 interface ProgressBarProps {
-  current: number
-  total: number
-  percentage: number
+  current: number;
+  total: number;
+  percentage: number;
 }
 
-export default function ProgressBar({ current, total, percentage }: ProgressBarProps) {
+export default function ProgressBar({
+  current,
+  total,
+  percentage,
+}: ProgressBarProps) {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
@@ -15,7 +19,11 @@ export default function ProgressBar({ current, total, percentage }: ProgressBarP
         </span>
         <span className="text-sm text-slate-500">{percentage}% complete</span>
       </div>
-      <Progress value={percentage} className="h-2" aria-label={`Assessment progress: ${percentage}%`} />
+      <Progress
+        value={percentage}
+        className="h-2"
+        aria-label={`Assessment progress: ${percentage}%`}
+      />
     </div>
-  )
+  );
 }

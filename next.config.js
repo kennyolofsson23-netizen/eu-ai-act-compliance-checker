@@ -3,22 +3,22 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   typescript: {
-    tsconfigPath: './tsconfig.json',
+    tsconfigPath: "./tsconfig.json",
     tsconfigValidation: true,
   },
   headers: async () => {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         headers: [
           {
-            key: 'Permissions-Policy',
-            value: 'geolocation=(), microphone=(), camera=()'
-          }
-        ]
-      }
-    ]
-  }
+            key: "Permissions-Policy",
+            value: "geolocation=(), microphone=(), camera=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

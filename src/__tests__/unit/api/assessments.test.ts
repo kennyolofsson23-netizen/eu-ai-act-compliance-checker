@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock prisma and auth
-vi.mock('@/lib/db/client', () => ({
+vi.mock("@/lib/db/client", () => ({
   prisma: {
     assessment: {
       findMany: vi.fn(),
@@ -11,39 +11,39 @@ vi.mock('@/lib/db/client', () => ({
       delete: vi.fn(),
     },
   },
-}))
+}));
 
-vi.mock('@/lib/auth', () => ({
+vi.mock("@/lib/auth", () => ({
   auth: vi.fn(),
-}))
+}));
 
-vi.mock('@/lib/engine/classifier', () => ({
+vi.mock("@/lib/engine/classifier", () => ({
   classify: vi.fn(() => ({
-    riskLevel: 'high',
-    citedArticles: ['Article 6(2)'],
+    riskLevel: "high",
+    citedArticles: ["Article 6(2)"],
     obligations: [],
-    reasoning: 'Test reasoning',
+    reasoning: "Test reasoning",
   })),
-}))
+}));
 
-import { prisma } from '@/lib/db/client'
-import { auth } from '@/lib/auth'
+import { prisma } from "@/lib/db/client";
+import { auth } from "@/lib/auth";
 
-describe('Assessment API', () => {
+describe("Assessment API", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  it('returns 401 for unauthenticated GET /api/assessments', async () => {
-    vi.mocked(auth).mockResolvedValue(null)
+  it("returns 401 for unauthenticated GET /api/assessments", async () => {
+    vi.mocked(auth).mockResolvedValue(null);
     // Test auth guard
-    const session = await auth()
-    expect(session).toBeNull()
-  })
+    const session = await auth();
+    expect(session).toBeNull();
+  });
 
-  it('classify is called when creating assessment', async () => {
-    const { classify } = await import('@/lib/engine/classifier')
-    const result = classify({ isAiSystem: true, role: 'provider' })
-    expect(result.riskLevel).toBe('high')
-  })
-})
+  it("classify is called when creating assessment", async () => {
+    const { classify } = await import("@/lib/engine/classifier");
+    const result = classify({ isAiSystem: true, role: "provider" });
+    expect(result.riskLevel).toBe("high");
+  });
+});

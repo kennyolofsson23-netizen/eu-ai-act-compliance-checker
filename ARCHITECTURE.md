@@ -2,20 +2,20 @@
 
 ## 1. Tech Stack
 
-| Layer | Choice | Rationale |
-|-------|--------|-----------|
-| **Framework** | Next.js 14 (App Router) | Already in repo. SSR for SEO, API routes for backend, React for UI. |
-| **Language** | TypeScript | Already configured. Type safety for complex questionnaire logic. |
-| **Styling** | Tailwind CSS + Radix UI | Already in repo. Radix gives accessible primitives; Tailwind for rapid styling. |
-| **Forms** | react-hook-form + zod | Already in repo. Validation shared between client and server. |
-| **Database** | SQLite via Prisma (libsql/Turso) | Zero-ops for launch. Turso for production (edge-replicated SQLite). Migrate to Postgres later if needed. |
-| **Auth** | NextAuth.js v5 | Handles email/password + Google OAuth. Session strategy: JWT stored in HTTP-only cookie. |
-| **PDF Generation** | @react-pdf/renderer | React component-based PDF generation. Runs server-side in API route. |
-| **Email** | Resend | Simple API, generous free tier (100 emails/day), good DX. |
-| **Hosting** | Vercel | Zero-config for Next.js. Edge functions for badge SVG. Free tier sufficient for launch. |
-| **Analytics** | Plausible (self-hosted or cloud) | Privacy-friendly, no cookie consent needed, lightweight. |
-| **Rate Limiting** | Vercel KV (Redis) via @upstash/ratelimit | Edge-compatible, serverless-friendly. |
-| **Testing** | Vitest + Testing Library + Playwright | Unit/integration with Vitest, E2E with Playwright. |
+| Layer              | Choice                                   | Rationale                                                                                                |
+| ------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Framework**      | Next.js 14 (App Router)                  | Already in repo. SSR for SEO, API routes for backend, React for UI.                                      |
+| **Language**       | TypeScript                               | Already configured. Type safety for complex questionnaire logic.                                         |
+| **Styling**        | Tailwind CSS + Radix UI                  | Already in repo. Radix gives accessible primitives; Tailwind for rapid styling.                          |
+| **Forms**          | react-hook-form + zod                    | Already in repo. Validation shared between client and server.                                            |
+| **Database**       | SQLite via Prisma (libsql/Turso)         | Zero-ops for launch. Turso for production (edge-replicated SQLite). Migrate to Postgres later if needed. |
+| **Auth**           | NextAuth.js v5                           | Handles email/password + Google OAuth. Session strategy: JWT stored in HTTP-only cookie.                 |
+| **PDF Generation** | @react-pdf/renderer                      | React component-based PDF generation. Runs server-side in API route.                                     |
+| **Email**          | Resend                                   | Simple API, generous free tier (100 emails/day), good DX.                                                |
+| **Hosting**        | Vercel                                   | Zero-config for Next.js. Edge functions for badge SVG. Free tier sufficient for launch.                  |
+| **Analytics**      | Plausible (self-hosted or cloud)         | Privacy-friendly, no cookie consent needed, lightweight.                                                 |
+| **Rate Limiting**  | Vercel KV (Redis) via @upstash/ratelimit | Edge-compatible, serverless-friendly.                                                                    |
+| **Testing**        | Vitest + Testing Library + Playwright    | Unit/integration with Vitest, E2E with Playwright.                                                       |
 
 ---
 
@@ -144,10 +144,12 @@ model AssessmentEvent {
 ### 3.1 Assessment Routes
 
 #### `POST /api/assessments`
+
 Create a new assessment from completed questionnaire answers.
 
 - **Auth**: None required (supports anonymous)
 - **Request**:
+
 ```json
 {
   "systemName": "My AI Chatbot",
@@ -167,7 +169,9 @@ Create a new assessment from completed questionnaire answers.
   }
 }
 ```
+
 - **Response** (201):
+
 ```json
 {
   "id": "clx1abc2def",
@@ -193,10 +197,12 @@ Create a new assessment from completed questionnaire answers.
 ```
 
 #### `GET /api/assessments`
+
 List assessments for authenticated user.
 
 - **Auth**: Required (JWT cookie)
 - **Response** (200):
+
 ```json
 {
   "assessments": [
@@ -212,33 +218,39 @@ List assessments for authenticated user.
 ```
 
 #### `GET /api/assessments/[id]`
+
 Get full assessment details.
 
 - **Auth**: Owner or anonymous ID match
 - **Response** (200): Full assessment object (same as POST response)
 
 #### `DELETE /api/assessments/[id]`
+
 Delete an assessment.
 
 - **Auth**: Required (owner only)
 - **Response** (204): No content
 
 #### `PATCH /api/assessments/[id]`
+
 Update assessment name or email reminder preference.
 
 - **Auth**: Required (owner only)
 - **Request**:
+
 ```json
 {
   "systemName": "Updated Name",
   "emailReminders": true
 }
 ```
+
 - **Response** (200): Updated assessment object
 
 ### 3.2 Badge Route
 
 #### `GET /api/badge/[assessmentId]`
+
 Returns an SVG badge image.
 
 - **Auth**: None (public endpoint)
@@ -249,6 +261,7 @@ Returns an SVG badge image.
 ### 3.3 PDF Route
 
 #### `GET /api/assessments/[id]/pdf`
+
 Generate and download PDF report.
 
 - **Auth**: Owner or anonymous ID match
@@ -257,10 +270,12 @@ Generate and download PDF report.
 ### 3.4 Auth Routes (NextAuth)
 
 #### `POST /api/auth/register`
+
 Create a new account with email/password.
 
 - **Auth**: None
 - **Request**:
+
 ```json
 {
   "email": "user@example.com",
@@ -268,25 +283,32 @@ Create a new account with email/password.
   "name": "Sarah Chen"
 }
 ```
+
 - **Response** (201):
+
 ```json
 { "id": "clx1user123", "email": "user@example.com", "name": "Sarah Chen" }
 ```
+
 - **Validation**: Email format, password min 8 chars with 1 uppercase + 1 number
 
 #### `POST /api/auth/[...nextauth]`
+
 NextAuth catch-all route for login, logout, OAuth callbacks.
 
 #### `GET /api/auth/session`
+
 Get current session.
 
 ### 3.5 API Key Routes
 
 #### `POST /api/keys`
+
 Generate a new API key.
 
 - **Auth**: Required
 - **Response** (201):
+
 ```json
 {
   "id": "clx1key123",
@@ -296,9 +318,11 @@ Generate a new API key.
   "createdAt": "2026-03-29T12:00:00Z"
 }
 ```
+
 Note: `key` is only returned on creation, never again.
 
 #### `DELETE /api/keys/[id]`
+
 Revoke an API key.
 
 - **Auth**: Required (owner only)
@@ -307,12 +331,14 @@ Revoke an API key.
 ### 3.6 Public API (v1)
 
 #### `POST /api/v1/classify`
+
 Programmatic classification endpoint.
 
 - **Auth**: API key via `Authorization: Bearer euai_xxx` header
 - **Rate Limit**: 10/hour anonymous (IP), 100/hour authenticated
 - **Request**: Same answers shape as POST /api/assessments
 - **Response** (200):
+
 ```json
 {
   "riskLevel": "high",
@@ -325,10 +351,12 @@ Programmatic classification endpoint.
 ### 3.7 Analytics Route
 
 #### `POST /api/events`
+
 Track assessment events (started, completed, abandoned).
 
 - **Auth**: None
 - **Request**:
+
 ```json
 {
   "assessmentId": "clx1abc2def",
@@ -337,11 +365,13 @@ Track assessment events (started, completed, abandoned).
   "metadata": {}
 }
 ```
+
 - **Response** (201): `{ "ok": true }`
 
 ### 3.8 Templates Route
 
 #### `GET /api/templates/[templateId]`
+
 Download a documentation template.
 
 - **Auth**: None (P1 — gated behind Pro in Phase 2)
@@ -352,23 +382,23 @@ Download a documentation template.
 
 ## 4. Page / Route Map
 
-| URL | Page | Auth | Data Requirements |
-|-----|------|------|-------------------|
-| `/` | Landing page | None | Static + assessment count from DB |
-| `/checker` | Questionnaire (12 questions) | None | Questions data (static JSON), localStorage for progress |
-| `/checker/results` | Results page (classification + obligations + badge + PDF) | None | Assessment from URL param or localStorage |
-| `/checker/results/[id]` | Saved assessment results | Optional (owner or anon match) | Assessment by ID from DB |
-| `/dashboard` | User dashboard (list assessments) | Required | User's assessments from DB |
-| `/dashboard/compare` | Comparison view | Required | 2-4 assessments by IDs from query params |
-| `/dashboard/keys` | API key management | Required | User's API keys from DB |
-| `/dashboard/settings` | Account settings | Required | User profile from DB |
-| `/auth/login` | Login page | None (redirect if authed) | None |
-| `/auth/register` | Registration page | None (redirect if authed) | None |
-| `/about` | About page | None | Static |
-| `/privacy` | Privacy policy | None | Static |
-| `/terms` | Terms of service | None | Static |
-| `/api/badge/[id]` | Badge SVG (edge function) | None | Assessment risk level from DB |
-| `/api/docs` | API documentation page | None | Static (OpenAPI spec rendered) |
+| URL                     | Page                                                      | Auth                           | Data Requirements                                       |
+| ----------------------- | --------------------------------------------------------- | ------------------------------ | ------------------------------------------------------- |
+| `/`                     | Landing page                                              | None                           | Static + assessment count from DB                       |
+| `/checker`              | Questionnaire (12 questions)                              | None                           | Questions data (static JSON), localStorage for progress |
+| `/checker/results`      | Results page (classification + obligations + badge + PDF) | None                           | Assessment from URL param or localStorage               |
+| `/checker/results/[id]` | Saved assessment results                                  | Optional (owner or anon match) | Assessment by ID from DB                                |
+| `/dashboard`            | User dashboard (list assessments)                         | Required                       | User's assessments from DB                              |
+| `/dashboard/compare`    | Comparison view                                           | Required                       | 2-4 assessments by IDs from query params                |
+| `/dashboard/keys`       | API key management                                        | Required                       | User's API keys from DB                                 |
+| `/dashboard/settings`   | Account settings                                          | Required                       | User profile from DB                                    |
+| `/auth/login`           | Login page                                                | None (redirect if authed)      | None                                                    |
+| `/auth/register`        | Registration page                                         | None (redirect if authed)      | None                                                    |
+| `/about`                | About page                                                | None                           | Static                                                  |
+| `/privacy`              | Privacy policy                                            | None                           | Static                                                  |
+| `/terms`                | Terms of service                                          | None                           | Static                                                  |
+| `/api/badge/[id]`       | Badge SVG (edge function)                                 | None                           | Assessment risk level from DB                           |
+| `/api/docs`             | API documentation page                                    | None                           | Static (OpenAPI spec rendered)                          |
 
 ---
 
@@ -601,6 +631,7 @@ Developer sends POST /api/v1/classify
 ## 7. Security Checklist
 
 ### Authentication
+
 - [x] Passwords hashed with bcrypt (cost factor 12)
 - [x] JWT tokens in HTTP-only, Secure, SameSite=Lax cookies
 - [x] Session expiry: 30 days, sliding window
@@ -609,12 +640,14 @@ Developer sends POST /api/v1/classify
 - [x] API key prefix stored separately for identification without exposing key
 
 ### Input Validation
+
 - [x] All API inputs validated with Zod schemas (shared between client/server)
 - [x] Assessment answers validated against known question IDs and allowed values
 - [x] String inputs: max length enforced (systemName: 200 chars, email: 254 chars)
 - [x] No raw SQL — Prisma parameterized queries only
 
 ### Authorization
+
 - [x] Assessment access: owner (userId match) or anonymous (anonymousId cookie match)
 - [x] Dashboard routes: AuthGuard redirects to /auth/login if no session
 - [x] API routes: middleware checks session or API key before processing
@@ -622,6 +655,7 @@ Developer sends POST /api/v1/classify
 - [x] No admin routes in V1 (manual DB access for ops)
 
 ### CSRF / XSS
+
 - [x] SameSite=Lax cookies prevent CSRF on GET-mutating routes (none exist)
 - [x] All state-changing operations use POST/PATCH/DELETE (not GET)
 - [x] React's default JSX escaping prevents XSS
@@ -629,6 +663,7 @@ Developer sends POST /api/v1/classify
 - [x] Content-Security-Policy header: `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'`
 
 ### Rate Limiting
+
 - [x] Anonymous API: 10 requests/hour per IP
 - [x] Authenticated API: 100 requests/hour per API key
 - [x] Assessment creation: 20/hour per IP (anonymous), 60/hour per user (authenticated)
@@ -636,12 +671,14 @@ Developer sends POST /api/v1/classify
 - [x] Badge endpoint: 1000/hour per IP (CDN cached, so rarely hit)
 
 ### Secrets Management
+
 - [x] All secrets in environment variables, never in code
 - [x] `.env.local` in `.gitignore`
 - [x] Required env vars: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
 - [x] `NEXTAUTH_SECRET`: minimum 32 bytes, randomly generated
 
 ### Data Privacy
+
 - [x] Anonymous assessments: no email, no name, only answers + anonymousId
 - [x] Account deletion: cascading delete of all user data (assessments, keys, sessions)
 - [x] No third-party analytics scripts that set cookies
@@ -650,6 +687,7 @@ Developer sends POST /api/v1/classify
 - [x] PDF exports generated server-side, not stored — streamed directly to client
 
 ### Infrastructure
+
 - [x] HTTPS enforced (Vercel default)
 - [x] HTTP Strict Transport Security header
 - [x] X-Frame-Options: DENY (except badge route: ALLOW)

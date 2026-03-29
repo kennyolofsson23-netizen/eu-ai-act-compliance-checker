@@ -1,10 +1,10 @@
-'use client'
-import Link from 'next/link'
-import { useState } from 'react'
-import { Menu, X, Shield } from 'lucide-react'
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { Menu, X, Shield } from "lucide-react";
 
 export default function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
@@ -12,19 +12,36 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-blue-600" aria-hidden="true" />
-            <span className="font-semibold text-slate-900">EU AI Act Checker</span>
+            <span className="font-semibold text-slate-900">
+              EU AI Act Checker
+            </span>
           </Link>
-          <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
-            <Link href="/checker" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+          <nav
+            className="hidden md:flex items-center gap-6"
+            aria-label="Main navigation"
+          >
+            <Link
+              href="/checker"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
               Start Assessment
             </Link>
-            <Link href="/#how-it-works" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+            <Link
+              href="/#how-it-works"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
               How It Works
             </Link>
-            <Link href="/#faq" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+            <Link
+              href="/#faq"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
               FAQ
             </Link>
-            <Link href="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+            <Link
+              href="/auth/login"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
               Sign In
             </Link>
             <Link
@@ -37,24 +54,47 @@ export default function Header() {
           <button
             className="md:hidden p-2 text-slate-600 hover:text-slate-900"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </button>
         </div>
         {mobileOpen && (
-          <nav className="md:hidden border-t border-slate-200 py-4 flex flex-col gap-3" aria-label="Mobile navigation">
-            <Link href="/checker" className="text-sm font-medium text-slate-700 py-2" onClick={() => setMobileOpen(false)}>
+          <nav
+            className="md:hidden border-t border-slate-200 py-4 flex flex-col gap-3"
+            aria-label="Mobile navigation"
+          >
+            <Link
+              href="/checker"
+              className="text-sm font-medium text-slate-700 py-2"
+              onClick={() => setMobileOpen(false)}
+            >
               Start Assessment
             </Link>
-            <Link href="/#how-it-works" className="text-sm font-medium text-slate-700 py-2" onClick={() => setMobileOpen(false)}>
+            <Link
+              href="/#how-it-works"
+              className="text-sm font-medium text-slate-700 py-2"
+              onClick={() => setMobileOpen(false)}
+            >
               How It Works
             </Link>
-            <Link href="/#faq" className="text-sm font-medium text-slate-700 py-2" onClick={() => setMobileOpen(false)}>
+            <Link
+              href="/#faq"
+              className="text-sm font-medium text-slate-700 py-2"
+              onClick={() => setMobileOpen(false)}
+            >
               FAQ
             </Link>
-            <Link href="/auth/login" className="text-sm font-medium text-slate-700 py-2" onClick={() => setMobileOpen(false)}>
+            <Link
+              href="/auth/login"
+              className="text-sm font-medium text-slate-700 py-2"
+              onClick={() => setMobileOpen(false)}
+            >
               Sign In
             </Link>
             <Link
@@ -68,5 +108,5 @@ export default function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }

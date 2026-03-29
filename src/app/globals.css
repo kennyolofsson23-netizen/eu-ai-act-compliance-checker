@@ -38,7 +38,7 @@
 
 /* Focus visible styles */
 :focus-visible {
-  outline: 3px solid #2563EB;
+  outline: 3px solid #2563eb;
   outline-offset: 2px;
   border-radius: 2px;
 }

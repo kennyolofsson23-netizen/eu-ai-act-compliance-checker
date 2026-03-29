@@ -1,28 +1,28 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/admin/'],
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/admin/"],
       },
       {
-        userAgent: 'GPTBot',
-        allow: '/',
+        userAgent: "GPTBot",
+        allow: "/",
       },
       {
-        userAgent: 'CCBot',
-        allow: '/',
+        userAgent: "CCBot",
+        allow: "/",
       },
       {
-        userAgent: 'anthropic-ai',
-        allow: '/',
+        userAgent: "anthropic-ai",
+        allow: "/",
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
-  }
+  };
 }

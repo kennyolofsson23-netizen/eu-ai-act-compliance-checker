@@ -1,9 +1,12 @@
-import Link from 'next/link'
-import { ArrowRight, CheckCircle } from 'lucide-react'
+import Link from "next/link";
+import { ArrowRight, CheckCircle } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-b from-blue-50 to-white py-20 md:py-32" aria-labelledby="hero-heading">
+    <section
+      className="bg-gradient-to-b from-blue-50 to-white py-20 md:py-32"
+      aria-labelledby="hero-heading"
+    >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-800 border border-orange-200 px-4 py-2 rounded-full text-sm font-medium mb-6">
@@ -14,13 +17,19 @@ export default function Hero() {
             EU AI Act enforcement: August 2, 2026
           </div>
 
-          <h1 id="hero-heading" className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
-            Is Your AI Product{' '}
+          <h1
+            id="hero-heading"
+            className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight"
+          >
+            Is Your AI Product{" "}
             <span className="text-blue-600">EU Compliant?</span>
           </h1>
 
           <p className="mt-6 text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            EU AI Act Compliance Checker is a free AI compliance tool that classifies your AI system&apos;s risk level, generates your obligation checklist, and creates a shareable compliance badge — all in under 3 minutes.
+            EU AI Act Compliance Checker is a free AI compliance tool that
+            classifies your AI system&apos;s risk level, generates your
+            obligation checklist, and creates a shareable compliance badge — all
+            in under 3 minutes.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
@@ -41,13 +50,16 @@ export default function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-600">
             {[
-              'No signup required',
-              'Free forever',
-              '3 minutes to complete',
-              'Article citations included',
-            ].map(feature => (
+              "No signup required",
+              "Free forever",
+              "3 minutes to complete",
+              "Article citations included",
+            ].map((feature) => (
               <div key={feature} className="flex items-center gap-1.5">
-                <CheckCircle className="h-4 w-4 text-green-600 shrink-0" aria-hidden="true" />
+                <CheckCircle
+                  className="h-4 w-4 text-green-600 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{feature}</span>
               </div>
             ))}
@@ -57,18 +69,39 @@ export default function Hero() {
         {/* Risk level preview cards */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
           {[
-            { level: 'Unacceptable', color: 'bg-red-100 border-red-200 text-red-800', icon: '🚫' },
-            { level: 'High Risk', color: 'bg-orange-100 border-orange-200 text-orange-800', icon: '⚠️' },
-            { level: 'Limited Risk', color: 'bg-yellow-100 border-yellow-200 text-yellow-800', icon: '⚡' },
-            { level: 'Minimal Risk', color: 'bg-green-100 border-green-200 text-green-800', icon: '✅' },
+            {
+              level: "Unacceptable",
+              color: "bg-red-100 border-red-200 text-red-800",
+              icon: "🚫",
+            },
+            {
+              level: "High Risk",
+              color: "bg-orange-100 border-orange-200 text-orange-800",
+              icon: "⚠️",
+            },
+            {
+              level: "Limited Risk",
+              color: "bg-yellow-100 border-yellow-200 text-yellow-800",
+              icon: "⚡",
+            },
+            {
+              level: "Minimal Risk",
+              color: "bg-green-100 border-green-200 text-green-800",
+              icon: "✅",
+            },
           ].map(({ level, color, icon }) => (
-            <div key={level} className={`${color} border rounded-lg p-3 text-center text-sm font-medium`}>
-              <div className="text-lg mb-1" aria-hidden="true">{icon}</div>
+            <div
+              key={level}
+              className={`${color} border rounded-lg p-3 text-center text-sm font-medium`}
+            >
+              <div className="text-lg mb-1" aria-hidden="true">
+                {icon}
+              </div>
               {level}
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

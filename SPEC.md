@@ -64,6 +64,7 @@ The core product. A guided, branching questionnaire that classifies an AI system
 **User Story**: As a user, I want to answer plain-language questions about my AI system so that I receive an accurate EU AI Act risk classification without reading the regulation.
 
 **Acceptance Criteria**:
+
 - Given a user lands on /checker, When the page loads, Then they see Question 1 with no signup required
 - Given a user is on any question, When they select an answer, Then the next relevant question appears (branching logic — not all 12 questions shown to every user)
 - Given a user answers a question indicating a prohibited practice (Article 5), When the questionnaire detects this, Then it short-circuits to "Unacceptable Risk" classification immediately with explanation
@@ -72,6 +73,7 @@ The core product. A guided, branching questionnaire that classifies an AI system
 - Given a user refreshes the page mid-questionnaire, When the page reloads, Then their progress is preserved via URL state or localStorage
 
 **Questions cover** (branching, not all shown):
+
 1. Is your system an AI system under the Act's definition? (autonomy, inference, output generation)
 2. What is your role? (provider / deployer / importer / distributor)
 3. Is this a general-purpose AI (GPAI) model?
@@ -92,6 +94,7 @@ After classification, display a specific, actionable checklist of what the user 
 **User Story**: As a user who received a risk classification, I want to see exactly what obligations apply to my AI system so that I know what to implement.
 
 **Acceptance Criteria**:
+
 - Given a user is classified as High Risk, When the results page loads, Then they see a checklist with all applicable obligations: Risk Management System (Art. 9), Data Governance (Art. 10), Technical Documentation (Art. 11), Record-Keeping (Art. 12), Transparency (Art. 13), Human Oversight (Art. 14), Accuracy/Robustness/Cybersecurity (Art. 15), Quality Management (Art. 17), Conformity Assessment (Art. 43), EU Database Registration (Art. 49), Post-Market Monitoring (Art. 72)
 - Given a user is classified as Limited Risk, When the results page loads, Then they see only transparency obligations (Art. 50) applicable to their system type
 - Given a user is classified as Minimal Risk, When the results page loads, Then they see "No mandatory obligations" with a recommendation to follow voluntary codes of conduct
@@ -106,6 +109,7 @@ A unique URL that renders an SVG badge showing the AI system's classification.
 **User Story**: As a user, I want a shareable badge URL showing my AI system's risk classification so that I can embed it in my website, pitch deck, or documentation.
 
 **Acceptance Criteria**:
+
 - Given a user completes an assessment, When results display, Then a badge preview is shown with the classification level and date
 - Given a user clicks "Copy Badge URL", When the URL is copied, Then it points to /api/badge/[assessmentId] which returns an SVG image
 - Given a badge URL is requested, When the server responds, Then it returns a valid SVG with: risk level (color-coded), assessment date, and "EU AI Act" label
@@ -120,6 +124,7 @@ Export the full assessment as a downloadable PDF.
 **User Story**: As a user, I want to download my assessment results as a PDF so that I can share it with my team, legal counsel, or auditors.
 
 **Acceptance Criteria**:
+
 - Given a user is on the results page, When they click "Download PDF", Then a PDF is generated and downloaded containing: system description (from answers), risk classification with reasoning, full obligation checklist, applicable article references, and assessment date
 - Given the PDF is generated, When opened, Then it includes a header with "EU AI Act Compliance Assessment" and a footer with the tool's URL and disclaimer
 - Given the PDF is generated, When reviewed, Then it contains a disclaimer stating this is an informational tool and not legal advice
@@ -131,6 +136,7 @@ The marketing/education page that drives organic traffic.
 **User Story**: As a potential user searching for EU AI Act compliance help, I want to find a clear, trustworthy landing page so that I understand what this tool does and start using it immediately.
 
 **Acceptance Criteria**:
+
 - Given a user visits /, When the page loads, Then they see: a headline communicating the value prop, a "Start Assessment" CTA above the fold, a brief explanation of the EU AI Act with key deadlines, and social proof (usage count)
 - Given search engine crawlers index the page, When /robots.txt and /sitemap.xml are requested, Then they return valid responses including all public pages
 - Given a user visits /, When they view the page, Then the meta title is "EU AI Act Compliance Checker — Free Risk Classification Tool" and description mentions key features
@@ -147,6 +153,7 @@ Downloadable/copyable templates for required compliance documentation.
 **User Story**: As a user with a high-risk AI system, I want documentation templates so that I have a starting point for my compliance paperwork.
 
 **Acceptance Criteria**:
+
 - Given a user is classified as High Risk, When they view the results page, Then they see a "Documentation Templates" section with downloadable Markdown templates for: Technical Documentation (Annex IV), Risk Management Plan (Art. 9), Data Governance Policy (Art. 10), Human Oversight Protocol (Art. 14), and Post-Market Monitoring Plan (Art. 72)
 - Given a user clicks a template, When it downloads, Then it contains structured sections with placeholder text, guidance comments, and references to the relevant articles
 - Given a user is classified as Limited Risk, When they view templates, Then only the Transparency Disclosure template is offered
@@ -159,6 +166,7 @@ Optional account creation to save and manage multiple assessments.
 **User Story**: As a returning user, I want to save my assessments to an account so that I can track compliance across multiple AI systems and update assessments over time.
 
 **Acceptance Criteria**:
+
 - Given a user completes an assessment without an account, When they click "Save Assessment", Then they are prompted to create an account via email/password or Google OAuth
 - Given a user creates an account, When they log in, Then they see a dashboard listing all their saved assessments with: system name, classification, date, and last updated
 - Given a user clicks an existing assessment, When the detail page loads, Then they can view the full results, re-take the questionnaire (creating a new version), or delete the assessment
@@ -172,6 +180,7 @@ Side-by-side comparison of multiple assessments.
 **User Story**: As a PM managing multiple AI features, I want to compare assessments side by side so that I can prioritize compliance efforts across my product portfolio.
 
 **Acceptance Criteria**:
+
 - Given a user has 2+ saved assessments, When they select 2-4 assessments and click "Compare", Then a comparison table displays showing: system name, risk level, applicable obligations (checkmarks), and key differences highlighted
 - Given the comparison view is displayed, When the user views it, Then obligations present in one assessment but not another are visually highlighted
 
@@ -186,6 +195,7 @@ A visual timeline showing the user when each obligation becomes enforceable.
 **User Story**: As a user, I want to see when my specific obligations take effect so that I can plan my compliance roadmap.
 
 **Acceptance Criteria**:
+
 - Given a user views their results, When they click "View Timeline", Then a visual timeline shows key dates (Feb 2025 prohibited practices, Aug 2025 GPAI, Aug 2026 Annex III high-risk, Aug 2027 Annex I products) with the user's relevant dates highlighted
 - Given the current date is before a deadline, When the timeline renders, Then the upcoming deadline shows a countdown (e.g., "127 days remaining")
 - Given the current date is past a deadline, When the timeline renders, Then that deadline shows "In effect" with a checkmark
@@ -197,6 +207,7 @@ Opt-in email notifications for upcoming compliance deadlines.
 **User Story**: As a user, I want to receive email reminders before my compliance deadlines so that I don't miss critical dates.
 
 **Acceptance Criteria**:
+
 - Given a user has an account and a saved assessment, When they toggle "Email Reminders" on, Then they receive emails at 90, 60, 30, and 7 days before each applicable deadline
 - Given a user receives a reminder email, When they click the link, Then they are taken to their assessment results page
 - Given a user toggles reminders off, When the toggle is saved, Then no further emails are sent
@@ -208,6 +219,7 @@ Questionnaire and results in the three most common EU business languages.
 **User Story**: As a non-native English speaker, I want to use the tool in my language so that I can accurately understand and answer the questions.
 
 **Acceptance Criteria**:
+
 - Given a user visits the site, When they click the language selector, Then they can choose English, German, or French
 - Given a user selects German, When the questionnaire loads, Then all questions, answers, results, and obligation descriptions are displayed in German
 - Given a user switches language mid-assessment, When the language changes, Then their progress is preserved and the current question re-renders in the new language
@@ -219,6 +231,7 @@ A public API for programmatic access to the classification engine.
 **User Story**: As a developer, I want to call the classification engine via API so that I can integrate compliance checking into my CI/CD pipeline or internal tools.
 
 **Acceptance Criteria**:
+
 - Given a developer sends a POST request to /api/v1/classify with valid answers JSON, When the server processes it, Then it returns a JSON response with: risk_level, applicable_obligations[], cited_articles[], and badge_url
 - Given a developer sends invalid or incomplete answers, When the server validates, Then it returns a 422 error with specific field-level validation messages
 - Given the API is called without an API key, When rate limiting is checked, Then anonymous requests are limited to 10/hour per IP
@@ -229,6 +242,7 @@ A public API for programmatic access to the classification engine.
 ## 4. Non-Functional Requirements
 
 ### Performance
+
 - Questionnaire page load: < 1.5 seconds on 3G
 - Question transition: < 100ms (no server round-trip — all logic runs client-side)
 - PDF generation: < 3 seconds
@@ -236,6 +250,7 @@ A public API for programmatic access to the classification engine.
 - Lighthouse score: > 90 on all metrics
 
 ### Security
+
 - All traffic over HTTPS
 - No PII collected during anonymous assessments (answers stored in localStorage only)
 - Accounts: passwords hashed with bcrypt (cost factor 12), sessions via HTTP-only secure cookies
@@ -245,17 +260,20 @@ A public API for programmatic access to the classification engine.
 - Input validation via Zod on both client and server
 
 ### Browser Support
+
 - Chrome 90+, Firefox 90+, Safari 15+, Edge 90+
 - Mobile: iOS Safari 15+, Chrome for Android 90+
 - Progressive enhancement — core questionnaire works without JavaScript via URL state (stretch goal)
 
 ### Accessibility
+
 - WCAG 2.1 AA compliance
 - Keyboard navigable questionnaire
 - Screen reader compatible (proper ARIA labels, live regions for dynamic content)
 - Color contrast ratios meet AA standards (4.5:1 for normal text)
 
 ### Legal
+
 - Prominent disclaimer on every results page: "This tool provides informational guidance only and does not constitute legal advice. Consult a qualified legal professional for compliance decisions."
 - Privacy policy and terms of service pages
 - GDPR-compliant data handling (minimal collection, right to deletion, cookie consent for non-essential cookies)
@@ -270,18 +288,18 @@ Everything is free. Build traffic, establish credibility, collect usage data.
 
 ### Phase 2: Freemium (Month 3+)
 
-| Feature | Free | Pro ($29/mo) |
-|---------|------|--------------|
-| Risk classification | Unlimited | Unlimited |
-| Obligation checklist | Full | Full |
-| Badge URL | 1 system | Unlimited |
-| PDF export | 1/month | Unlimited |
-| Documentation templates | Preview only | Full download |
-| Saved assessments | Up to 3 | Unlimited |
-| Assessment comparison | No | Yes |
-| API access | No | 1,000 calls/mo |
-| Email reminders | No | Yes |
-| Priority support | No | Yes |
+| Feature                 | Free         | Pro ($29/mo)   |
+| ----------------------- | ------------ | -------------- |
+| Risk classification     | Unlimited    | Unlimited      |
+| Obligation checklist    | Full         | Full           |
+| Badge URL               | 1 system     | Unlimited      |
+| PDF export              | 1/month      | Unlimited      |
+| Documentation templates | Preview only | Full download  |
+| Saved assessments       | Up to 3      | Unlimited      |
+| Assessment comparison   | No           | Yes            |
+| API access              | No           | 1,000 calls/mo |
+| Email reminders         | No           | Yes            |
+| Priority support        | No           | Yes            |
 
 ### Phase 3: Team Plan (Month 6+)
 
@@ -291,17 +309,17 @@ $99/mo for up to 10 users. Shared dashboard, team assessment library, audit log.
 
 ## 6. Success Metrics
 
-| Metric | Target (Month 1) | Target (Month 3) | Target (Month 6) |
-|--------|-------------------|-------------------|-------------------|
-| Monthly unique visitors | 5,000 | 20,000 | 50,000 |
-| Assessments completed | 2,000 | 10,000 | 30,000 |
-| Completion rate (start to result) | > 70% | > 75% | > 80% |
-| Average time to complete | < 4 minutes | < 3.5 minutes | < 3 minutes |
-| Badge embeds (external sites) | 100 | 1,000 | 5,000 |
-| Accounts created | 200 | 2,000 | 8,000 |
-| Pro conversions | N/A (free phase) | 50 | 300 |
-| Monthly recurring revenue | $0 | $1,450 | $8,700 |
-| SEO: ranking for "EU AI Act compliance checker" | Top 20 | Top 10 | Top 5 |
+| Metric                                          | Target (Month 1) | Target (Month 3) | Target (Month 6) |
+| ----------------------------------------------- | ---------------- | ---------------- | ---------------- |
+| Monthly unique visitors                         | 5,000            | 20,000           | 50,000           |
+| Assessments completed                           | 2,000            | 10,000           | 30,000           |
+| Completion rate (start to result)               | > 70%            | > 75%            | > 80%            |
+| Average time to complete                        | < 4 minutes      | < 3.5 minutes    | < 3 minutes      |
+| Badge embeds (external sites)                   | 100              | 1,000            | 5,000            |
+| Accounts created                                | 200              | 2,000            | 8,000            |
+| Pro conversions                                 | N/A (free phase) | 50               | 300              |
+| Monthly recurring revenue                       | $0               | $1,450           | $8,700           |
+| SEO: ranking for "EU AI Act compliance checker" | Top 20           | Top 10           | Top 5            |
 
 ---
 
