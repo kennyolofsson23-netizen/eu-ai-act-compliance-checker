@@ -82,7 +82,7 @@ export default function HomePage() {
       },
       {
         "@type": "Question",
-        name: "What does \"GPAI\" mean?",
+        name: 'What does "GPAI" mean?',
         acceptedAnswer: {
           "@type": "Answer",
           text: "GPAI stands for General Purpose AI — AI models trained on large amounts of data to perform a wide range of tasks, such as large language models (GPT, Claude, Llama). GPAI providers have specific obligations under the EU AI Act including technical documentation, copyright compliance, and transparency with downstream providers.",

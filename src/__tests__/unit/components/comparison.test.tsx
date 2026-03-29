@@ -75,6 +75,8 @@ describe("ComparisonTable", () => {
 
   it("has accessible aria-label on the table", () => {
     render(<ComparisonTable assessments={mockAssessments} />);
-    expect(screen.getByRole("table", { name: /assessment comparison/i })).toBeTruthy();
+    expect(
+      screen.getByRole("table", { name: /assessment comparison/i }),
+    ).toBeTruthy();
   });
 });

@@ -10,10 +10,12 @@ export const credentialsProvider = Credentials({
     password: { label: "Password", type: "password" },
   },
   async authorize(credentials) {
-    const parsed = z.object({
-      email: z.string().email(),
-      password: z.string().min(8),
-    }).safeParse(credentials);
+    const parsed = z
+      .object({
+        email: z.string().email(),
+        password: z.string().min(8),
+      })
+      .safeParse(credentials);
 
     if (!parsed.success) return null;
 
@@ -22,7 +24,8 @@ export const credentialsProvider = Credentials({
     });
 
     // Always run bcrypt to prevent timing-based user enumeration
-    const DUMMY_HASH = "$2b$12$dummyhashfortimingnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn";
+    const DUMMY_HASH =
+      "$2b$12$dummyhashfortimingnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn";
     const passwordMatch = await bcrypt.compare(
       parsed.data.password,
       user?.passwordHash ?? DUMMY_HASH,

@@ -2,7 +2,12 @@ import { describe, it, expect } from "vitest";
 import { getObligationsForLevel } from "@/lib/engine/obligations";
 import type { RiskLevel, UserRole } from "@/lib/engine/types";
 
-const ALL_ROLES: UserRole[] = ["provider", "deployer", "importer", "distributor"];
+const ALL_ROLES: UserRole[] = [
+  "provider",
+  "deployer",
+  "importer",
+  "distributor",
+];
 
 describe("getObligationsForLevel() — unacceptable", () => {
   ALL_ROLES.forEach((role) => {

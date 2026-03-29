@@ -27,7 +27,10 @@ export default function ComparisonTable({ assessments }: ComparisonTableProps) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse" aria-label="Assessment comparison">
+      <table
+        className="w-full border-collapse"
+        aria-label="Assessment comparison"
+      >
         <thead>
           <tr className="border-b border-slate-200">
             <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700">
@@ -45,7 +48,9 @@ export default function ComparisonTable({ assessments }: ComparisonTableProps) {
         </thead>
         <tbody>
           <tr className="border-b border-slate-100">
-            <td className="py-3 px-4 text-sm font-medium text-slate-600">Risk Level</td>
+            <td className="py-3 px-4 text-sm font-medium text-slate-600">
+              Risk Level
+            </td>
             {sorted.map((a) => (
               <td key={a.id} className="py-3 px-4 text-sm text-slate-900">
                 {a.riskLevel}
@@ -53,7 +58,9 @@ export default function ComparisonTable({ assessments }: ComparisonTableProps) {
             ))}
           </tr>
           <tr className="border-b border-slate-100">
-            <td className="py-3 px-4 text-sm font-medium text-slate-600">Role</td>
+            <td className="py-3 px-4 text-sm font-medium text-slate-600">
+              Role
+            </td>
             {sorted.map((a) => (
               <td key={a.id} className="py-3 px-4 text-sm text-slate-900">
                 {a.role}
@@ -61,7 +68,9 @@ export default function ComparisonTable({ assessments }: ComparisonTableProps) {
             ))}
           </tr>
           <tr className="border-b border-slate-100">
-            <td className="py-3 px-4 text-sm font-medium text-slate-600">GPAI Model</td>
+            <td className="py-3 px-4 text-sm font-medium text-slate-600">
+              GPAI Model
+            </td>
             {sorted.map((a) => (
               <td key={a.id} className="py-3 px-4 text-sm text-slate-900">
                 {a.isGpai ? "Yes" : "No"}
@@ -69,7 +78,9 @@ export default function ComparisonTable({ assessments }: ComparisonTableProps) {
             ))}
           </tr>
           <tr className="border-b border-slate-100">
-            <td className="py-3 px-4 text-sm font-medium text-slate-600">Obligations</td>
+            <td className="py-3 px-4 text-sm font-medium text-slate-600">
+              Obligations
+            </td>
             {sorted.map((a) => (
               <td key={a.id} className="py-3 px-4 text-sm text-slate-900">
                 {a.obligations.length}

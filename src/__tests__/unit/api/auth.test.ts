@@ -135,10 +135,17 @@ describe("Auth Config callbacks", () => {
 
     const token = { id: "user-123" };
     // Cast to avoid complex AdapterUser/AdapterSession intersection typing in tests
-    const callSession = sessionCallback as unknown as (args: unknown) => Promise<{ user: Record<string, unknown> }>;
+    const callSession = sessionCallback as unknown as (
+      args: unknown,
+    ) => Promise<{ user: Record<string, unknown> }>;
     const result = await callSession({
       session: {
-        user: { id: "placeholder", email: "test@example.com", name: "Test", emailVerified: null },
+        user: {
+          id: "placeholder",
+          email: "test@example.com",
+          name: "Test",
+          emailVerified: null,
+        },
         expires: new Date().toISOString(),
       },
       token,

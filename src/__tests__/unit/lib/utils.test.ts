@@ -1,5 +1,13 @@
 import { describe, it, expect } from "vitest";
-import { cn, formatDate, formatDateISO, getDaysUntil, generateAnonymousId, truncate, slugify } from "@/lib/utils";
+import {
+  cn,
+  formatDate,
+  formatDateISO,
+  getDaysUntil,
+  generateAnonymousId,
+  truncate,
+  slugify,
+} from "@/lib/utils";
 
 describe("cn()", () => {
   it("merges class names", () => {
@@ -51,7 +59,9 @@ describe("formatDate()", () => {
 
 describe("formatDateISO()", () => {
   it("formats a date to YYYY-MM-DD", () => {
-    expect(formatDateISO(new Date("2025-08-02T00:00:00.000Z"))).toBe("2025-08-02");
+    expect(formatDateISO(new Date("2025-08-02T00:00:00.000Z"))).toBe(
+      "2025-08-02",
+    );
   });
 
   it("strips time portion", () => {

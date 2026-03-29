@@ -23,8 +23,8 @@ export default function CheckerPage() {
           </h1>
           <p className="mt-2 text-slate-600 max-w-xl mx-auto">
             Answer up to 12 plain-language questions. Get your risk
-            classification, obligation checklist, and compliance badge
-            — no account required.
+            classification, obligation checklist, and compliance badge — no
+            account required.
           </p>
         </div>
         <QuestionnaireProvider>

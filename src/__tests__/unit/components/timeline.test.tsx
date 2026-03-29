@@ -8,7 +8,8 @@ const mockObligations: Obligation[] = [
     id: "conformity",
     title: "Conformity Assessment",
     article: "Article 43",
-    summary: "Undergo conformity assessment before placing the system on the market.",
+    summary:
+      "Undergo conformity assessment before placing the system on the market.",
     practicalMeaning: "Complete self-assessment or engage a notified body.",
     appliesToRole: ["provider"],
     riskLevels: ["high"],
@@ -38,22 +39,33 @@ const noDeadlineObligations: Obligation[] = [
 
 describe("ComplianceTimeline", () => {
   it("renders a list when obligations with deadlines are provided", () => {
-    render(<ComplianceTimeline obligations={mockObligations} riskLevel="high" />);
+    render(
+      <ComplianceTimeline obligations={mockObligations} riskLevel="high" />,
+    );
     expect(screen.getByRole("list")).toBeTruthy();
   });
 
   it("renders obligation titles", () => {
-    render(<ComplianceTimeline obligations={mockObligations} riskLevel="high" />);
+    render(
+      <ComplianceTimeline obligations={mockObligations} riskLevel="high" />,
+    );
     expect(screen.getByText("Conformity Assessment")).toBeTruthy();
   });
 
   it("renders article references", () => {
-    render(<ComplianceTimeline obligations={mockObligations} riskLevel="high" />);
+    render(
+      <ComplianceTimeline obligations={mockObligations} riskLevel="high" />,
+    );
     expect(screen.getByText("Article 43")).toBeTruthy();
   });
 
   it("shows empty state when no obligations have known deadlines", () => {
-    render(<ComplianceTimeline obligations={noDeadlineObligations} riskLevel="high" />);
+    render(
+      <ComplianceTimeline
+        obligations={noDeadlineObligations}
+        riskLevel="high"
+      />,
+    );
     expect(screen.getByText(/no deadline-based obligations/i)).toBeTruthy();
   });
 
@@ -63,7 +75,11 @@ describe("ComplianceTimeline", () => {
   });
 
   it("has an accessible aria-label on the list", () => {
-    render(<ComplianceTimeline obligations={mockObligations} riskLevel="high" />);
-    expect(screen.getByRole("list", { name: /compliance timeline/i })).toBeTruthy();
+    render(
+      <ComplianceTimeline obligations={mockObligations} riskLevel="high" />,
+    );
+    expect(
+      screen.getByRole("list", { name: /compliance timeline/i }),
+    ).toBeTruthy();
   });
 });

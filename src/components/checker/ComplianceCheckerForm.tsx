@@ -238,7 +238,8 @@ export default function ComplianceCheckerForm() {
                 Classifying your AI system…
               </p>
               <p className="text-sm text-slate-600 mt-2">
-                Matching your answers against EU AI Act Annex III risk categories
+                Matching your answers against EU AI Act Annex III risk
+                categories
               </p>
             </div>
           </div>

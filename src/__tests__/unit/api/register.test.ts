@@ -103,7 +103,9 @@ describe("POST /api/auth/register", () => {
   });
 
   it("returns 422 for invalid email", async () => {
-    const res = await POST(makeRequest({ ...validBody, email: "not-an-email" }));
+    const res = await POST(
+      makeRequest({ ...validBody, email: "not-an-email" }),
+    );
     expect(res.status).toBe(422);
   });
 
@@ -113,7 +115,9 @@ describe("POST /api/auth/register", () => {
   });
 
   it("returns 422 for password without uppercase letter", async () => {
-    const res = await POST(makeRequest({ ...validBody, password: "password1" }));
+    const res = await POST(
+      makeRequest({ ...validBody, password: "password1" }),
+    );
     expect(res.status).toBe(422);
   });
 

@@ -16,7 +16,11 @@ export interface PdfGeneratorOptions {
 export async function generateAssessmentPdf(
   options: PdfGeneratorOptions,
 ): Promise<Buffer> {
-  const { assessment, includeObligations = true, includeArticles = true } = options;
+  const {
+    assessment,
+    includeObligations = true,
+    includeArticles = true,
+  } = options;
 
   const lines: string[] = [
     "EU AI Act Compliance Assessment Report",
@@ -46,12 +50,16 @@ export async function generateAssessmentPdf(
     lines.push("");
   }
 
-  lines.push("Disclaimer: This report is for informational purposes only and does not constitute legal advice.");
+  lines.push(
+    "Disclaimer: This report is for informational purposes only and does not constitute legal advice.",
+  );
 
   return Buffer.from(lines.join("\n"), "utf-8");
 }
 
-export function getPdfFilename(assessment: Pick<AssessmentData, "systemName" | "createdAt">): string {
+export function getPdfFilename(
+  assessment: Pick<AssessmentData, "systemName" | "createdAt">,
+): string {
   const slug = assessment.systemName
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")

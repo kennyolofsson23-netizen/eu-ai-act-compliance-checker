@@ -36,9 +36,9 @@ export default function TermsPage() {
             </h2>
             <p>
               You may use the EU AI Act Compliance Checker to assess your
-              organization&apos;s AI systems, share assessment results with
-              your team, legal counsel, or auditors, and embed your compliance
-              badge on your website or in product documentation. You may not:
+              organization&apos;s AI systems, share assessment results with your
+              team, legal counsel, or auditors, and embed your compliance badge
+              on your website or in product documentation. You may not:
             </p>
             <ul className="list-disc pl-6 space-y-2 my-4">
               <li>

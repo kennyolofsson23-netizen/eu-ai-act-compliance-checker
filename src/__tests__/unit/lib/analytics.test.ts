@@ -2,9 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { trackEvent, analytics } from "@/lib/analytics/events";
 
 function mockFetch(ok = true): ReturnType<typeof vi.spyOn> {
-  return vi.spyOn(global, "fetch").mockResolvedValue(
-    new Response(JSON.stringify({ ok }), { status: ok ? 201 : 500 }),
-  );
+  return vi
+    .spyOn(global, "fetch")
+    .mockResolvedValue(
+      new Response(JSON.stringify({ ok }), { status: ok ? 201 : 500 }),
+    );
 }
 
 describe("trackEvent()", () => {

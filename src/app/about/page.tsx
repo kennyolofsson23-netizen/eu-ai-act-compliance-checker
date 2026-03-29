@@ -21,11 +21,11 @@ export default function AboutPage() {
           <div className="prose prose-lg max-w-none space-y-6 text-slate-700">
             <p>
               EU AI Act Compliance Checker is a free AI risk classification tool
-              that takes any organization from &ldquo;I have an AI product&rdquo;
-              to &ldquo;here&apos;s exactly what I need to do&rdquo; in under
-              3 minutes. Unlike enterprise GRC platforms that cost $20K–$150K
-              per year, the core assessment requires no account and no credit
-              card.
+              that takes any organization from &ldquo;I have an AI
+              product&rdquo; to &ldquo;here&apos;s exactly what I need to
+              do&rdquo; in under 3 minutes. Unlike enterprise GRC platforms that
+              cost $20K–$150K per year, the core assessment requires no account
+              and no credit card.
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">
@@ -34,9 +34,9 @@ export default function AboutPage() {
             <p>
               The EU AI Act (Regulation 2024/1689) is the world&apos;s first
               comprehensive AI regulation. Full enforcement begins August 2,
-              2026, with fines up to 7% of global annual turnover. Yet the
-              gap between &ldquo;regulation exists&rdquo; and &ldquo;my team
-              knows what to do&rdquo; is enormous for anyone outside a large
+              2026, with fines up to 7% of global annual turnover. Yet the gap
+              between &ldquo;regulation exists&rdquo; and &ldquo;my team knows
+              what to do&rdquo; is enormous for anyone outside a large
               enterprise with a dedicated compliance team.
             </p>
             <p>We built this tool because:</p>
@@ -129,8 +129,8 @@ export default function AboutPage() {
             <p>
               This tool provides informational guidance based on publicly
               available EU AI Act text and does not constitute legal advice.
-              Results reflect our interpretation of Regulation 2024/1689 and
-              may not account for implementing acts, delegated regulations, or
+              Results reflect our interpretation of Regulation 2024/1689 and may
+              not account for implementing acts, delegated regulations, or
               jurisdiction-specific guidance issued after our last update.
               Consult a qualified legal professional before making compliance
               decisions that affect your organization.

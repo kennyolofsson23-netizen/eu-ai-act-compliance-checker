@@ -2,7 +2,12 @@ import { describe, it, expect } from "vitest";
 import { generateBadgeSvg, getRiskColor } from "@/lib/badge/generator";
 import type { RiskLevel } from "@/lib/engine/types";
 
-const ALL_RISK_LEVELS: RiskLevel[] = ["unacceptable", "high", "limited", "minimal"];
+const ALL_RISK_LEVELS: RiskLevel[] = [
+  "unacceptable",
+  "high",
+  "limited",
+  "minimal",
+];
 
 describe("generateBadgeSvg()", () => {
   it("returns a string starting with <svg", () => {
@@ -41,15 +46,18 @@ describe("generateBadgeSvg()", () => {
     expect(svg).toContain("xyz789");
   });
 
-  it.each(ALL_RISK_LEVELS)("generates valid SVG for risk level: %s", (riskLevel) => {
-    const svg = generateBadgeSvg({
-      riskLevel,
-      systemName: "Test System",
-      assessmentId: "id-123",
-    });
-    expect(svg).toContain("<svg");
-    expect(svg).toContain("</svg>");
-  });
+  it.each(ALL_RISK_LEVELS)(
+    "generates valid SVG for risk level: %s",
+    (riskLevel) => {
+      const svg = generateBadgeSvg({
+        riskLevel,
+        systemName: "Test System",
+        assessmentId: "id-123",
+      });
+      expect(svg).toContain("<svg");
+      expect(svg).toContain("</svg>");
+    },
+  );
 
   it("truncates long system names to 30 characters", () => {
     const longName = "A".repeat(40);
@@ -107,10 +115,13 @@ describe("getRiskColor()", () => {
     expect(color.label).toBe("Minimal Risk");
   });
 
-  it.each(ALL_RISK_LEVELS)("returns an object with bg, text, and label for: %s", (riskLevel) => {
-    const color = getRiskColor(riskLevel);
-    expect(typeof color.bg).toBe("string");
-    expect(typeof color.text).toBe("string");
-    expect(typeof color.label).toBe("string");
-  });
+  it.each(ALL_RISK_LEVELS)(
+    "returns an object with bg, text, and label for: %s",
+    (riskLevel) => {
+      const color = getRiskColor(riskLevel);
+      expect(typeof color.bg).toBe("string");
+      expect(typeof color.text).toBe("string");
+      expect(typeof color.label).toBe("string");
+    },
+  );
 });

@@ -173,7 +173,6 @@ const UNACCEPTABLE_OBLIGATION: Obligation = {
   riskLevels: ["unacceptable"],
 };
 
-
 const HIGH_RISK_IMPORTER_OBLIGATIONS: Obligation[] = [
   {
     id: "importer-verify-conformity",
@@ -190,7 +189,8 @@ const HIGH_RISK_IMPORTER_OBLIGATIONS: Obligation[] = [
     id: "importer-registration",
     title: "Ensure EU Database Registration",
     article: "Article 23",
-    summary: "Verify the AI system is registered in the EU database before market placement.",
+    summary:
+      "Verify the AI system is registered in the EU database before market placement.",
     practicalMeaning:
       "Confirm the provider has registered the system in the EU AI Act database (https://ec.europa.eu/AI).",
     appliesToRole: ["importer"],
@@ -200,7 +200,8 @@ const HIGH_RISK_IMPORTER_OBLIGATIONS: Obligation[] = [
     id: "importer-storage-conditions",
     title: "Maintain Safe Storage and Transport",
     article: "Article 23",
-    summary: "Ensure storage and transport conditions do not jeopardize the system's compliance.",
+    summary:
+      "Ensure storage and transport conditions do not jeopardize the system's compliance.",
     practicalMeaning:
       "Document storage/transport procedures and verify they do not affect the system's conformity with the EU AI Act.",
     appliesToRole: ["importer"],

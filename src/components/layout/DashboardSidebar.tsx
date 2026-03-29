@@ -61,7 +61,9 @@ export default function DashboardSidebar() {
       <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-white">
         <Link href="/" className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-blue-600" aria-hidden="true" />
-          <span className="font-semibold text-sm text-slate-900">EU AI Act Checker</span>
+          <span className="font-semibold text-sm text-slate-900">
+            EU AI Act Checker
+          </span>
         </Link>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -69,7 +71,11 @@ export default function DashboardSidebar() {
           aria-expanded={mobileOpen}
           className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
         </button>
       </div>
       {/* Mobile menu */}
@@ -86,7 +92,9 @@ export default function DashboardSidebar() {
         <div className="p-4 border-b border-slate-200">
           <Link href="/" className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-blue-600" aria-hidden="true" />
-            <span className="font-semibold text-sm text-slate-900">EU AI Act Checker</span>
+            <span className="font-semibold text-sm text-slate-900">
+              EU AI Act Checker
+            </span>
           </Link>
         </div>
         <nav className="flex-1 p-4 space-y-1" aria-label="Dashboard navigation">

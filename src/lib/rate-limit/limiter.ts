@@ -41,7 +41,11 @@ function inMemoryRateLimit(
   }
 
   entry.count++;
-  return { success: true, remaining: limit - entry.count, reset: entry.resetAt };
+  return {
+    success: true,
+    remaining: limit - entry.count,
+    reset: entry.resetAt,
+  };
 }
 
 function getRedisClient(): Redis | null {

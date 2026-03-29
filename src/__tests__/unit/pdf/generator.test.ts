@@ -107,14 +107,20 @@ describe("getPdfFilename()", () => {
   });
 
   it("slugifies the system name", () => {
-    const filename = getPdfFilename({ systemName: "My AI System!", createdAt: "2026-01-15T00:00:00.000Z" });
+    const filename = getPdfFilename({
+      systemName: "My AI System!",
+      createdAt: "2026-01-15T00:00:00.000Z",
+    });
     expect(filename).toContain("my-ai-system");
     expect(filename).not.toContain("!");
   });
 
   it("truncates very long system names", () => {
     const longName = "A".repeat(100);
-    const filename = getPdfFilename({ systemName: longName, createdAt: "2026-01-15T00:00:00.000Z" });
+    const filename = getPdfFilename({
+      systemName: longName,
+      createdAt: "2026-01-15T00:00:00.000Z",
+    });
     expect(filename.length).toBeLessThan(120);
   });
 });

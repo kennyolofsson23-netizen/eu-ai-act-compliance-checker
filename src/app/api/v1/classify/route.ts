@@ -8,7 +8,9 @@ const classifyRequestSchema = z.object({
   systemName: z.string().min(1).max(200).optional(),
   answers: z.object({
     isAiSystem: z.boolean().optional(),
-    role: z.enum(["provider", "deployer", "importer", "distributor"]).optional(),
+    role: z
+      .enum(["provider", "deployer", "importer", "distributor"])
+      .optional(),
     isGpai: z.boolean().optional(),
     prohibitedPractices: z.array(z.string()).optional(),
     isSafetyComponent: z.boolean().optional(),
@@ -63,6 +65,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (err: unknown) {
     void err;
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

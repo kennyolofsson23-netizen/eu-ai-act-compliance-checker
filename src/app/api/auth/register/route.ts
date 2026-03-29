@@ -29,7 +29,9 @@ export async function POST(request: NextRequest) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       return NextResponse.json(
-        { error: "Registration failed. Please try with different credentials." },
+        {
+          error: "Registration failed. Please try with different credentials.",
+        },
         { status: 409 },
       );
     }

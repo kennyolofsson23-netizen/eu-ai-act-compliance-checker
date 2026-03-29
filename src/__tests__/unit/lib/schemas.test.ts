@@ -69,7 +69,9 @@ describe("createAssessmentSchema", () => {
   });
 
   it("accepts input with only answers (everything else optional)", () => {
-    expect(createAssessmentSchema.safeParse({ answers: {} }).success).toBe(true);
+    expect(createAssessmentSchema.safeParse({ answers: {} }).success).toBe(
+      true,
+    );
   });
 
   it("rejects systemName longer than 200 characters", () => {
@@ -209,9 +211,9 @@ describe("loginSchema", () => {
   });
 
   it("rejects invalid email", () => {
-    expect(
-      loginSchema.safeParse({ email: "bad", password: "x" }).success,
-    ).toBe(false);
+    expect(loginSchema.safeParse({ email: "bad", password: "x" }).success).toBe(
+      false,
+    );
   });
 
   it("rejects empty password", () => {

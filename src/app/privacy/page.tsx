@@ -105,7 +105,8 @@ export default function PrivacyPage() {
                 rel="noopener noreferrer"
               >
                 https://plausible.io/privacy
-              </a>.
+              </a>
+              .
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">

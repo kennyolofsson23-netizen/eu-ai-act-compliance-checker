@@ -22,12 +22,12 @@ describe("QUESTIONS array", () => {
   });
 
   it("radio/checkbox questions have at least 2 options", () => {
-    QUESTIONS.filter((q) => q.type === "radio" || q.type === "checkbox").forEach(
-      (q) => {
-        expect(q.options).toBeDefined();
-        expect(q.options!.length).toBeGreaterThanOrEqual(2);
-      },
-    );
+    QUESTIONS.filter(
+      (q) => q.type === "radio" || q.type === "checkbox",
+    ).forEach((q) => {
+      expect(q.options).toBeDefined();
+      expect(q.options!.length).toBeGreaterThanOrEqual(2);
+    });
   });
 
   it("all options have a value and a label", () => {

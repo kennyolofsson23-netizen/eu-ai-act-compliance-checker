@@ -63,7 +63,8 @@ export function buildReminderText(reminder: DeadlineReminder): string {
     "",
     "Please ensure all required compliance actions are completed before this deadline.",
     "",
-    "View your assessment at: https://euaiacompliance.app/checker/results/" + reminder.assessmentId,
+    "View your assessment at: https://euaiacompliance.app/checker/results/" +
+      reminder.assessmentId,
     "",
     "This is an automated reminder. You can manage your reminder settings in your dashboard.",
   ];

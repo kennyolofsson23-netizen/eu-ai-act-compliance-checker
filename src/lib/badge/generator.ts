@@ -1,6 +1,9 @@
 import { RiskLevel } from "@/lib/engine/types";
 
-const RISK_COLORS: Record<RiskLevel, { bg: string; text: string; label: string }> = {
+const RISK_COLORS: Record<
+  RiskLevel,
+  { bg: string; text: string; label: string }
+> = {
   unacceptable: { bg: "#DC2626", text: "#FFFFFF", label: "Unacceptable Risk" },
   high: { bg: "#EA580C", text: "#FFFFFF", label: "High Risk" },
   limited: { bg: "#CA8A04", text: "#FFFFFF", label: "Limited Risk" },
@@ -16,7 +19,8 @@ export interface BadgeOptions {
 export function generateBadgeSvg(options: BadgeOptions): string {
   const { riskLevel, systemName, assessmentId } = options;
   const color = RISK_COLORS[riskLevel];
-  const truncatedName = systemName.length > 30 ? systemName.slice(0, 27) + "…" : systemName;
+  const truncatedName =
+    systemName.length > 30 ? systemName.slice(0, 27) + "…" : systemName;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" role="img" aria-label="EU AI Act compliance badge: ${color.label}">
   <title>EU AI Act: ${color.label}</title>
@@ -28,6 +32,10 @@ export function generateBadgeSvg(options: BadgeOptions): string {
 </svg>`;
 }
 
-export function getRiskColor(riskLevel: RiskLevel): { bg: string; text: string; label: string } {
+export function getRiskColor(riskLevel: RiskLevel): {
+  bg: string;
+  text: string;
+  label: string;
+} {
   return RISK_COLORS[riskLevel];
 }

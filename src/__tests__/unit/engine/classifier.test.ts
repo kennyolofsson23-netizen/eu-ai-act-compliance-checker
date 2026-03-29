@@ -108,9 +108,9 @@ describe("classify() — prohibited practices (Article 5)", () => {
 
 describe("classify() — high risk: safety component", () => {
   it("classifies safety component as high risk", () => {
-    expect(
-      classify({ ...minimal, isSafetyComponent: true }).riskLevel,
-    ).toBe("high");
+    expect(classify({ ...minimal, isSafetyComponent: true }).riskLevel).toBe(
+      "high",
+    );
   });
 
   it("cites Article 6(1) and Annex II", () => {
@@ -258,9 +258,9 @@ describe("classify() — high risk: domain + profiling", () => {
 
 describe("classify() — limited risk (Article 50)", () => {
   it("interactsWithPeople → limited", () => {
-    expect(
-      classify({ ...minimal, interactsWithPeople: true }).riskLevel,
-    ).toBe("limited");
+    expect(classify({ ...minimal, interactsWithPeople: true }).riskLevel).toBe(
+      "limited",
+    );
   });
 
   it("generatesSyntheticContent → limited", () => {
@@ -270,9 +270,9 @@ describe("classify() — limited risk (Article 50)", () => {
   });
 
   it("emotionRecognition → limited", () => {
-    expect(
-      classify({ ...minimal, emotionRecognition: true }).riskLevel,
-    ).toBe("limited");
+    expect(classify({ ...minimal, emotionRecognition: true }).riskLevel).toBe(
+      "limited",
+    );
   });
 
   it("cites Article 50", () => {
@@ -316,19 +316,31 @@ describe("classify() — minimal risk", () => {
 
 describe("classify() — role-based obligations", () => {
   it("provider gets 11 high-risk obligations", () => {
-    const result = classify({ ...minimal, role: "provider", isSafetyComponent: true });
+    const result = classify({
+      ...minimal,
+      role: "provider",
+      isSafetyComponent: true,
+    });
     expect(result.obligations.length).toBeGreaterThanOrEqual(11);
   });
 
   it("deployer gets human-oversight and fundamental-rights obligations", () => {
-    const result = classify({ ...minimal, role: "deployer", isSafetyComponent: true });
+    const result = classify({
+      ...minimal,
+      role: "deployer",
+      isSafetyComponent: true,
+    });
     const ids = result.obligations.map((o) => o.id);
     expect(ids).toContain("human-oversight-deployer");
     expect(ids).toContain("fundamental-rights-impact");
   });
 
   it("defaults to provider role when role is undefined", () => {
-    const result = classify({ ...minimal, role: undefined, isSafetyComponent: true });
+    const result = classify({
+      ...minimal,
+      role: undefined,
+      isSafetyComponent: true,
+    });
     expect(result.obligations.some((o) => o.id === "risk-mgmt")).toBe(true);
   });
 

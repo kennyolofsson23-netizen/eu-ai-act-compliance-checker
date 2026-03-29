@@ -65,14 +65,20 @@ describe("translation files structure", () => {
     const riskLevels = ["unacceptable", "high", "limited", "minimal"];
     for (const [locale, t] of Object.entries(translations)) {
       for (const level of riskLevels) {
-        expect((t.riskLevels as Record<string, string>)[level], `${locale} missing riskLevel.${level}`).toBeTruthy();
+        expect(
+          (t.riskLevels as Record<string, string>)[level],
+          `${locale} missing riskLevel.${level}`,
+        ).toBeTruthy();
       }
     }
   });
 
   it("all locales have nav.startAssessment", () => {
     for (const [locale, t] of Object.entries(translations)) {
-      expect((t.nav as Record<string, string>).startAssessment, `${locale} missing nav.startAssessment`).toBeTruthy();
+      expect(
+        (t.nav as Record<string, string>).startAssessment,
+        `${locale} missing nav.startAssessment`,
+      ).toBeTruthy();
     }
   });
 

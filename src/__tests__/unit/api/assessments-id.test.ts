@@ -14,11 +14,7 @@ vi.mock("@/lib/auth", () => ({
   auth: vi.fn(),
 }));
 
-import {
-  GET,
-  PATCH,
-  DELETE,
-} from "@/app/api/assessments/[id]/route";
+import { GET, PATCH, DELETE } from "@/app/api/assessments/[id]/route";
 import { prisma } from "@/lib/db/client";
 import { auth } from "@/lib/auth";
 import { NextRequest } from "next/server";

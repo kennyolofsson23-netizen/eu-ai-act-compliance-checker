@@ -105,7 +105,10 @@ function handleAnswerQuestion(
   if (!question) return state;
 
   const answerKey = getAnswerKey(questionId);
-  const newAnswers = { ...state.answers, [answerKey]: answer } as AssessmentAnswers;
+  const newAnswers = {
+    ...state.answers,
+    [answerKey]: answer,
+  } as AssessmentAnswers;
 
   if (questionId === "q1_is_ai" && answer === "no") {
     return buildNonAiResult(state, newAnswers);

@@ -81,10 +81,15 @@ export default function DeadlineCountdown() {
                       >
                         {isPast ? (
                           <span className="flex items-center gap-1">
-                            <CheckCircle className="h-5 w-5" aria-hidden="true" />
+                            <CheckCircle
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
                             <span>Now in effect</span>
                           </span>
-                        ) : `${daysLeft} days`}
+                        ) : (
+                          `${daysLeft} days`
+                        )}
                       </div>
                     )}
                   </div>

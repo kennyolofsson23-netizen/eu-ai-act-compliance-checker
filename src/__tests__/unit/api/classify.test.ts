@@ -4,7 +4,9 @@ import { NextRequest } from "next/server";
 
 // Mock rate limiter to always allow
 vi.mock("@/lib/rate-limit/limiter", () => ({
-  rateLimit: vi.fn().mockResolvedValue({ success: true, remaining: 9, reset: 0 }),
+  rateLimit: vi
+    .fn()
+    .mockResolvedValue({ success: true, remaining: 9, reset: 0 }),
   RATE_LIMITS: {
     API_ANONYMOUS: { limit: 10, windowMs: 3600000 },
   },
@@ -102,7 +104,11 @@ describe("POST /api/v1/classify", () => {
 
   it("returns 429 when rate limit exceeded", async () => {
     const { rateLimit } = await import("@/lib/rate-limit/limiter");
-    vi.mocked(rateLimit).mockResolvedValueOnce({ success: false, remaining: 0, reset: Date.now() + 1000 });
+    vi.mocked(rateLimit).mockResolvedValueOnce({
+      success: false,
+      remaining: 0,
+      reset: Date.now() + 1000,
+    });
     const req = makeRequest({ answers: { isAiSystem: false } });
     const res = await POST(req);
     expect(res.status).toBe(429);

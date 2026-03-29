@@ -77,7 +77,10 @@ describe("POST /api/events", () => {
 
   it("stores questionId when provided", async () => {
     await POST(
-      makeRequest({ eventType: "abandoned", questionId: "q5_safety_component" }),
+      makeRequest({
+        eventType: "abandoned",
+        questionId: "q5_safety_component",
+      }),
     );
     expect(prisma.assessmentEvent.create).toHaveBeenCalledWith(
       expect.objectContaining({

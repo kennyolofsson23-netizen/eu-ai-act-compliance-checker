@@ -52,7 +52,10 @@ export default function ComplianceTimeline({
   }
 
   return (
-    <ol aria-label="Compliance timeline" className="relative border-l border-slate-200 space-y-6 ml-3">
+    <ol
+      aria-label="Compliance timeline"
+      className="relative border-l border-slate-200 space-y-6 ml-3"
+    >
       {timelineItems.map((item) => (
         <li key={item.title} className="ml-6">
           <span
