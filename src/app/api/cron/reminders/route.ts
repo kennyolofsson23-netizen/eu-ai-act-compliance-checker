@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     });
 
     const results = await Promise.allSettled(
-      assessments.map((assessment) => {
+      assessments.map((assessment: (typeof assessments)[number]) => {
         if (!assessment.user?.email) return Promise.resolve({ skipped: true });
         return sendDeadlineReminder({
           assessmentId: assessment.id,
