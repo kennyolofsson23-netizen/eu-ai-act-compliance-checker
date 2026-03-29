@@ -4,6 +4,7 @@
   "description": "EU AI Act Compliance Checker - Instant risk classification and obligation checklist for AI products",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
