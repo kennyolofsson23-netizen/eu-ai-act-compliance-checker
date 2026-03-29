@@ -78,7 +78,7 @@ export default function DeadlineCountdown() {
                               : "text-blue-700"
                         }`}
                       >
-                        {isPast ? "✓ In effect" : `${daysLeft}d`}
+                        {isPast ? "✓ Now in effect" : `${daysLeft} days`}
                       </div>
                     )}
                   </div>

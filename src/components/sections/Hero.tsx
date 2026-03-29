@@ -14,7 +14,7 @@ export default function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
             </span>
-            EU AI Act enforcement: August 2, 2026
+            High-risk AI obligations enforceable August 2, 2026
           </div>
 
           <h1
@@ -26,10 +26,11 @@ export default function Hero() {
           </h1>
 
           <p className="mt-6 text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            EU AI Act Compliance Checker is a free AI compliance tool that
-            classifies your AI system&apos;s risk level, generates your
-            obligation checklist, and creates a shareable compliance badge — all
-            in under 3 minutes.
+            EU AI Act Compliance Checker is a free AI risk classification tool
+            that maps your AI system to the correct risk level, generates your
+            obligation checklist with article citations, and produces a
+            shareable compliance badge — all in under 3 minutes, no account
+            required.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
@@ -50,9 +51,9 @@ export default function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-600">
             {[
-              "No signup required",
-              "Free forever",
-              "3 minutes to complete",
+              "No account required",
+              "Completely free",
+              "Under 3 minutes",
               "Article citations included",
             ].map((feature) => (
               <div key={feature} className="flex items-center gap-1.5">

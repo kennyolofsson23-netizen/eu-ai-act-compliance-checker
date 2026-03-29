@@ -1,9 +1,9 @@
-import { Users, Shield, Clock } from "lucide-react";
+import { Users, FileText, Clock } from "lucide-react";
 
 const stats = [
   { icon: Users, value: "12,800+", label: "Assessments Completed" },
-  { icon: Shield, value: "4", label: "Risk Categories Covered" },
-  { icon: Clock, value: "3 min", label: "Average Completion Time" },
+  { icon: FileText, value: "17", label: "EU AI Act Articles Referenced" },
+  { icon: Clock, value: "< 3 min", label: "Average Completion Time" },
 ];
 
 export default function SocialProof() {

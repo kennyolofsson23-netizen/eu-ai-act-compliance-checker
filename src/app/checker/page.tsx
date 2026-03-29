@@ -22,8 +22,9 @@ export default function CheckerPage() {
             EU AI Act Risk Assessment
           </h1>
           <p className="mt-2 text-slate-600 max-w-xl mx-auto">
-            Answer 12 questions to classify your AI system and get your
-            obligation checklist.
+            Answer up to 12 plain-language questions. Get your risk
+            classification, obligation checklist, and compliance badge
+            — no account required.
           </p>
         </div>
         <QuestionnaireProvider>

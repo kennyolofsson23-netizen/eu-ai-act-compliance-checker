@@ -111,7 +111,7 @@ export const EU_AI_ACT_DEADLINES = [
     date: "2025-02-02",
     title: "Prohibited AI Practices",
     description:
-      "AI systems in the prohibited category must be withdrawn immediately.",
+      "Practices banned under Article 5 — including subliminal manipulation, social scoring, and real-time biometric identification in public spaces — are now enforceable.",
     articles: ["Article 5"],
   },
   {
@@ -119,7 +119,7 @@ export const EU_AI_ACT_DEADLINES = [
     date: "2025-08-02",
     title: "GPAI Model Obligations",
     description:
-      "General Purpose AI model providers must comply with obligations.",
+      "General-purpose AI model providers — including LLM developers — must now comply with transparency, technical documentation, and copyright policy obligations.",
     articles: ["Article 53", "Article 55"],
   },
   {
@@ -127,7 +127,7 @@ export const EU_AI_ACT_DEADLINES = [
     date: "2026-08-02",
     title: "High-Risk AI Obligations",
     description:
-      "Full enforcement of high-risk AI obligations including technical documentation, conformity assessment, and registration.",
+      "Full enforcement of all Annex III obligations: risk management, data governance, technical documentation, conformity assessment, and EU database registration.",
     articles: [
       "Article 6",
       "Article 9-15",
@@ -141,7 +141,7 @@ export const EU_AI_ACT_DEADLINES = [
     date: "2026-08-02",
     title: "Transparency Obligations",
     description:
-      "Limited risk AI systems must comply with transparency and disclosure requirements.",
+      "AI systems that interact with people or generate synthetic content must clearly disclose their AI nature to users. AI-generated media must be labelled.",
     articles: ["Article 50"],
   },
 ];

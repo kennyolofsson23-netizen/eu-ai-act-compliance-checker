@@ -202,7 +202,7 @@ export default function ComplianceCheckerForm() {
           "Establish incident reporting procedures",
         ],
         description:
-          "Your AI system falls into the High-Risk category under the EU AI Act. This means you must implement substantial compliance measures.",
+          "Your AI system meets the criteria for High Risk under EU AI Act Annex III. You must complete 11 compliance obligations — including technical documentation, conformity assessment, and EU database registration — before August 2, 2026.",
       };
 
       setResult(mockResult);
@@ -235,10 +235,10 @@ export default function ComplianceCheckerForm() {
             <div className="text-center">
               <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
               <p className="text-lg font-medium text-slate-900">
-                Analyzing your responses...
+                Classifying your AI system…
               </p>
               <p className="text-sm text-slate-600 mt-2">
-                Assessing EU AI Act compliance requirements
+                Matching your answers against EU AI Act Annex III risk categories
               </p>
             </div>
           </div>
@@ -367,9 +367,11 @@ function ResultScreen({
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">
-            Your Compliance Assessment
+            Your EU AI Act Classification
           </h1>
-          <p className="text-lg text-slate-600">Based on your responses</p>
+          <p className="text-lg text-slate-600">
+            Based on your answers and EU AI Act Annex III criteria
+          </p>
         </div>
 
         <div
@@ -389,7 +391,7 @@ function ResultScreen({
         <div className="bg-slate-50 rounded-lg p-8 mb-8">
           <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
             <AlertCircle className="w-6 h-6 text-blue-600" />
-            Your Obligations
+            Your Compliance Obligations
           </h2>
           <ul className="space-y-4">
             {result.obligations.map((obligation, index) => (
@@ -403,10 +405,10 @@ function ResultScreen({
 
         <div className="flex gap-4">
           <Button onClick={onReset} variant="outline" className="flex-1">
-            Start New Assessment
+            Assess Another System
           </Button>
           <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-            Download Report (Coming Soon)
+            Download PDF Report
           </Button>
         </div>
       </div>

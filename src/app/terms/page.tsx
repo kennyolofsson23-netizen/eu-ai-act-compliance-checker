@@ -35,31 +35,36 @@ export default function TermsPage() {
               2. Use License
             </h2>
             <p>
-              Permission is granted to temporarily download one copy of the
-              materials (information or software) on the EU AI Act Compliance
-              Checker for personal, non-commercial transitory viewing only. This
-              is the grant of a license, not a transfer of title, and under this
-              license you may not:
+              You may use the EU AI Act Compliance Checker to assess your
+              organization&apos;s AI systems, share assessment results with
+              your team, legal counsel, or auditors, and embed your compliance
+              badge on your website or in product documentation. You may not:
             </p>
             <ul className="list-disc pl-6 space-y-2 my-4">
-              <li>Modifying or copying the materials</li>
               <li>
-                Using the materials for any commercial purpose or for any public
-                display
+                Resell, relicense, or redistribute assessment results as your
+                own compliance product or service
               </li>
               <li>
-                Attempting to decompile or reverse engineer any software
-                contained on the Service
+                Scrape or programmatically access the Service outside of the
+                official API and its documented rate limits
               </li>
               <li>
-                Transferring the materials to another person or
-                &quot;mirroring&quot; the materials on any other server
+                Attempt to decompile, reverse engineer, or extract the
+                classification logic of the Service
               </li>
               <li>
-                Removing any copyright or other proprietary notations from the
-                materials
+                Mirror or republish the Service&apos;s content on any other
+                domain or platform
               </li>
-              <li>Disrupting the normal flow of dialogue within the Service</li>
+              <li>
+                Remove or obscure any copyright notices, disclaimers, or
+                attribution in assessment outputs
+              </li>
+              <li>
+                Use the Service in any manner that could damage, disable, or
+                impair its availability for other users
+              </li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">

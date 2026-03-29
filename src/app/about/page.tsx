@@ -3,7 +3,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About — What Is EU AI Act Compliance Checker?",
   description:
     "EU AI Act Compliance Checker is a free tool that classifies AI systems by risk level and generates actionable obligation checklists. Built for developers and PMs, not lawyers.",
 };

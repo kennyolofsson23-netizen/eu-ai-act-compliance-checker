@@ -15,7 +15,7 @@ function LoadingScreen() {
         className="h-8 w-8 text-blue-600 animate-spin mb-4"
         aria-hidden="true"
       />
-      <p className="text-slate-600">Analyzing your AI system...</p>
+      <p className="text-slate-600">Classifying your AI system under the EU AI Act…</p>
     </div>
   );
 }
