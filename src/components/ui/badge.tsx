@@ -18,6 +18,10 @@ const badgeVariants = cva(
         warning:
           "border-transparent bg-yellow-100 text-yellow-800 border-yellow-300",
         danger: "border-transparent bg-red-100 text-red-800 border-red-300",
+        unacceptable: "border-transparent bg-red-600 text-white",
+        "risk-high": "border-transparent bg-orange-600 text-white",
+        "risk-limited": "border-transparent bg-yellow-600 text-white",
+        "risk-minimal": "border-transparent bg-green-600 text-white",
       },
     },
     defaultVariants: { variant: "default" },

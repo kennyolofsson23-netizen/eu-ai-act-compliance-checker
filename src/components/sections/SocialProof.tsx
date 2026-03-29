@@ -13,7 +13,7 @@ export default function SocialProof() {
       aria-label="Usage statistics"
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="flex justify-center mb-2">

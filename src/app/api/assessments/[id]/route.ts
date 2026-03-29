@@ -33,6 +33,20 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    let citedArticles: unknown;
+    let obligations: unknown;
+    let answers: unknown;
+    try {
+      citedArticles = JSON.parse(assessment.citedArticles);
+      obligations = JSON.parse(assessment.obligations);
+      answers = JSON.parse(assessment.answers);
+    } catch (_parseError) {
+      return NextResponse.json(
+        { error: "Assessment data is corrupted" },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json({
       id: assessment.id,
       systemName: assessment.systemName,
@@ -40,15 +54,16 @@ export async function GET(
       role: assessment.role,
       isGpai: assessment.isGpai,
       annexCategory: assessment.annexCategory,
-      citedArticles: JSON.parse(assessment.citedArticles),
-      obligations: JSON.parse(assessment.obligations),
-      answers: JSON.parse(assessment.answers),
+      citedArticles,
+      obligations,
+      answers,
       emailReminders: assessment.emailReminders,
       badgeUrl: `/api/badge/${assessment.id}`,
       createdAt: assessment.createdAt,
       updatedAt: assessment.updatedAt,
     });
-  } catch {
+  } catch (err: unknown) {
+    void err;
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -93,7 +108,8 @@ export async function PATCH(
       emailReminders: updated.emailReminders,
       updatedAt: updated.updatedAt,
     });
-  } catch {
+  } catch (err: unknown) {
+    void err;
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -120,7 +136,8 @@ export async function DELETE(
 
     await prisma.assessment.delete({ where: { id } });
     return new NextResponse(null, { status: 204 });
-  } catch {
+  } catch (err: unknown) {
+    void err;
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

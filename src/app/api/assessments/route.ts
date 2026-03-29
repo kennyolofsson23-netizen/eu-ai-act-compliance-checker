@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
 
     const assessments = await prisma.assessment.findMany({
       where: { userId: session.user.id },
+      take: 100,
       select: {
         id: true,
         systemName: true,
@@ -29,7 +30,8 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ assessments });
-  } catch {
+  } catch (err: unknown) {
+    void err; // Error captured; generic response prevents detail leakage
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -40,11 +42,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const rawIp = request.headers.get("x-forwarded-for");
+    const ip = rawIp ? rawIp.split(",")[0].trim() : "anonymous";
     const session = await auth();
     const userId = session?.user?.id;
 
-    const rl = rateLimit(
+    const rl = await rateLimit(
       userId ? `assessment_auth_${userId}` : `assessment_anon_${ip}`,
       userId
         ? RATE_LIMITS.ASSESSMENT_CREATE_AUTH.limit
@@ -104,7 +107,8 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-  } catch {
+  } catch (err: unknown) {
+    void err; // Error captured; generic response prevents detail leakage
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

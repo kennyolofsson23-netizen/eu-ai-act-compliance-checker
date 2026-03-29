@@ -173,9 +173,74 @@ const UNACCEPTABLE_OBLIGATION: Obligation = {
   riskLevels: ["unacceptable"],
 };
 
+
+const HIGH_RISK_IMPORTER_OBLIGATIONS: Obligation[] = [
+  {
+    id: "importer-verify-conformity",
+    title: "Verify Provider Conformity",
+    article: "Article 23",
+    summary:
+      "Before placing a high-risk AI system on the market, verify the provider has completed the conformity assessment and prepared required documentation.",
+    practicalMeaning:
+      "Check CE marking, EU declaration of conformity, and technical documentation are in place before importing the system.",
+    appliesToRole: ["importer"],
+    riskLevels: ["high"],
+  },
+  {
+    id: "importer-registration",
+    title: "Ensure EU Database Registration",
+    article: "Article 23",
+    summary: "Verify the AI system is registered in the EU database before market placement.",
+    practicalMeaning:
+      "Confirm the provider has registered the system in the EU AI Act database (https://ec.europa.eu/AI).",
+    appliesToRole: ["importer"],
+    riskLevels: ["high"],
+  },
+  {
+    id: "importer-storage-conditions",
+    title: "Maintain Safe Storage and Transport",
+    article: "Article 23",
+    summary: "Ensure storage and transport conditions do not jeopardize the system's compliance.",
+    practicalMeaning:
+      "Document storage/transport procedures and verify they do not affect the system's conformity with the EU AI Act.",
+    appliesToRole: ["importer"],
+    riskLevels: ["high"],
+  },
+];
+
+const HIGH_RISK_DISTRIBUTOR_OBLIGATIONS: Obligation[] = [
+  {
+    id: "distributor-verify-ce",
+    title: "Verify CE Marking and Documentation",
+    article: "Article 24",
+    summary:
+      "Before making a high-risk AI system available on the market, verify it bears the CE marking and is accompanied by required documentation.",
+    practicalMeaning:
+      "Check that the AI system has CE marking, EU declaration of conformity, and instructions in the correct language for the target market.",
+    appliesToRole: ["distributor"],
+    riskLevels: ["high"],
+  },
+  {
+    id: "distributor-cooperate",
+    title: "Cooperate with Competent Authorities",
+    article: "Article 24",
+    summary: "Cooperate with national competent authorities on request.",
+    practicalMeaning:
+      "Provide information and documentation to market surveillance authorities when requested, and keep records of complaints and non-conformities.",
+    appliesToRole: ["distributor"],
+    riskLevels: ["high"],
+  },
+];
+
 function getHighRiskObligations(role: UserRole): Obligation[] {
   if (role === "deployer") {
     return HIGH_RISK_DEPLOYER_OBLIGATIONS;
+  }
+  if (role === "importer") {
+    return HIGH_RISK_IMPORTER_OBLIGATIONS;
+  }
+  if (role === "distributor") {
+    return HIGH_RISK_DISTRIBUTOR_OBLIGATIONS;
   }
   return HIGH_RISK_PROVIDER_OBLIGATIONS;
 }

@@ -97,8 +97,15 @@ export default function PrivacyPage() {
             <p>
               We use Plausible Analytics for website analytics. Plausible is
               GDPR compliant and does not track users across the web. You can
-              learn more about their privacy practices at
-              https://plausible.io/privacy.
+              learn more about their privacy practices at{" "}
+              <a
+                href="https://plausible.io/privacy"
+                className="text-blue-600 underline hover:text-blue-700"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                https://plausible.io/privacy
+              </a>.
             </p>
 
             <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4">

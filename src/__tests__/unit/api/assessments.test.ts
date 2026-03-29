@@ -14,11 +14,11 @@ vi.mock("@/lib/auth", () => ({
 }));
 
 vi.mock("@/lib/rate-limit/limiter", () => ({
-  rateLimit: vi.fn(() => ({
+  rateLimit: vi.fn().mockResolvedValue({
     success: true,
     remaining: 59,
     reset: Date.now() + 3_600_000,
-  })),
+  }),
   RATE_LIMITS: {
     ASSESSMENT_CREATE_ANON: { limit: 20, windowMs: 3_600_000 },
     ASSESSMENT_CREATE_AUTH: { limit: 60, windowMs: 3_600_000 },
@@ -126,7 +126,7 @@ describe("POST /api/assessments", () => {
   });
 
   it("returns 429 when rate limit is exceeded", async () => {
-    vi.mocked(rateLimit).mockReturnValueOnce({
+    vi.mocked(rateLimit).mockResolvedValueOnce({
       success: false,
       remaining: 0,
       reset: Date.now() + 3_600_000,

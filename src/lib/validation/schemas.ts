@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address").max(254),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -11,7 +11,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address").max(254),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -33,7 +33,7 @@ export const assessmentAnswersSchema = z.object({
 export const createAssessmentSchema = z.object({
   systemName: z.string().min(1).max(200).optional(),
   answers: assessmentAnswersSchema,
-  anonymousId: z.string().optional(),
+  anonymousId: z.string().max(128).optional(),
 });
 
 export const updateAssessmentSchema = z.object({
@@ -55,7 +55,7 @@ export const analyticsEventSchema = z.object({
     "badge_copied",
   ]),
   questionId: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string().max(100), z.unknown()).optional(),
 });
 
 export const classifyRequestSchema = assessmentAnswersSchema;

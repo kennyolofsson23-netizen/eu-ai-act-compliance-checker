@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "startAssessment": "Bewertung starten",
+    "howItWorks": "So funktioniert es",
+    "faq": "FAQ",
+    "signIn": "Anmelden",
+    "freeAssessment": "Kostenlose Bewertung"
+  },
+  "hero": {
+    "title": "EU-KI-Gesetz Compliance-Checker",
+    "subtitle": "Kostenloses Risikoklassifizierungstool",
+    "cta": "Kostenlose Bewertung starten"
+  },
+  "riskLevels": {
+    "unacceptable": "Inakzeptables Risiko",
+    "high": "Hohes Risiko",
+    "limited": "Begrenztes Risiko",
+    "minimal": "Minimales Risiko"
+  },
+  "questionnaire": {
+    "progress": "Frage {current} von {total}",
+    "previous": "Zurück",
+    "continue": "Weiter zur nächsten Frage",
+    "noSignup": "Keine Registrierung erforderlich"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Etwas ist schiefgelaufen",
+    "notFound": "Seite nicht gefunden"
+  }
+}

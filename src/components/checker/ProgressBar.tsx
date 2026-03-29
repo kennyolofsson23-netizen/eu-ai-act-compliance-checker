@@ -22,7 +22,11 @@ export default function ProgressBar({
       <Progress
         value={percentage}
         className="h-2"
-        aria-label={`Assessment progress: ${percentage}%`}
+        role="progressbar"
+        aria-valuenow={percentage}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`Assessment progress: question ${current} of ${total}, ${percentage}% complete`}
       />
     </div>
   );

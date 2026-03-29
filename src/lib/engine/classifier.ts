@@ -129,8 +129,11 @@ function checkHighRiskByDomainAndFunction(
     answers.domainFunction ?? "",
   );
   const isNarrowTask = answers.isNarrowTask === true;
+  const profilesPersons = answers.profilesPersons === true;
+  // Per Article 6(3): profiling nullifies the narrow procedural task exception
+  const effectiveNarrowTask = isNarrowTask && !profilesPersons;
 
-  if (isHighRiskDomain && isHighRiskFunction && !isNarrowTask) {
+  if (isHighRiskDomain && isHighRiskFunction && !effectiveNarrowTask) {
     const domainArticles = DOMAIN_ANNEX_ARTICLES[domain] ?? [];
     return classifyHighRisk({
       role,
@@ -140,8 +143,7 @@ function checkHighRiskByDomainAndFunction(
     });
   }
 
-  const profilesPersons = answers.profilesPersons === true;
-  if (isHighRiskDomain && profilesPersons && !isNarrowTask) {
+  if (isHighRiskDomain && profilesPersons && !effectiveNarrowTask) {
     return classifyHighRisk({
       role,
       articles: ["Article 6(2)", "Annex III"],
@@ -151,6 +153,16 @@ function checkHighRiskByDomainAndFunction(
   }
 
   return null;
+}
+
+function classifyGpai(role: UserRole): ClassificationResult {
+  return {
+    riskLevel: "limited",
+    citedArticles: ["Article 53", "Article 55"],
+    obligations: getObligationsForLevel("limited", role),
+    reasoning:
+      "Your model is a General Purpose AI (GPAI) model. Under Article 53, all GPAI model providers must maintain technical documentation, provide a summary of training content, and comply with EU copyright law. If the model poses systemic risks (Article 55), additional obligations apply including adversarial testing and incident reporting.",
+  };
 }
 
 export function classify(answers: AssessmentAnswers): ClassificationResult {
@@ -169,6 +181,10 @@ export function classify(answers: AssessmentAnswers): ClassificationResult {
   const prohibited = answers.prohibitedPractices ?? [];
   const hasProhibited = prohibited.some((p) => p !== "none" && p !== "");
   if (hasProhibited) return classifyProhibited(prohibited, role);
+
+  if (answers.isGpai === true) {
+    return classifyGpai(role);
+  }
 
   if (answers.isSafetyComponent === true) {
     return classifyHighRisk({

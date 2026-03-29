@@ -52,7 +52,7 @@ export default function Header() {
             </Link>
           </nav>
           <button
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900"
+            className="md:hidden p-3 min-h-[44px] min-w-[44px] flex items-center justify-center text-slate-600 hover:text-slate-900 rounded-md"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -65,9 +65,14 @@ export default function Header() {
           </button>
         </div>
         {mobileOpen && (
-          <nav
-            className="md:hidden border-t border-slate-200 py-4 flex flex-col gap-3"
+          <div
+            role="dialog"
+            aria-modal="true"
             aria-label="Mobile navigation"
+            className="md:hidden border-t border-slate-200 py-4 flex flex-col gap-3"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setMobileOpen(false);
+            }}
           >
             <Link
               href="/checker"
@@ -104,7 +109,7 @@ export default function Header() {
             >
               Free Assessment
             </Link>
-          </nav>
+          </div>
         )}
       </div>
     </header>

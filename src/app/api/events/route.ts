@@ -3,32 +3,37 @@ import { prisma } from "@/lib/db/client";
 import { analyticsEventSchema } from "@/lib/validation/schemas";
 
 export async function POST(request: NextRequest) {
+  let body: unknown;
   try {
-    const body = await request.json();
-    const parsed = analyticsEventSchema.safeParse(body);
+    body = await request.json();
+  } catch (_error) {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
 
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Validation failed", issues: parsed.error.issues },
-        { status: 422 },
-      );
-    }
+  const parsed = analyticsEventSchema.safeParse(body);
 
-    const { assessmentId, eventType, questionId, metadata } = parsed.data;
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Validation failed", issues: parsed.error.issues },
+      { status: 422 },
+    );
+  }
 
-    await prisma.assessmentEvent.create({
+  const { assessmentId, eventType, questionId, metadata } = parsed.data;
+
+  // Fire-and-forget: analytics must not block or fail the user flow
+  void prisma.assessmentEvent
+    .create({
       data: {
         assessmentId: assessmentId || null,
         eventType,
         questionId: questionId || null,
         metadata: metadata ? JSON.stringify(metadata) : null,
       },
+    })
+    .catch(() => {
+      // Intentionally ignored — analytics failure must not disrupt user flow
     });
 
-    return NextResponse.json({ ok: true }, { status: 201 });
-  } catch (error) {
-    // Don't fail the main flow if analytics fails
-    console.error("Analytics event error:", error);
-    return NextResponse.json({ ok: true }, { status: 201 });
-  }
+  return NextResponse.json({ ok: true }, { status: 201 });
 }

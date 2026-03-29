@@ -1,3 +1,5 @@
+import type { RiskLevel } from "@/lib/engine/types";
+
 export const APP_NAME = "EU AI Act Compliance Checker";
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL || "https://euaiacompliance.app";
@@ -94,7 +96,7 @@ export const RISK_COLORS = {
   },
 };
 
-export const RISK_LEVEL_LABELS: Record<string, string> = {
+export const RISK_LEVEL_LABELS: Record<RiskLevel, string> = {
   unacceptable: "Unacceptable Risk",
   high: "High Risk",
   limited: "Limited Risk",

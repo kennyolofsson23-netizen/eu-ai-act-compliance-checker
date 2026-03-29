@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "startAssessment": "Commencer l'évaluation",
+    "howItWorks": "Comment ça marche",
+    "faq": "FAQ",
+    "signIn": "Se connecter",
+    "freeAssessment": "Évaluation gratuite"
+  },
+  "hero": {
+    "title": "Vérificateur de conformité à l'acte IA de l'UE",
+    "subtitle": "Outil gratuit de classification des risques",
+    "cta": "Commencer l'évaluation gratuite"
+  },
+  "riskLevels": {
+    "unacceptable": "Risque inacceptable",
+    "high": "Risque élevé",
+    "limited": "Risque limité",
+    "minimal": "Risque minimal"
+  },
+  "questionnaire": {
+    "progress": "Question {current} sur {total}",
+    "previous": "Précédent",
+    "continue": "Continuer à la question suivante",
+    "noSignup": "Sans inscription requise"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "notFound": "Page introuvable"
+  }
+}

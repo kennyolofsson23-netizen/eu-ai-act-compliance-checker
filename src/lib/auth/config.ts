@@ -1,5 +1,12 @@
 import { NextAuthConfig } from "next-auth";
 
+const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+if (!authSecret) {
+  throw new Error(
+    "AUTH_SECRET or NEXTAUTH_SECRET environment variable must be set",
+  );
+}
+
 export const authConfig: Omit<NextAuthConfig, "providers"> = {
   pages: {
     signIn: "/auth/login",
@@ -29,5 +36,5 @@ export const authConfig: Omit<NextAuthConfig, "providers"> = {
     },
   },
   session: { strategy: "jwt" },
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
 };

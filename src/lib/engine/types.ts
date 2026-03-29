@@ -19,7 +19,6 @@ export interface AssessmentAnswers {
   interactsWithPeople?: boolean;
   generatesSyntheticContent?: boolean;
   emotionRecognition?: boolean;
-  [key: string]: unknown;
 }
 
 export interface ClassificationResult {

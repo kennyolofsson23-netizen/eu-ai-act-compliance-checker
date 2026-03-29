@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { CheckCircle } from "lucide-react";
 import { EU_AI_ACT_DEADLINES } from "@/lib/constants";
 import { getDaysUntil, formatDate } from "@/lib/utils";
 
@@ -78,7 +79,12 @@ export default function DeadlineCountdown() {
                               : "text-blue-700"
                         }`}
                       >
-                        {isPast ? "✓ Now in effect" : `${daysLeft} days`}
+                        {isPast ? (
+                          <span className="flex items-center gap-1">
+                            <CheckCircle className="h-5 w-5" aria-hidden="true" />
+                            <span>Now in effect</span>
+                          </span>
+                        ) : `${daysLeft} days`}
                       </div>
                     )}
                   </div>

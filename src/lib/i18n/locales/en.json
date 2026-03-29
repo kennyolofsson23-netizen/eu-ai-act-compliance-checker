@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "startAssessment": "Start Assessment",
+    "howItWorks": "How It Works",
+    "faq": "FAQ",
+    "signIn": "Sign In",
+    "freeAssessment": "Free Assessment"
+  },
+  "hero": {
+    "title": "EU AI Act Compliance Checker",
+    "subtitle": "Free Risk Classification Tool",
+    "cta": "Start Free Assessment"
+  },
+  "riskLevels": {
+    "unacceptable": "Unacceptable Risk",
+    "high": "High Risk",
+    "limited": "Limited Risk",
+    "minimal": "Minimal Risk"
+  },
+  "questionnaire": {
+    "progress": "Question {current} of {total}",
+    "previous": "Previous",
+    "continue": "Continue to next question",
+    "noSignup": "No Signup Required"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "notFound": "Page not found"
+  }
+}

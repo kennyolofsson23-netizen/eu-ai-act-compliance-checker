@@ -16,20 +16,23 @@ function RadioOption({
   description,
   isSelected,
   onSelect,
+  onKeyDown,
 }: {
   value: string;
   label: string;
   description?: string;
   isSelected: boolean;
   onSelect: (value: string) => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }) {
   return (
     <button
       role="radio"
       aria-checked={isSelected}
       onClick={() => onSelect(value)}
+      onKeyDown={onKeyDown}
       className={cn(
-        "w-full text-left p-4 rounded-lg border-2 transition-all duration-150",
+        "w-full text-left p-4 rounded-lg border-2 transition-all duration-150 min-h-[44px]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600",
         isSelected
           ? "border-blue-600 bg-blue-50"
@@ -74,7 +77,7 @@ function CheckboxOption({
       aria-pressed={isSelected}
       onClick={() => onToggle(value)}
       className={cn(
-        "w-full text-left p-4 rounded-lg border-2 transition-all duration-150",
+        "w-full text-left p-4 rounded-lg border-2 transition-all duration-150 min-h-[44px]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600",
         isSelected
           ? "border-blue-600 bg-blue-50"
@@ -134,6 +137,20 @@ export default function QuestionCard({
     setTimeout(() => onAnswer(value), 150);
   };
 
+  const handleRadioKeyDown = (e: React.KeyboardEvent, currentValue: string) => {
+    const opts = question.options ?? [];
+    const currentIdx = opts.findIndex((o) => o.value === currentValue);
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      e.preventDefault();
+      const nextIdx = (currentIdx + 1) % opts.length;
+      handleRadioSelect(opts[nextIdx].value);
+    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const prevIdx = (currentIdx - 1 + opts.length) % opts.length;
+      handleRadioSelect(opts[prevIdx].value);
+    }
+  };
+
   const handleCheckboxToggle = (value: string) => {
     setSelected((prev) => {
       const arr = Array.isArray(prev) ? prev : [];
@@ -161,6 +178,7 @@ export default function QuestionCard({
               {...opt}
               isSelected={selected === opt.value}
               onSelect={handleRadioSelect}
+              onKeyDown={(e) => handleRadioKeyDown(e, opt.value)}
             />
           ))}
         </div>
@@ -188,6 +206,7 @@ export default function QuestionCard({
         <button
           onClick={handleCheckboxSubmit}
           disabled={selectedArr.length === 0}
+          aria-label="Continue to next question"
           className="mt-6 w-full py-3 px-6 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
         >
           Continue

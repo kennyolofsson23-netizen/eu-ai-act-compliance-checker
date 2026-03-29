@@ -86,12 +86,33 @@ describe("getObligationsForLevel() — high risk deployer", () => {
 });
 
 describe("getObligationsForLevel() — high risk importer/distributor", () => {
-  it("importer gets provider-equivalent obligations (11)", () => {
-    expect(getObligationsForLevel("high", "importer")).toHaveLength(11);
+  it("importer gets role-specific obligations (Article 23)", () => {
+    const obligations = getObligationsForLevel("high", "importer");
+    expect(obligations.length).toBeGreaterThan(0);
+    const articles = obligations.map((o) => o.article);
+    expect(articles.some((a) => a.includes("23"))).toBe(true);
   });
 
-  it("distributor gets provider-equivalent obligations (11)", () => {
-    expect(getObligationsForLevel("high", "distributor")).toHaveLength(11);
+  it("importer does NOT get provider-only obligations", () => {
+    const obligations = getObligationsForLevel("high", "importer");
+    const ids = obligations.map((o) => o.id);
+    // Provider obligations like qms, conformity, registration should not appear
+    expect(ids).not.toContain("qms");
+    expect(ids).not.toContain("conformity");
+  });
+
+  it("distributor gets role-specific obligations (Article 24)", () => {
+    const obligations = getObligationsForLevel("high", "distributor");
+    expect(obligations.length).toBeGreaterThan(0);
+    const articles = obligations.map((o) => o.article);
+    expect(articles.some((a) => a.includes("24"))).toBe(true);
+  });
+
+  it("distributor does NOT get provider-only obligations", () => {
+    const obligations = getObligationsForLevel("high", "distributor");
+    const ids = obligations.map((o) => o.id);
+    expect(ids).not.toContain("qms");
+    expect(ids).not.toContain("conformity");
   });
 });
 

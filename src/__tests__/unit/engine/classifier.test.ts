@@ -233,7 +233,8 @@ describe("classify() — high risk: domain + profiling", () => {
     expect(result.riskLevel).toBe("high");
   });
 
-  it("narrow task exempts profiling-based high risk", () => {
+  it("narrow task does NOT exempt profiling-based high risk (Article 6(3))", () => {
+    // Per Article 6(3): profiling nullifies the narrow procedural task exception
     const result = classify({
       ...minimal,
       domain: "law_enforcement",
@@ -241,7 +242,7 @@ describe("classify() — high risk: domain + profiling", () => {
       profilesPersons: true,
       isNarrowTask: true,
     });
-    expect(result.riskLevel).not.toBe("high");
+    expect(result.riskLevel).toBe("high");
   });
 
   it("non-high-risk domain + profilesPersons → not high", () => {

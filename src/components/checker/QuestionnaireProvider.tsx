@@ -14,6 +14,11 @@ import {
 } from "@/lib/engine/questions";
 import { classify } from "@/lib/engine/classifier";
 
+function onStorageError(_err: unknown): void {
+  // Storage errors (private browsing, quota limits, corrupted data) are non-fatal.
+  // Fresh/default state will be used.
+}
+
 export interface QuestionnaireState {
   currentQuestionId: string;
   answers: AssessmentAnswers;
@@ -63,6 +68,34 @@ export function getAnswerKey(questionId: string): keyof AssessmentAnswers {
   return (map[questionId] ?? questionId) as keyof AssessmentAnswers;
 }
 
+function buildNonAiResult(
+  state: QuestionnaireState,
+  newAnswers: AssessmentAnswers,
+): QuestionnaireState {
+  return {
+    ...state,
+    answers: newAnswers,
+    isComplete: true,
+    result: classify({ isAiSystem: false }),
+  };
+}
+
+function buildProhibitedResult(
+  state: QuestionnaireState,
+  newAnswers: AssessmentAnswers,
+  answer: string | string[] | boolean,
+): QuestionnaireState | null {
+  const arr = Array.isArray(answer) ? answer : [answer as string];
+  if (!arr.some((a) => a !== "none" && a !== "")) return null;
+  const mergedAnswers = { ...newAnswers, prohibitedPractices: arr };
+  return {
+    ...state,
+    answers: mergedAnswers,
+    isComplete: true,
+    result: classify(mergedAnswers),
+  };
+}
+
 function handleAnswerQuestion(
   state: QuestionnaireState,
   questionId: string,
@@ -72,28 +105,15 @@ function handleAnswerQuestion(
   if (!question) return state;
 
   const answerKey = getAnswerKey(questionId);
-  const newAnswers = { ...state.answers, [answerKey]: answer };
+  const newAnswers = { ...state.answers, [answerKey]: answer } as AssessmentAnswers;
 
   if (questionId === "q1_is_ai" && answer === "no") {
-    return {
-      ...state,
-      answers: newAnswers,
-      isComplete: true,
-      result: classify({ isAiSystem: false }),
-    };
+    return buildNonAiResult(state, newAnswers);
   }
 
   if (questionId === "q4_prohibited") {
-    const arr = Array.isArray(answer) ? answer : [answer as string];
-    if (arr.some((a) => a !== "none" && a !== "")) {
-      const mergedAnswers = { ...newAnswers, prohibitedPractices: arr };
-      return {
-        ...state,
-        answers: mergedAnswers,
-        isComplete: true,
-        result: classify(mergedAnswers),
-      };
-    }
+    const prohibitedResult = buildProhibitedResult(state, newAnswers, answer);
+    if (prohibitedResult) return prohibitedResult;
   }
 
   const answerStr = Array.isArray(answer)
@@ -180,16 +200,16 @@ export function QuestionnaireProvider({
         if (parsed?.currentQuestionId)
           dispatch({ type: "RESTORE", state: parsed });
       }
-    } catch (_err) {
-      // Ignore malformed stored state
+    } catch (err: unknown) {
+      onStorageError(err);
     }
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (_err) {
-      // Ignore storage errors (e.g. private browsing quota)
+    } catch (err: unknown) {
+      onStorageError(err);
     }
   }, [state]);
 
@@ -206,8 +226,8 @@ export function QuestionnaireProvider({
     dispatch({ type: "RESET" });
     try {
       localStorage.removeItem(STORAGE_KEY);
-    } catch (_err) {
-      // Ignore storage errors
+    } catch (err: unknown) {
+      onStorageError(err);
     }
   }, []);
 

@@ -15,6 +15,17 @@ vi.mock("bcryptjs", () => ({
   },
 }));
 
+vi.mock("@/lib/rate-limit/limiter", () => ({
+  rateLimit: vi.fn().mockResolvedValue({
+    success: true,
+    remaining: 9,
+    reset: Date.now() + 3_600_000,
+  }),
+  RATE_LIMITS: {
+    AUTH_REGISTER: { limit: 10, windowMs: 3_600_000 },
+  },
+}));
+
 import { POST } from "@/app/api/auth/register/route";
 import { prisma } from "@/lib/db/client";
 import { NextRequest } from "next/server";
